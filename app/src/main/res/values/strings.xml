@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Goal</string>
-    <string name="index">Olá, Vamos nos conhecer um pouco</string>
+    <string name="index">Olá. Vamos nos conhecer um pouco</string>
     <string name="login">Já Possuo Cadastro</string>
     <string name="singin">Realizar Cadastro</string>
     <string name="ignore"><u>Pular essa Etapa</u></string>
-    <string name="index_login">Que bom nós reencontrarmos !!!</string>
+    <string name="index_login">Que bom nós reencontrarmos !</string>
 </resources>
