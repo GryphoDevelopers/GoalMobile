@@ -24,10 +24,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void nextStage(View view){
+    public void nextStage(View view) {
        /* Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);*/
-
+        System.out.println("Pular Etapa");
     }
+
+
 
 }
