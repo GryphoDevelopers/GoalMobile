@@ -1,12 +1,38 @@
 <resources>
     <string name="app_name">Goal</string>
+    <!-- Index -->
     <string name="index">Olá. Vamos nos conhecer um pouco.</string>
     <string name="login">Já Possuo Cadastro</string>
     <string name="cadastro">Realizar Cadastro</string>
-    <string name="ignore"><u>Pular essa Etapa</u></string>
+    <string name="next_stage"><u>Pular essa Etapa</u></string>
+    <!-- Login -->
     <string name="index_login">Que bom nos reencontrarmos !</string>
     <string name="hint_email">E-mail</string>
     <string name="hint_password">Senha</string>
     <string name="singIn">Entrar</string>
     <string name="data_login"><b>Dados de Login</b></string>
+    <!-- Cadastro -->
+    <string name="index_singin">Nos fale um pouco sobre você !</string>
+    <string name="data_personal">Dados Pessoais</string>
+    <string name="txt_name">Qual é o seu <b>Nome</b> ?</string>
+    <string name="hint_name">Nome</string>
+    <string name="txt_lastName">Qual é o seu <b>Sobrenome</b> ?</string>
+    <string name="hint_lastName">Sobrenome</string>
+    <string name="txt_peopleType">Você é um <b>Vendedor</b> ou <b>Cliente</b> ?</string>
+    <string-array name="options_peopleType">
+        <item>Vendedor</item>
+        <item>Cliente</item>
+    </string-array>
+    <string name="txt_email">Digite seu endereço de <b>E-mail</b></string>
+    <string name="txt_confirmEmail">Confirme seu <b>E-mail</b></string>
+    <string name="hint_confirmEmail">Confirmar E-mail</string>
+    <string name="txt_password">Digita sua <b>Senha</b></string>
+    <string name="txt_confirmPassword">Confirme sua <b>Senha</b></string>
+    <string name="hint_confirmPassword">Confirmar Senha</string>
+    <string name="data_termsUse">Termos de Uso:</string>
+    <string name="confirm_TermsUse">Aceito os Termos e Condições de Uso</string>
+    <string name="btn_createAcount">Criar Conta</string>
+
+    <string name="secondStage_singIn">Poderia nos contar mais um Pouco ?</string>
+    <string name="description_secondStage">Esses dados são necessarios para realizar compras</string>
 </resources>

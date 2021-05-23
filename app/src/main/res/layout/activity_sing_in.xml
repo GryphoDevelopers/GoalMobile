@@ -1,9 +1,357 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SingInActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_singin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="40dp"
+            android:gravity="center"
+            android:text="@string/index_singin"
+            android:textSize="36sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <include
+            android:id="@+id/line_goal3"
+            layout="@layout/line_gol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_singin"></include>
+
+
+        <LinearLayout
+            android:id="@+id/layout_dataPersonal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@+id/line_goal3">
+
+            <TextView
+                android:id="@+id/txt_dataSingIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/data_personal"
+                android:textSize="22sp" />
+
+            <View
+                android:id="@+id/line_grey2"
+                android:layout_width="135dp"
+                android:layout_height="3dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:background="@color/light_grey" />
+
+            <TextView
+                android:id="@+id/txt_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="-55dp"
+                android:layout_marginLeft="-55dp"
+                android:layout_marginTop="15dp"
+                android:gravity="start"
+                android:text="@string/txt_name"
+                android:textSize="20sp" />
+
+            <!--TODO Implementar AutoFillHint-->
+
+            <EditText
+                android:id="@+id/edittxt_name"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:autofillHints="Nome"
+                android:ems="10"
+                android:hint="@string/hint_name"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/txt_lastName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="-30dp"
+                android:layout_marginLeft="-30dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/txt_lastName"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/edittxt_lastName"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:autofillHints="Sobrenome"
+                android:ems="10"
+                android:hint="@string/hint_lastName"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/txt_typeUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:text="@string/txt_peopleType"
+                android:textSize="20sp" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <!-- Os valores de Texto dos RadioButtons são colocados na SingInActivity.java -->
+
+                <RadioButton
+                    android:id="@+id/rbtn_seller"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-20dp"
+                    android:layout_marginLeft="-20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginRight="20dp" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_client"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_dataLogin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@+id/layout_dataPersonal">
+
+            <TextView
+                android:id="@+id/txt_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="-15dp"
+                android:layout_marginLeft="-15dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/txt_email"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTextTextEmailAddress"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:autofillHints="Email"
+                android:ems="10"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress" />
+
+            <TextView
+                android:id="@+id/txt_confirmEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="-57dp"
+                android:layout_marginLeft="-57dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/txt_confirmEmail"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTextTextEmailAddress2"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:autofillHints="Confirmar Email"
+                android:ems="10"
+                android:hint="@string/hint_confirmEmail"
+                android:inputType="textEmailAddress" />
+
+            <TextView
+                android:id="@+id/txt_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="-72dp"
+                android:layout_marginLeft="-72dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/txt_password"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTextTextPassword"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:autofillHints="Senha"
+                android:ems="10"
+                android:hint="@string/hint_password"
+                android:inputType="textPassword" />
+
+            <TextView
+                android:id="@+id/txt_confrimPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="-55dp"
+                android:layout_marginLeft="-55dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/txt_confirmPassword"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTextTextPassword2"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:autofillHints="Confirme a Senha"
+                android:ems="10"
+                android:hint="@string/hint_confirmPassword"
+                android:inputType="textPassword" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_termsUse"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@+id/layout_dataLogin">
+
+            <TextView
+                android:id="@+id/txt_termsUse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/data_termsUse"
+                android:textSize="22sp" />
+
+            <View
+                android:id="@+id/line_grey3"
+                android:layout_width="130dp"
+                android:layout_height="3dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:background="@color/light_grey" />
+
+            <CheckBox
+                android:id="@+id/cbx_termsUse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="-20dp"
+                android:layout_marginLeft="-20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/confirm_TermsUse"
+                app:useMaterialThemeColors="false" />
+
+            <Button
+                android:id="@+id/btn_createAcount"
+                android:layout_width="220dp"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="25dp"
+                android:text="@string/btn_createAcount"
+                android:textSize="18sp"
+                app:backgroundTint="@color/ruby_red" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_secondStage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="40dp"
+            android:gravity="center"
+            android:text="@string/secondStage_singIn"
+            android:textSize="36sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_termsUse" />
+
+        <TextView
+            android:id="@+id/txt_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="40dp"
+            android:gravity="center"
+            android:text="@string/description_secondStage"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_secondStage" />
+
+        <include
+
+            android:id="@+id/line_goal4"
+            layout="@layout/line_gol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_description">
+
+        </include>
+
+        <!--TODO Adicionar Icone apos o texto "Pular essa Etapa" -->
+
+        <Button
+            android:id="@+id/btn_nextStage"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/next_stage"
+            android:textColor="@color/grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line_goal4" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

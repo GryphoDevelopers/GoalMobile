@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:onClick="nextStage"
-        android:text="@string/ignore"
+        android:text="@string/next_stage"
         android:textColor="@color/light_grey"
         android:textSize="10sp"
         app:backgroundTint="#FFFFFF"
