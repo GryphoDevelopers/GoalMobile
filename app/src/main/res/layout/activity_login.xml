@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
             android:layout_marginLeft="40dp"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="40dp"
             android:layout_marginRight="40dp"
             android:gravity="center"
@@ -31,10 +31,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <include
-            android:id="@+id/include2"
+            android:id="@+id/line_goal2"
             layout="@layout/line_gol"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_login"></include>
@@ -44,7 +45,9 @@
             android:layout_height="match_parent"
             android:layout_marginTop="50dp"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/include2">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line_goal2">
 
             <TextView
                 android:id="@+id/txt_dadosLogin"
@@ -71,6 +74,7 @@
                 android:layout_marginTop="30dp"
                 android:ems="10"
                 android:hint="@string/hint_email"
+                android:autofillHints="Email"
                 android:inputType="textEmailAddress" />
 
             <EditText
@@ -81,6 +85,7 @@
                 android:layout_marginTop="20dp"
                 android:ems="10"
                 android:hint="@string/hint_password"
+                android:autofillHints="Senha"
                 android:inputType="textPassword" />
 
             <Button
@@ -91,7 +96,8 @@
                 android:layout_marginTop="30dp"
                 android:onClick="SingUp"
                 android:text="@string/singIn"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:backgroundTint="@color/ruby_red" />
 
         </LinearLayout>
 

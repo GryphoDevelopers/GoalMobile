@@ -4,7 +4,7 @@
     <string name="login">Já Possuo Cadastro</string>
     <string name="cadastro">Realizar Cadastro</string>
     <string name="ignore"><u>Pular essa Etapa</u></string>
-    <string name="index_login">Que bom nós reencontrarmos !</string>
+    <string name="index_login">Que bom nos reencontrarmos !</string>
     <string name="hint_email">E-mail</string>
     <string name="hint_password">Senha</string>
     <string name="singIn">Entrar</string>
