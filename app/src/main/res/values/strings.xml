@@ -18,10 +18,9 @@
     <string name="index_singin">Nos fale um pouco sobre você !</string>
     <string name="data_personal">Dados Pessoais</string>
     <string name="txt_name">Qual é o seu <b>Nome</b> ?</string>
-    <string name="hint_name">Nome</string>
-    <string name="txt_lastName">Qual é o seu <b>Sobrenome</b> ?</string>
-    <string name="hint_lastName">Sobrenome</string>
+    <string name="hint_name">Nome e Sobrenome</string>
     <string name="txt_peopleType">Você é um <b>Vendedor</b> ou <b>Cliente</b> ?</string>
+    <string name="errorInputs">Campo obrigatório</string>
     <string-array name="options_peopleType">
         <item>Vendedor</item>
         <item>Cliente</item>
