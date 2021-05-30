@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/viewLogin"
@@ -69,7 +70,7 @@
 
             <!--TODO Implementar AutoFillHint-->
             <EditText
-                android:id="@+id/editText_email"
+                android:id="@+id/editText_emailLogin"
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -80,7 +81,7 @@
                 android:inputType="textEmailAddress" />
 
             <EditText
-                android:id="@+id/editText_password"
+                android:id="@+id/editText_passwordLogin"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -96,7 +97,7 @@
                 android:layout_height="55dp"
                 android:layout_gravity="center|center_vertical"
                 android:layout_marginTop="30dp"
-                android:onClick="SingUp"
+                android:onClick="ValidationSingUp"
                 android:text="@string/singIn"
                 android:textSize="18sp"
                 app:backgroundTint="@color/ruby_red" />

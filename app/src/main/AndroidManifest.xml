@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Goal">
-        <activity android:name=".SingInActivity"></activity>
+        <activity android:name=".windowIndex"></activity>
+        <activity android:name=".SingInActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

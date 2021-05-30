@@ -1,16 +1,19 @@
 <resources>
     <string name="app_name">Goal</string>
+
     <!-- Index -->
     <string name="index">Olá. Vamos nos conhecer um pouco.</string>
     <string name="login">Já Possuo Cadastro</string>
     <string name="cadastro">Realizar Cadastro</string>
     <string name="next_stage"><u>Pular essa Etapa</u></string>
+
     <!-- Login -->
     <string name="index_login">Que bom nos reencontrarmos !</string>
     <string name="hint_email">E-mail</string>
     <string name="hint_password">Senha</string>
     <string name="singIn">Entrar</string>
     <string name="data_login"><b>Dados de Login</b></string>
+
     <!-- Cadastro -->
     <string name="index_singin">Nos fale um pouco sobre você !</string>
     <string name="data_personal">Dados Pessoais</string>
@@ -32,7 +35,6 @@
     <string name="data_termsUse">Termos de Uso:</string>
     <string name="confirm_TermsUse">Aceito os Termos e Condições de Uso</string>
     <string name="btn_createAcount">Criar Conta</string>
-
     <string name="secondStage_singIn">Poderia nos contar mais um Pouco ?</string>
     <string name="description_secondStage">Esses dados são necessarios para realizar compras</string>
 </resources>

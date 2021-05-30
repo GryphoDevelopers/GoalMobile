@@ -14,22 +14,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    //Instancia a Pagina Login
     public void login(View view){
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        Intent intentLogin = new Intent(this, LoginActivity.class);
+        startActivity(intentLogin);
     }
 
+    //Instancia a Pagina de Cadstro
     public void singIn(View view){
-        Intent intent = new Intent(this, SingInActivity.class);
-        startActivity(intent);
+        Intent intentSignIn = new Intent(this, SingInActivity.class);
+        startActivity(intentSignIn);
     }
 
+    //Instancia a Pagina Index
     public void nextStage(View view) {
-       /* Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);*/
-        System.out.println("Pular Etapa");
+        Intent intentIndex = new Intent(this, windowIndex.class);
+        startActivity(intentIndex);
     }
-
-
 
 }
