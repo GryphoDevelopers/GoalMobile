@@ -52,13 +52,6 @@ public class SingInActivity extends AppCompatActivity {
         opClient.setText(optionsUsers[1]);
     }
 
-
-    //Metodo para pular o Cadastro Completo
-    public void SkipStep(View view){
-        Intent intentIndex = new Intent(this, windowIndex.class);
-        startActivity(intentIndex);
-    }
-
     //Valida as Informações da Primeira Etapa do Cadastro (Parte Obrigatoria(Nome, Email, ...))
     public void ValidationFirstStage(View view) {
 

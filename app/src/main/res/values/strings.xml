@@ -34,6 +34,8 @@
     <string name="data_termsUse">Termos de Uso:</string>
     <string name="confirm_TermsUse">Aceito os Termos e Condições de Uso</string>
     <string name="btn_createAcount">Criar Conta</string>
+
+    <!-- Registro para Compras -->
     <string name="secondStage_singIn">Poderia nos contar mais um Pouco ?</string>
     <string name="description_secondStage">Esses dados são necessarios para realizar compras</string>
 </resources>
