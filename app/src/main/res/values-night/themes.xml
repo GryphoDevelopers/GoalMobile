@@ -1,16 +1,28 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.Goal" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimary">@color/ruby_red</item>
         <item name="colorPrimaryVariant">@color/black</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white_light</item>
+
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/ruby_red</item>
-        <item name="colorSecondaryVariant">@color/ruby_red</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/blue_jeans</item>
+        <item name="colorSecondaryVariant">@color/blue_jeans</item>
+        <item name="colorOnSecondary">@color/white_light</item>
+
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+
+        <!-- Implementação do Dark Theme. Definição do Background e Texto -->
+        <item name="android:windowBackground">@color/grey</item>
+        <item name="android:textColor">@color/white_light</item>
+        <item name="android:textColorPrimary">@color/white_light</item>
+
+        <!-- Desativa a ActionBar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
     </style>
 </resources>

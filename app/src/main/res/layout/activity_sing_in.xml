@@ -13,6 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <include layout="@layout/tool_bar" android:id="@+id/toolBarSingIn"/>
+
         <TextView
             android:id="@+id/txt_singin"
             android:layout_width="0dp"
@@ -28,7 +30,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/toolBarSingIn" />
 
 
         <include
