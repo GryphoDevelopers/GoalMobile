@@ -9,10 +9,12 @@
     android:background="?attr/colorPrimaryVariant"
     android:elevation="4dp"
     android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    app:layout_collapseMode="pin"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     tools:targetApi="lollipop">
 
     //TODO Adicionar Imagem
+
     <ImageView
         android:id="@+id/tv_header_title"
         android:layout_width="wrap_content"

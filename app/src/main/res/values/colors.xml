@@ -9,8 +9,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="white_light">#FFF8F8F8</color>
     <color name="black">#FF000000</color>
+
     <color name="grey">#FF212121</color>
-    <color name="dark_grey">#1a1a1a</color>
     <color name="light_grey">#FFA9A9A9</color>
+    <color name="mediun_lightGrey">#FF6E6E6E</color>
+    <color name="mediun_grey">#FF333333</color>
+    <color name="dark_grey">#1A1A1A</color>
 
 </resources>

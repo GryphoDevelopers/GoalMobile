@@ -33,6 +33,7 @@
     <string name="hint_confirmPassword">Confirmar Senha</string>
     <string name="data_termsUse">Termos de Uso:</string>
     <string name="confirm_TermsUse">Aceito os Termos e Condições de Uso</string>
+    <string name="see_termsUse">Ler os Termos de Uso</string>
     <string name="btn_createAcount">Criar Conta</string>
 
     <!-- Registro para Compras -->

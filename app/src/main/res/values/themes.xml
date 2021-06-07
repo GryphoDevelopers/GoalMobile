@@ -10,14 +10,17 @@
         <!-- Checkboxes e Text Fields -->
         <item name="colorSecondary">@color/blue_jeans</item>
         <item name="colorSecondaryVariant">@color/blue_jeans</item>
-        <item name="colorOnSecondary">@color/white_light</item>
+        <item name="colorOnSecondary">@color/dark_grey</item>
         
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 
         <!-- Implementação do Light Theme. Definição do Background e Texto -->
         <item name="android:windowBackground">@color/white_light</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textColorPrimary">@color/black</item>
+
+        <item name="android:textColorSecondary">@color/mediun_grey</item>
 
 
         <!-- Desativa a ActionBar -->
