@@ -101,8 +101,8 @@
                 android:layout_marginTop="30dp"
                 android:onClick="ValidationSingUp"
                 android:text="@string/singIn"
-                android:textSize="18sp"
-                app:backgroundTint="@color/ruby_red" />
+                android:textColor="?attr/colorOnSecondary"
+                android:textSize="18sp" />
 
         </LinearLayout>
 

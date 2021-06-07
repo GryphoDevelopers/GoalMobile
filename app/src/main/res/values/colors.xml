@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Paleta de Cor do App-->
-    <color name="ruby_red">#9B1213</color>
-    <color name="lime_green">#79D550</color>
-    <color name="blue_jeans">#3DB2F6</color>
+    <color name="ruby_red">#FF9B1213</color>
+    <color name="lime_green">#FF79D550</color>
+    <color name="blue_jeans">#FF3DB2F6</color>
 
     <!-- Cores de Base -->
     <color name="white">#FFFFFFFF</color>
@@ -14,6 +14,9 @@
     <color name="light_grey">#FFA9A9A9</color>
     <color name="mediun_lightGrey">#FF6E6E6E</color>
     <color name="mediun_grey">#FF333333</color>
-    <color name="dark_grey">#1A1A1A</color>
+    <color name="dark_grey">#FF1A1A1A</color>
+
+    <!-- Dark Theme -->
+    <color name="ruby_redDark">#FFF51D1D</color>
 
 </resources>
