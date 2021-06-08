@@ -54,7 +54,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:onClick="SkipStep"
         android:text="@string/next_stage"
         android:textColor="@color/light_grey"
         android:textSize="12sp"
@@ -64,4 +63,176 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line_goal4" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_dataPersonal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/btn_nextStage"
+        tools:layout_editor_absoluteX="56dp">
+
+        <TextView
+            android:id="@+id/txt_dataSingIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginLeft="25dp"
+            android:text="@string/data_personal"
+            android:textSize="22sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/line_grey2"
+            android:layout_width="135dp"
+            android:layout_height="3dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:background="@color/mediun_lightGrey"
+            app:layout_constraintStart_toStartOf="@+id/txt_dataSingIn"
+            app:layout_constraintTop_toBottomOf="@+id/txt_dataSingIn" />
+
+        <!--TODO Implementar AutoFillHint-->
+
+        <TextView
+            android:id="@+id/txt_typeData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/cpf_OrCnpj"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="@+id/line_grey2"
+            app:layout_constraintTop_toBottomOf="@+id/line_grey2" />
+
+        <TextView
+            android:id="@+id/error_optionUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:text="@string/errorInputs"
+            android:textColor="@color/ruby_red"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/txt_typeData"
+            app:layout_constraintTop_toBottomOf="@+id/txt_typeData" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/error_optionUser">
+
+            <RadioButton
+                android:id="@+id/rbtn_cpf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp" />
+
+            <RadioButton
+                android:id="@+id/rbtn_cnpj"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/txt_cpf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/txt_cpf"
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/txt_typeData"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+        <EditText
+            android:id="@+id/edit_cpf"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:autofillHints="Nome"
+            android:background="@drawable/edit_text_border"
+            android:ems="10"
+            android:hint="@string/hint_cpf"
+            android:inputType="number"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/txt_cpf"
+            app:layout_constraintTop_toBottomOf="@+id/txt_cpf" />
+
+        <TextView
+            android:id="@+id/txt_cnpj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/txt_cnpj"
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/txt_typeData"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+        <EditText
+            android:id="@+id/edit_cnpj"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:autofillHints="Nome"
+            android:background="@drawable/edit_text_border"
+            android:ems="10"
+            android:hint="@string/hint_cnpj"
+            android:inputType="number"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/txt_cnpj"
+            app:layout_constraintTop_toBottomOf="@+id/txt_cnpj" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/txt_telephone"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="@+id/txt_typeData"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+        <EditText
+            android:id="@+id/editTextPhone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/edit_text_border"
+            android:ems="10"
+            android:inputType="phone"
+            android:autofillHints="Nome"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textView3"
+            app:layout_constraintTop_toBottomOf="@+id/textView3"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            android:hint="@string/hint_telephone"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

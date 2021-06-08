@@ -2,10 +2,11 @@ package com.example.goal;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.service.voice.VoiceInteractionService;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -22,6 +23,10 @@ public class SingInActivity extends AppCompatActivity {
     private CheckBox checkTermsUse;
     private TextView errorOptionUser;
     private TextView errorTermsUse;
+
+    private RadioButton cpf;
+    private RadioButton cnpj;
+    private Button skipStage;
 
     private String name, email, confirmEmail, password, confirmPassword, optionUser;
 
@@ -50,6 +55,53 @@ public class SingInActivity extends AppCompatActivity {
         //Coloca os valores do Array nas respectivas opções
         opSeller.setText(optionsUsers[0]);
         opClient.setText(optionsUsers[1]);
+
+        //2° Parte do Cadastro
+
+        //Botão de pular a 2° Parte do Cadastro
+        skipStage = findViewById(R.id.btn_nextStage);
+        skipStage.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                RegisterForPurchases classRegister = new RegisterForPurchases();
+                classRegister.skipStep(view);
+            }
+        });
+
+        //Coloca o array CPF e CNPJ na Tela
+        Resources resources = getResources();
+        String[] optionsDocs = resources.getStringArray(R.array.cpf_cnpj);
+
+        cpf = findViewById(R.id.rbtn_cpf);
+        cnpj = findViewById(R.id.rbtn_cnpj);
+
+        cpf.setText(optionsDocs[0]);
+        cnpj.setText(optionsDocs[1]);
+
+        TextView txtCpf = findViewById(R.id.txt_cpf) ;
+        TextView txtCnpj = findViewById(R.id.txt_cnpj);
+        EditText editCpf = findViewById(R.id.edit_cpf);
+        EditText editCnpj = findViewById(R.id.edit_cnpj);
+
+        cpf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txtCnpj.setVisibility(View.GONE);
+                editCnpj.setVisibility(View.GONE);
+                txtCpf.setVisibility(View.VISIBLE);
+                editCpf.setVisibility(View.VISIBLE);
+            }
+        });
+
+        cnpj.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txtCnpj.setVisibility(View.VISIBLE);
+                editCnpj.setVisibility(View.VISIBLE);
+                txtCpf.setVisibility(View.GONE);
+                editCpf.setVisibility(View.GONE);
+            }
+        });
+
     }
 
     //Valida as Informações da Primeira Etapa do Cadastro (Parte Obrigatoria(Nome, Email, ...))

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 
 <!-- Uso do ScrollView para que seja possivel subir e abaixar a naveganção na Tela -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -383,7 +382,7 @@
                 android:id="@+id/see_termsUse"
                 style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:text="@string/see_termsUse"
                 android:textColor="@color/light_grey"
                 android:textSize="10sp"
