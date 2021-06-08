@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/line_goal3"
             tools:layout_editor_absoluteX="56dp">
 
@@ -161,7 +161,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/layout_dataPersonal"
             tools:layout_editor_absoluteX="56dp">
 
@@ -322,12 +322,12 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_termsUse"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:visibility="visible"
             app:layout_constraintTop_toBottomOf="@+id/layout_dataLogin">
 
@@ -335,19 +335,22 @@
                 android:id="@+id/txt_termsUse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
                 android:text="@string/data_termsUse"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/line_grey3"
                 android:layout_width="130dp"
                 android:layout_height="3dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:background="@color/mediun_lightGrey" />
+                android:layout_marginStart="12dp"
+                android:layout_marginLeft="12dp"
+                android:background="@color/mediun_lightGrey"
+                app:layout_constraintStart_toStartOf="@+id/txt_termsUse"
+                app:layout_constraintTop_toBottomOf="@+id/txt_termsUse" />
 
             <TextView
                 android:id="@+id/error_termsUse"
@@ -359,7 +362,9 @@
                 android:text="@string/errorInputs"
                 android:textColor="@color/ruby_red"
                 android:textStyle="bold"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/line_grey3"
+                app:layout_constraintTop_toBottomOf="@+id/line_grey3" />
 
             <CheckBox
                 android:id="@+id/cbx_termsUse"
@@ -368,44 +373,48 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="-20dp"
                 android:layout_marginLeft="-20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/confirm_TermsUse"
+                app:layout_constraintStart_toStartOf="@+id/line_grey3"
+                app:layout_constraintTop_toBottomOf="@+id/line_grey3"
                 app:useMaterialThemeColors="false" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/see_termsUse"
                 style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="51dp"
-                android:layout_marginLeft="51dp"
+                android:layout_height="30dp"
                 android:text="@string/see_termsUse"
                 android:textColor="@color/light_grey"
                 android:textSize="10sp"
-                android:padding="0dp"/>
+                app:layout_constraintStart_toStartOf="@+id/cbx_termsUse"
+                app:layout_constraintTop_toBottomOf="@+id/cbx_termsUse" />
 
             <Button
                 android:id="@+id/btn_createAcount"
-                android:layout_width="220dp"
+                android:layout_width="200dp"
                 android:layout_height="55dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:onClick="ValidationFirstStage"
                 android:text="@string/btn_createAcount"
+                android:textColor="@color/white_light"
                 android:textSize="18sp"
-                android:textColor="@color/white_light"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/see_termsUse" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
             layout="@layout/activity_register_for_purchases"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_termsUse"/>
+            app:layout_constraintTop_toBottomOf="@id/layout_termsUse" />
 
         <!--TODO Adicionar Icone apos o texto "Pular essa Etapa" -->
         <!-- Pular a etapa do Cadastro Completo (Opcional, mas Obrigatorio para Compras) -->
