@@ -9,10 +9,12 @@
 
     <!-- Login -->
     <string name="txt_indexLogin">Que bom nos reencontrarmos !</string>
+    <string name="data_login"><b>Dados de Login</b></string>
+    <string name="txt_email_login">Insira seu <b>E-Mail</b></string>
+    <string name="txt_password_login">Insira sua <b>Senha</b></string>
     <string name="hint_email">E-mail</string>
     <string name="hint_password">Senha</string>
     <string name="singIn">Entrar</string>
-    <string name="data_login"><b>Dados de Login</b></string>
 
     <!-- Cadastro -->
     <string name="txt_indexSingIn">Nos fale um pouco sobre você !</string>
@@ -47,8 +49,8 @@
     <string name="txt_cpf">Qual é seu <b>CPF</b> ?</string>
     <string name="txt_cnpj">Qual é seu <b>CNPJ</b> ?</string>
     <string name="txt_telephone">Qual seu <b>Telefone</b> ?</string>
-    <string name="hint_cnpj">00.000.000/0000-00</string>
+    <string name="hint_cnpj">00.000.000/0000–00</string>
     <string name="hint_cpf">000.000.000-XX</string>
-    <string name="hint_telephone">(XX) 90000-0000</string>
+    <string name="hint_telephone">(XX) 90000–0000</string>
 
 </resources>

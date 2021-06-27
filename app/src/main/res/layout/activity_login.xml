@@ -6,7 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/viewLogin"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,69 +43,98 @@
             android:layout_marginTop="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_login"></include>
+            app:layout_constraintTop_toBottomOf="@+id/txt_login" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/data_login"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
-            android:orientation="vertical"
+            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/line_goal3">
 
             <TextView
                 android:id="@+id/txt_dataLogin"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginLeft="15dp"
+                style="@style/title_fields"
                 android:text="@string/data_login"
-                android:textSize="22sp" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!--TODO Implementar AutoFillHint-->
 
             <View
                 android:id="@+id/line_grey"
                 android:layout_width="135dp"
                 android:layout_height="3dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:background="@color/light_grey" />
+                android:layout_marginStart="12dp"
+                android:layout_marginLeft="12dp"
+                android:background="@color/mediun_lightGrey"
+                app:layout_constraintStart_toStartOf="@+id/txt_dataLogin"
+                app:layout_constraintTop_toBottomOf="@+id/txt_dataLogin" />
 
-            <!--TODO Implementar AutoFillHint-->
+            <TextView
+                android:id="@+id/txt_emailLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/label_fields"
+                android:labelFor="@+id/editTxt_emailLogin"
+                android:text="@string/txt_email_login"
+                app:layout_constraintStart_toStartOf="@+id/line_grey"
+                app:layout_constraintTop_toBottomOf="@+id/txt_dataLogin" />
+
             <EditText
-                android:id="@+id/editText_emailLogin"
-                android:layout_width="300dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginTop="30dp"
+                android:id="@+id/editTxt_emailLogin"
+                style="@style/editTextInitial"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:autofillHints="Email"
                 android:ems="10"
                 android:hint="@string/hint_email"
-                android:autofillHints="Email"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/txt_emailLogin"
+                app:layout_constraintTop_toBottomOf="@+id/txt_emailLogin" />
+
+            <TextView
+                android:id="@+id/txt_passwordLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/label_fields"
+                android:labelFor="@+id/editTxt_passwordLogin"
+                android:text="@string/txt_password_login"
+                app:layout_constraintStart_toStartOf="@+id/txt_emailLogin"
+                app:layout_constraintTop_toBottomOf="@+id/editTxt_emailLogin" />
 
             <EditText
-                android:id="@+id/editText_passwordLogin"
-                android:layout_width="300dp"
+                android:id="@+id/editTxt_passwordLogin"
+                style="@style/editTextInitial"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
+                android:autofillHints="Senha"
                 android:ems="10"
                 android:hint="@string/hint_password"
-                android:autofillHints="Senha"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/txt_passwordLogin"
+                app:layout_constraintTop_toBottomOf="@+id/txt_passwordLogin" />
 
             <Button
-                android:id="@+id/btn_singup"
-                android:layout_width="200dp"
-                android:layout_height="55dp"
-                android:layout_gravity="center|center_vertical"
-                android:layout_marginTop="30dp"
-                android:onClick="ValidationSingUp"
+                android:id="@+id/btn_singUp"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                android:onClick="validationSingUp"
                 android:text="@string/singIn"
-                android:textColor="?attr/colorOnSecondary"
-                android:textSize="18sp" />
+                android:textColor="@color/white_light"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTxt_passwordLogin" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
