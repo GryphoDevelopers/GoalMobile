@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <style name="title_forms">
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
     <style name="editTextInitial">
         <item name="android:layout_marginTop">3dp</item>
         <item name="android:layout_marginEnd">30dp</item>
@@ -13,10 +25,26 @@
         <item name="android:paddingBottom">10dp</item>
     </style>
 
+    <style name="editTextIcon">
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_marginEnd">30dp</item>
+        <item name="android:layout_marginRight">30dp</item>
+
+        <item name="android:background">@drawable/edit_text_with_icon</item>
+
+        <item name="android:drawablePadding">12dp</item>
+
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
     <style name="title_fields">
         <item name="android:layout_marginStart">25dp</item>
         <item name="android:layout_marginLeft">25dp</item>
         <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="label_fields">

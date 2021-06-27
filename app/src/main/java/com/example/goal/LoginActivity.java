@@ -2,7 +2,6 @@ package com.example.goal;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -17,13 +16,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        edit_email = findViewById(R.id.editText_emailLogin);
-        edit_password = findViewById(R.id.editText_passwordLogin);
+        edit_email = findViewById(R.id.editTxt_emailLogin);
+        edit_password = findViewById(R.id.editTxt_passwordLogin);
     }
 
     //Metodo acionado pelo botão 'Entrar'
     //Recupera os valores e realiza uma Validação
-    public void ValidationSingUp(View view){
+    public void validationSingUp(View view){
         String email = edit_email.getText().toString();
         String password = edit_password.getText().toString();
         if (email.equals("")) {
