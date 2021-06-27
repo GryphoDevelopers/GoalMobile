@@ -1,10 +1,12 @@
-package com.example.goal;
+package com.example.goal.views.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.example.goal.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Instancia a Pagina Index
     public void nextStage(View view) {
-        Intent intentIndex = new Intent(this, windowIndex.class);
+        Intent intentIndex = new Intent(this, IndexActivity.class);
         startActivity(intentIndex);
     }
 

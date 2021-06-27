@@ -1,14 +1,16 @@
-package com.example.goal;
+package com.example.goal.views.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class windowIndex extends AppCompatActivity {
+import com.example.goal.R;
+
+public class IndexActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_window_index);
+        setContentView(R.layout.activity_index);
     }
 }

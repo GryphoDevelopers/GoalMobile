@@ -1,4 +1,4 @@
-package com.example.goal;
+package com.example.goal.views.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import com.example.goal.R;
 
 public class SingUpActivity extends AppCompatActivity {
 
