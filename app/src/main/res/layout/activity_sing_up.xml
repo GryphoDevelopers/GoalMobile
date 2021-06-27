@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SingInActivity">
+    tools:context=".SingUpActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ConstraintLayout"
@@ -19,9 +19,9 @@
             android:id="@+id/txt_singin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/title_forms"
+            style="@style/title_activitys"
             android:gravity="center"
-            android:text="@string/txt_indexSingIn"
+            android:text="@string/title_singUp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +53,7 @@
                 style="@style/title_fields"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/data_personal"
+                android:text="@string/title_personal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 style="@style/label_fields"
                 android:labelFor="@+id/editText_name"
-                android:text="@string/txt_name"
+                android:text="@string/label_name"
                 app:layout_constraintStart_toStartOf="@+id/line_grey2"
                 app:layout_constraintTop_toBottomOf="@+id/line_grey2" />
 
@@ -82,7 +82,7 @@
                 android:id="@+id/editText_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/editTextInitial"
+                style="@style/editText_personalized"
                 android:autofillHints="Nome"
                 android:drawablePadding="20dp"
                 android:ems="10"
@@ -97,7 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/label_fields"
-                android:text="@string/txt_peopleType"
+                android:text="@string/label_peopleType"
                 app:layout_constraintStart_toStartOf="@+id/txt_name"
                 app:layout_constraintTop_toBottomOf="@+id/editText_name" />
 
@@ -154,7 +154,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/title_fields"
-                android:text="@string/data_login"
+                android:text="@string/title_login"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -174,7 +174,7 @@
                 android:layout_height="wrap_content"
                 style="@style/label_fields"
                 android:labelFor="@+id/editText_email"
-                android:text="@string/txt_email"
+                android:text="@string/label_email"
                 app:layout_constraintStart_toStartOf="@+id/line_grey31"
                 app:layout_constraintTop_toBottomOf="@+id/line_grey31" />
 
@@ -182,7 +182,7 @@
                 android:id="@+id/editText_email"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/editTextIcon"
+                style="@style/editText_icon"
                 android:autofillHints="Email"
                 android:drawableStart="@drawable/ic_email"
                 android:drawableLeft="@drawable/ic_email"
@@ -201,7 +201,7 @@
                 android:layout_height="wrap_content"
                 style="@style/label_fields"
                 android:labelFor="@+id/editText_confrimEmail"
-                android:text="@string/txt_confirmEmail"
+                android:text="@string/label_confirmEmail"
                 app:layout_constraintStart_toStartOf="@+id/txt_email"
                 app:layout_constraintTop_toBottomOf="@+id/editText_email" />
 
@@ -209,7 +209,7 @@
                 android:id="@+id/editText_confrimEmail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/editTextIcon"
+                style="@style/editText_icon"
                 android:autofillHints="Confirmar Email"
                 android:drawableStart="@drawable/ic_email"
                 android:drawableLeft="@drawable/ic_email"
@@ -226,7 +226,7 @@
                 android:layout_height="wrap_content"
                 style="@style/label_fields"
                 android:labelFor="@+id/editText_password"
-                android:text="@string/txt_password"
+                android:text="@string/label_password"
                 app:layout_constraintStart_toStartOf="@+id/txt_confirmEmail"
                 app:layout_constraintTop_toBottomOf="@+id/editText_confrimEmail" />
 
@@ -234,7 +234,7 @@
                 android:id="@+id/editText_password"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/editTextInitial"
+                style="@style/editText_personalized"
                 android:autofillHints="Senha"
                 android:ems="10"
                 android:hint="@string/hint_password"
@@ -249,7 +249,7 @@
                 android:layout_height="wrap_content"
                 style="@style/label_fields"
                 android:labelFor="@+id/editText_confirmPassword"
-                android:text="@string/txt_confirmPassword"
+                android:text="@string/label_confirmPassword"
                 app:layout_constraintStart_toStartOf="@+id/txt_password"
                 app:layout_constraintTop_toBottomOf="@+id/editText_password" />
 
@@ -257,7 +257,7 @@
                 android:id="@+id/editText_confirmPassword"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/editTextInitial"
+                style="@style/editText_personalized"
                 android:autofillHints="Confirme a Senha"
                 android:ems="10"
                 android:hint="@string/hint_confirmPassword"
@@ -282,7 +282,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/title_fields"
-                android:text="@string/data_termsUse"
+                android:text="@string/title_termsUse"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

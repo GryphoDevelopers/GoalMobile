@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.service.voice.VoiceInteractionService;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -12,7 +11,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-public class SingInActivity extends AppCompatActivity {
+public class SingUpActivity extends AppCompatActivity {
 
     private EditText editName;
     private EditText editEmail;
@@ -33,7 +32,7 @@ public class SingInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sing_in);
+        setContentView(R.layout.activity_sing_up);
 
         editName = findViewById(R.id.editText_name);
         editEmail = findViewById(R.id.editText_email);

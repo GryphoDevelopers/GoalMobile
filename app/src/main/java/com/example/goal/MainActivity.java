@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Instancia a Pagina de Cadstro
     public void singIn(View view){
-        Intent intentSignIn = new Intent(this, SingInActivity.class);
+        Intent intentSignIn = new Intent(this, SingUpActivity.class);
         startActivity(intentSignIn);
     }
 

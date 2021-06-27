@@ -10,8 +10,8 @@
         android:id="@+id/txt_secondStage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/title_forms"
-        android:text="@string/txt_secondStageSingIn"
+        style="@style/title_activitys"
+        android:text="@string/title_registerOptional"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +27,7 @@
         android:layout_marginEnd="40dp"
         android:layout_marginRight="40dp"
         android:gravity="center"
-        android:text="@string/description_secondStage"
+        android:text="@string/description_registerOptional"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/title_fields"
-            android:text="@string/data_personal"
+            android:text="@string/title_personal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -94,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/label_fields"
-            android:text="@string/cpf_OrCnpj"
+            android:text="@string/label_typeDocument"
             app:layout_constraintStart_toStartOf="@+id/line_grey2"
             app:layout_constraintTop_toBottomOf="@+id/line_grey2" />
 
@@ -140,7 +140,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="@string/txt_cpf"
+            android:text="@string/label_cpf"
             android:textSize="20sp"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@+id/txt_typeData"
@@ -171,7 +171,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="@string/txt_cnpj"
+            android:text="@string/label_cnpj"
             android:textSize="20sp"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@+id/txt_typeData"
@@ -202,7 +202,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/label_fields"
-            android:text="@string/txt_telephone"
+            android:text="@string/label_telephone"
             app:layout_constraintStart_toStartOf="@+id/txt_typeData"
             app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
@@ -210,7 +210,7 @@
             android:id="@+id/editTextPhone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/editTextIcon"
+            style="@style/editText_icon"
             android:autofillHints="Nome"
             android:background="@drawable/edit_text_with_icon"
             android:drawableStart="@drawable/ic_smartphone"

@@ -2,35 +2,35 @@
     <string name="app_name">Goal</string>
 
     <!-- Index -->
-    <string name="txt_index">Olá. Vamos nos conhecer um pouco.</string>
+    <string name="title_index">Olá. Vamos nos conhecer um pouco.</string>
     <string name="btn_login">Já Possuo Cadastro</string>
-    <string name="btn_singIn">Realizar Cadastro</string>
+    <string name="btn_register">Realizar Cadastro</string>
     <string name="next_stage"><u>Pular essa Etapa</u></string>
 
     <!-- Login -->
-    <string name="txt_indexLogin">Que bom nos reencontrarmos !</string>
-    <string name="data_login"><b>Dados de Login</b></string>
-    <string name="txt_email_login">Insira seu <b>E-Mail</b></string>
-    <string name="txt_password_login">Insira sua <b>Senha</b></string>
+    <string name="title_pageLogin">Que bom nos reencontrarmos !</string>
+    <string name="title_login">Dados de Login</string>
+    <string name="label_emailLogin">Insira seu <b>E-Mail</b></string>
+    <string name="label_passwordLogin">Insira sua <b>Senha</b></string>
     <string name="hint_email">E-mail</string>
     <string name="hint_password">Senha</string>
-    <string name="singIn">Entrar</string>
+    <string name="btn_singIn">Entrar</string>
 
     <!-- Cadastro -->
-    <string name="txt_indexSingIn">Nos fale um pouco sobre você !</string>
-    <string name="data_personal">Dados Pessoais</string>
-    <string name="data_termsUse">Termos de Uso:</string>
+    <string name="title_singUp">Nos fale um pouco sobre você !</string>
+    <string name="title_personal">Dados Pessoais</string>
+    <string name="title_termsUse">Termos de Uso:</string>
     <string name="errorInputs">Campo obrigatório</string>
     <string-array name="options_peopleType">
         <item>Vendedor</item>
         <item>Cliente</item>
     </string-array>
-    <string name="txt_name">Qual é o seu <b>Nome</b> ?</string>
-    <string name="txt_peopleType">Você é um <b>Vendedor</b> ou <b>Cliente</b> ?</string>
-    <string name="txt_email">Digite seu endereço de <b>E-mail</b></string>
-    <string name="txt_confirmEmail">Confirme seu <b>E-mail</b></string>
-    <string name="txt_password">Digita sua <b>Senha</b></string>
-    <string name="txt_confirmPassword">Confirme sua <b>Senha</b></string>
+    <string name="label_name">Qual é o seu <b>Nome</b> ?</string>
+    <string name="label_peopleType">Você é um <b>Vendedor</b> ou <b>Cliente</b> ?</string>
+    <string name="label_email">Digite seu endereço de <b>E-mail</b></string>
+    <string name="label_confirmEmail">Confirme seu <b>E-mail</b></string>
+    <string name="label_password">Digita sua <b>Senha</b></string>
+    <string name="label_confirmPassword">Confirme sua <b>Senha</b></string>
     <string name="hint_name">Nome e Sobrenome</string>
     <string name="hint_confirmPassword">Confirmar Senha</string>
     <string name="hint_confirmEmail">Confirmar E-mail</string>
@@ -39,16 +39,17 @@
     <string name="btn_createAcount">Criar Conta</string>
 
     <!-- Registro para Compras -->
-    <string name="txt_secondStageSingIn">Poderia nos contar mais um Pouco ?</string>
-    <string name="description_secondStage">Esses dados são necessarios para realizar compras</string>
-    <string name="cpf_OrCnpj">Usar <b>CPF</b> ou <b>CNPJ</b> ?</string>
+    <string name="title_registerOptional">Poderia nos contar mais um Pouco ?</string>
+    <string name="description_registerOptional">Esses dados são necessarios
+        para realizar compras</string>
+    <string name="label_typeDocument">Usar <b>CPF</b> ou <b>CNPJ</b> ?</string>
     <string-array name="cpf_cnpj">
         <item>CPF</item>
         <item>CNPJ</item>
     </string-array>
-    <string name="txt_cpf">Qual é seu <b>CPF</b> ?</string>
-    <string name="txt_cnpj">Qual é seu <b>CNPJ</b> ?</string>
-    <string name="txt_telephone">Qual seu <b>Telefone</b> ?</string>
+    <string name="label_cpf">Qual é seu <b>CPF</b> ?</string>
+    <string name="label_cnpj">Qual é seu <b>CNPJ</b> ?</string>
+    <string name="label_telephone">Qual seu <b>Telefone</b> ?</string>
     <string name="hint_cnpj">00.000.000/0000–00</string>
     <string name="hint_cpf">000.000.000-XX</string>
     <string name="hint_telephone">(XX) 90000–0000</string>

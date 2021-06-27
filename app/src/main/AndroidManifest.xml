@@ -11,7 +11,7 @@
         android:theme="@style/Theme.Goal">
         <activity android:name=".RegisterForPurchases"></activity>
         <activity android:name=".windowIndex" />
-        <activity android:name=".SingInActivity" />
+        <activity android:name=".SingUpActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
