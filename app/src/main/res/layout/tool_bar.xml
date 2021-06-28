@@ -13,18 +13,13 @@
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     tools:targetApi="lollipop">
 
-    <LinearLayout
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:foregroundGravity="center_vertical"
+        android:scaleType="center"
+        android:src="@drawable/vector_goal"
+        tools:ignore="ContentDescription" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="100dp"
-            android:scaleType="center"
-            android:src="@drawable/vector_goal"
-            tools:ignore="ContentDescription" />
-    </LinearLayout>
 
 </androidx.appcompat.widget.Toolbar>
