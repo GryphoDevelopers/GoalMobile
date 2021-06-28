@@ -22,7 +22,7 @@
             android:id="@+id/txt_login"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/title_activitys"
+            style="@style/title_activities"
             android:text="@string/title_pageLogin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"

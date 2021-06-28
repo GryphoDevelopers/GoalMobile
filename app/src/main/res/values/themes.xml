@@ -11,7 +11,7 @@
         <item name="colorSecondary">@color/blue_jeans</item>
         <item name="colorSecondaryVariant">@color/blue_jeans</item>
         <item name="colorOnSecondary">@color/black</item>
-        
+
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 
@@ -22,10 +22,18 @@
 
         <item name="android:textColorSecondary">@color/mediun_grey</item>
 
-
         <!-- Desativa a ActionBar -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
     </style>
+
+    <style name="Theme.Goal.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Goal.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Goal.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

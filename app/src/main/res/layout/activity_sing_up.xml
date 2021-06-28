@@ -19,7 +19,7 @@
             android:id="@+id/txt_singin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/title_activitys"
+            style="@style/title_activities"
             android:gravity="center"
             android:text="@string/title_singUp"
             app:layout_constraintEnd_toEndOf="parent"

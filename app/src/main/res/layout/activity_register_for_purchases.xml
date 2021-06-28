@@ -8,9 +8,9 @@
 
     <TextView
         android:id="@+id/txt_secondStage"
+        style="@style/title_activities"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/title_activitys"
         android:text="@string/title_registerOptional"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
