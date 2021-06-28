@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Goal</string>
 
-    <!-- Index -->
+    <!-- Main - 1° Tela -->
     <string name="title_index">Olá. Vamos nos conhecer um pouco.</string>
     <string name="btn_login">Já Possuo Cadastro</string>
     <string name="btn_register">Realizar Cadastro</string>
@@ -53,5 +53,24 @@
     <string name="hint_cnpj">00.000.000/0000–00</string>
     <string name="hint_cpf">000.000.000-XX</string>
     <string name="hint_telephone">(XX) 90000–0000</string>
+
+    <!-- Index -->
+    <string name="navigation_drawer_open">Abrir Menu Lateral</string>
+    <string name="navigation_drawer_close">Fechar Menu Lateral</string>
+    
+    <!-- Menu Categorias -->
+    <string name="titleMenu_categories">Categorias</string>
+    <string name="option_equipment">Equipamentos</string>
+    <string name="option_accessories">Acessorios</string>
+    <string name="option_vitamins">Vitaminas</string>
+    <string name="option_clothes">Roupas</string>
+    <string name="option_shoes">Calçados</string>
+    <string name="option_bags">Bolsas</string>
+    <string name="option_others">Outros</string>
+    <string name="title_otherOptions">Empresa</string>
+    <string name="option_contact">Contato GOAL</string>
+    <string name="option_about">Sobre a GOAL</string>
+    <string name="option_privacy">Politicas de Privacidade</string>
+    <!-- TODO IMPLEMENTAR CAMPO 'MEUS PEDIDOS', 'CONFIGURAÇÕES', 'SAIR'  -->
 
 </resources>

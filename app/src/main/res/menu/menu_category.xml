@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/titleMenu_categories">
+        <menu>
+            <group>
+                <item android:title="@string/option_equipment"
+                    android:id="@+id/equipment"/>
+                <item android:title="@string/option_accessories"
+                    android:id="@+id/acessories"/>
+                <item android:title="@string/option_vitamins"
+                    android:id="@+id/vitamins"/>
+                <item android:title="@string/option_clothes"
+                    android:id="@+id/clothes"/>
+                <item android:title="@string/option_shoes"
+                    android:id="@+id/shoes"/>
+                <item android:title="@string/option_bags"
+                    android:id="@+id/bags"/>
+                <item android:title="@string/option_others"
+                    android:id="@+id/others"/>
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="@string/title_otherOptions">
+        <menu>
+            <group>
+                <item android:title="@string/option_contact"
+                    android:id="@+id/contact"/>
+                <item android:title="@string/option_about"
+                    android:id="@+id/about"/>
+                <item android:title="@string/option_privacy"
+                    android:id="@+id/privacy"/>
+            </group>
+        </menu>
+    </item>
+
+</menu>
