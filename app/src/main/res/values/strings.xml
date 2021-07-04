@@ -2,7 +2,10 @@
     <string name="app_name">Goal</string>
 
     <!-- Main - 1° Tela -->
-    <string name="title_index">Olá. Vamos nos conhecer um pouco.</string>
+    <string name="title_index">Aguarde enquanto recuperamos seus Dados…</string>
+
+    <!-- OptionsActivity - Tela de Opções  -->
+    <string name="title_options">Olá. Vamos nos conhecer um pouco.</string>
     <string name="btn_login">Já Possuo Cadastro</string>
     <string name="btn_register">Realizar Cadastro</string>
     <string name="next_stage"><u>Pular essa Etapa</u></string>
@@ -57,7 +60,7 @@
     <!-- Index -->
     <string name="navigation_drawer_open">Abrir Menu Lateral</string>
     <string name="navigation_drawer_close">Fechar Menu Lateral</string>
-    
+
     <!-- Menu Categorias -->
     <string name="titleMenu_categories">Categorias</string>
     <string name="option_equipment">Equipamentos</string>

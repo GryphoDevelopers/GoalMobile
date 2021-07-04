@@ -2,6 +2,7 @@ package com.example.goal.views.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.example.goal.HandleSharedPreferences;
 import com.example.goal.R;
 
 public class SingUpActivity extends AppCompatActivity {
@@ -30,6 +32,8 @@ public class SingUpActivity extends AppCompatActivity {
     private Button skipStage;
 
     private String name, email, confirmEmail, password, confirmPassword, optionUser;
+
+    private static final String PREFERENCE_LOGIN = "EXISTS_LOGIN";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +65,9 @@ public class SingUpActivity extends AppCompatActivity {
 
         //Botão de pular a 2° Parte do Cadastro
         skipStage = findViewById(R.id.btn_nextStage);
-        skipStage.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                RegisterForPurchases classRegister = new RegisterForPurchases();
-                classRegister.skipStep(view);
-            }
+        skipStage.setOnClickListener(view -> {
+            RegisterForPurchases classRegister = new RegisterForPurchases();
+            classRegister.skipStep(view);
         });
 
         //Coloca o array CPF e CNPJ na Tela
@@ -83,33 +85,34 @@ public class SingUpActivity extends AppCompatActivity {
         EditText editCpf = findViewById(R.id.edit_cpf);
         EditText editCnpj = findViewById(R.id.edit_cnpj);
 
-        cpf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                txtCnpj.setVisibility(View.GONE);
-                editCnpj.setVisibility(View.GONE);
-                txtCpf.setVisibility(View.VISIBLE);
-                editCpf.setVisibility(View.VISIBLE);
-            }
+        cpf.setOnClickListener(v -> {
+            txtCnpj.setVisibility(View.GONE);
+            editCnpj.setVisibility(View.GONE);
+            txtCpf.setVisibility(View.VISIBLE);
+            editCpf.setVisibility(View.VISIBLE);
         });
 
-        cnpj.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                txtCnpj.setVisibility(View.VISIBLE);
-                editCnpj.setVisibility(View.VISIBLE);
-                txtCpf.setVisibility(View.GONE);
-                editCpf.setVisibility(View.GONE);
-            }
+        cnpj.setOnClickListener(v -> {
+            txtCnpj.setVisibility(View.VISIBLE);
+            editCnpj.setVisibility(View.VISIBLE);
+            txtCpf.setVisibility(View.GONE);
+            editCpf.setVisibility(View.GONE);
         });
 
     }
 
-    //Valida as Informações da Primeira Etapa do Cadastro (Parte Obrigatoria(Nome, Email, ...))
+    //Valida as Informações
     public void ValidationFirstStage(View view) {
 
         //Aciona os metodos de validação
         if(ValidationEditText() && ValidationTypeUser() && ValidationTermsUse()){
+
+            // Validação retornando True
+
+            HandleSharedPreferences preferences = new HandleSharedPreferences(
+                    getSharedPreferences(PREFERENCE_LOGIN, 0));
+            // Define TRUE para login Realizado
+            preferences.setLogin();
 
            System.out.println("Nome: " + name +
                    "\nEmail: " + email + "\nConfirmar Email: " + confirmEmail +
