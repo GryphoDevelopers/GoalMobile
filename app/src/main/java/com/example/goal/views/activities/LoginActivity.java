@@ -2,6 +2,7 @@ package com.example.goal.views.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -37,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     //Recupera os valores e realiza uma Validação
     public void validationSingUp(View view){
 
-        if (emptyFields()) {
+        if (filledFields()) {
             // Validação retornou True
             System.out.println("Email: " + email + "\nSenha: " + password);
 
@@ -46,12 +47,17 @@ public class LoginActivity extends AppCompatActivity {
             // Define TRUE para login Realizado
             preferences.setLogin();
 
+            // Inicia a Pagina Index (Produtos) e Finaliza essa Activity
+            Intent indexPage = new Intent(this, IndexActivity.class);
+            startActivity(indexPage);
+            finish();
         } else {
             System.out.println("Não foi Possivel Logar o Usuario");
         }
     }
 
-    public boolean emptyFields(){
+    // Verifica se os Campos estão preenchidos
+    public boolean filledFields(){
         email = edit_email.getText().toString();
         password = edit_password.getText().toString();
 
