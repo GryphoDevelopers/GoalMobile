@@ -43,6 +43,7 @@
 
     <!-- Registro para Compras -->
     <string name="title_registerOptional">Poderia nos contar mais um Pouco ?</string>
+    <string name="title_address">Endereço</string>
     <string name="description_registerOptional">Esses dados são necessarios
         para realizar compras</string>
     <string name="label_typeDocument">Usar <b>CPF</b> ou <b>CNPJ</b> ?</string>
@@ -52,10 +53,39 @@
     </string-array>
     <string name="label_cpf">Qual é seu <b>CPF</b> ?</string>
     <string name="label_cnpj">Qual é seu <b>CNPJ</b> ?</string>
-    <string name="label_telephone">Qual seu <b>Telefone</b> ?</string>
+    <string name="label_telephone">Digite seu <b>Telefone</b></string>
+    <string name="label_country">Qual seu <b>País</b> ?</string>
+    <string name="label_state">Escolha seu <b>Estado</b></string>
+    <string name="label_cep">Digite seu <b>CEP</b></string>
+    <string name="label_address">Digite seu <b>Endereço</b></string>
+    <string name="label_district">Digite seu <b>Bairro</b></string>
+    <string name="label_number">Digite seu <b>Numero</b></string>
+    <string name="label_complement"><b>Complemento</b></string>
     <string name="hint_cnpj">00.000.000/0000–00</string>
     <string name="hint_cpf">000.000.000-XX</string>
     <string name="hint_telephone">(XX) 90000–0000</string>
+    <string name="hint_cep">00000–000</string>
+    <string name="hint_address">Ex: "Avenida Paulista"</string>
+    <string name="hint_district">Ex: "Bela Vista"</string>
+    <string name="hint_number">Ex: "130"</string>
+    <string name="hint_complement">Ex: "Apto 401, Bl 06"</string>
+    <string-array name="pays">
+        <item>Argentina</item>
+        <item>Brasil</item>
+        <item>Chile</item>
+        <item>Colombia</item>
+        <item>Equador</item>
+        <item>Mexico</item>
+        <item>Paraguai</item>
+        <item>Peru</item>
+        <item>Uruguai</item>
+        <item>Venezuela</item>
+    </string-array>
+    <string-array name="state">
+        <item>São Paulo</item>
+        <item>Rio de Janeiro</item>
+    </string-array>
+
 
     <!-- Index -->
     <string name="navigation_drawer_open">Abrir Menu Lateral</string>
