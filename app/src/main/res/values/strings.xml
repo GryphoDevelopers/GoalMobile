@@ -85,6 +85,7 @@
         <item>São Paulo</item>
         <item>Rio de Janeiro</item>
     </string-array>
+    <string name="btn_finishSingUp">Finalizar Cadastro</string>
 
 
     <!-- Index -->

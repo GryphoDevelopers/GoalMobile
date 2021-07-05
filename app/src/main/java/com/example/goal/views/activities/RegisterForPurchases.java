@@ -16,16 +16,17 @@ import android.widget.TextView;
 
 import com.example.goal.R;
 
-public class RegisterForPurchases extends AppCompatActivity
-        implements AdapterView.OnItemSelectedListener{
+public class RegisterForPurchases extends AppCompatActivity {
 
     TextView txtCpf;
     TextView txtCnpj;
     EditText editCpf;
     EditText editCnpj;
+    private Spinner spinnerCountry;
+    private Spinner spinnerState;
     private Button next_stage;
+    private Button createCompleteAcount;
     private RadioButton cpf, cnpj;
-    private Spinner spinner;
 
 
     private boolean isCpf = false;
@@ -51,7 +52,9 @@ public class RegisterForPurchases extends AppCompatActivity
         txtCnpj = findViewById(R.id.txt_cnpj);
         editCpf = findViewById(R.id.edit_cpf);
         editCnpj = findViewById(R.id.edit_cnpj);
-        spinner = findViewById(R.id.spinner_countries);
+        spinnerCountry = findViewById(R.id.spinner_countries);
+        spinnerState = findViewById(R.id.spinner_state);
+        createCompleteAcount = findViewById(R.id.btn_completeAcount);
 
         next_stage.setOnClickListener(v -> skipStep(v));
 
@@ -78,15 +81,41 @@ public class RegisterForPurchases extends AppCompatActivity
             editCpf.setVisibility(View.GONE);
         });
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> adapterCountry = ArrayAdapter.createFromResource(this,
                 R.array.pays, android.R.layout.simple_spinner_item);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        adapterCountry.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCountry.setAdapter(adapterCountry);
+        spinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                country = countriesOptions[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
+        ArrayAdapter<CharSequence> adapterState = ArrayAdapter.createFromResource(this,
+                R.array.state, android.R.layout.simple_spinner_item);
+        adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerState.setAdapter(adapterState);
+        spinnerState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                state = stateOptions[position];
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        createCompleteAcount.setOnClickListener(v -> validationCompleteSingUp());
 
     }
 
@@ -96,24 +125,13 @@ public class RegisterForPurchases extends AppCompatActivity
         startActivity(intentIndex);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (parent.getId()){
-            case R.id.spinner_countries:
-                country = countriesOptions[position];
-                break;
-            case R.id.spinner_state:
-                state = stateOptions[position];
-                break;
-            default:
-                country = "";
-                state = "";
-                break;
-        }
+    private void validationCompleteSingUp(){
+        // TODO IMPLEMENTAR MEDOTOS DE VALIDAÇÕES
+
+        // Abre a pagina Index (Produtos) e Finaliza a Actvity
+        Intent indexProducts = new Intent(this, IndexActivity.class);
+        startActivity(indexProducts);
+        finish();
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
 }
