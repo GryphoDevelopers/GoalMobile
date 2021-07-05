@@ -1,4 +1,4 @@
-package com.example.goal;
+package com.example.goal.models;
 
 import android.content.SharedPreferences;
 

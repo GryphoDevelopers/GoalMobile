@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.example.goal.HandleSharedPreferences;
+import com.example.goal.models.HandleSharedPreferences;
 import com.example.goal.R;
 
 public class OpenActivity extends AppCompatActivity {
