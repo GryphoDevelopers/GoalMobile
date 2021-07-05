@@ -4,15 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.goal.HandleSharedPreferences;
+import com.example.goal.models.HandleSharedPreferences;
 import com.example.goal.R;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText edit_email;
-    private  EditText edit_password;
+    private EditText edit_password;
+    private Button singUp;
 
     private String email, password;
 
@@ -25,6 +27,10 @@ public class LoginActivity extends AppCompatActivity {
 
         edit_email = findViewById(R.id.editTxt_emailLogin);
         edit_password = findViewById(R.id.editTxt_passwordLogin);
+        singUp = findViewById(R.id.btn_singUp);
+
+        singUp.setOnClickListener(v -> validationSingUp(v));
+
     }
 
     //Metodo acionado pelo botão 'Entrar'

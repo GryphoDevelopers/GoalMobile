@@ -17,7 +17,6 @@
 
         <include layout="@layout/tool_bar" android:id="@+id/toolBarLogin"/>
 
-
         <TextView
             android:id="@+id/txt_login"
             android:layout_width="0dp"
@@ -48,36 +47,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/line_goal3">
 
-            <TextView
-                android:id="@+id/txt_dataLogin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/title_fields"
-                android:text="@string/title_login"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <!--TODO Implementar AutoFillHint-->
-
-            <View
-                android:id="@+id/line_grey"
-                android:layout_width="135dp"
-                android:layout_height="3dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
-                android:background="@color/mediun_lightGrey"
-                app:layout_constraintStart_toStartOf="@+id/txt_dataLogin"
-                app:layout_constraintTop_toBottomOf="@+id/txt_dataLogin" />
 
             <TextView
                 android:id="@+id/txt_emailLogin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 style="@style/label_fields"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="33dp"
+                android:layout_marginLeft="33dp"
                 android:labelFor="@+id/editTxt_emailLogin"
                 android:text="@string/label_emailLogin"
-                app:layout_constraintStart_toStartOf="@+id/line_grey"
-                app:layout_constraintTop_toBottomOf="@+id/txt_dataLogin" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/editTxt_emailLogin"
@@ -119,8 +101,7 @@
                 android:id="@+id/btn_singUp"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_marginTop="20dp"
-                android:onClick="validationSingUp"
+                android:layout_marginTop="30dp"
                 android:text="@string/btn_singIn"
                 android:textColor="@color/white_light"
                 android:textSize="18sp"
