@@ -59,11 +59,14 @@
 
             <View
                 android:id="@+id/line_grey2"
-                android:layout_width="135dp"
+                android:layout_width="0dp"
                 android:layout_height="3dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:background="@color/mediun_lightGrey"
+                app:layout_constraintEnd_toEndOf="@+id/txt_dataSingIn"
                 app:layout_constraintStart_toStartOf="@+id/txt_dataSingIn"
                 app:layout_constraintTop_toBottomOf="@+id/txt_dataSingIn" />
 
@@ -160,11 +163,14 @@
 
             <View
                 android:id="@+id/line_grey31"
-                android:layout_width="135dp"
+                android:layout_width="0dp"
                 android:layout_height="3dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:background="@color/mediun_lightGrey"
+                app:layout_constraintEnd_toEndOf="@+id/txt_dataforLogin"
                 app:layout_constraintStart_toStartOf="@+id/txt_dataforLogin"
                 app:layout_constraintTop_toBottomOf="@+id/txt_dataforLogin" />
 
@@ -288,11 +294,14 @@
 
             <View
                 android:id="@+id/line_grey3"
-                android:layout_width="130dp"
+                android:layout_width="0dp"
                 android:layout_height="3dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:background="@color/mediun_lightGrey"
+                app:layout_constraintEnd_toEndOf="@+id/txt_termsUse"
                 app:layout_constraintStart_toStartOf="@+id/txt_termsUse"
                 app:layout_constraintTop_toBottomOf="@+id/txt_termsUse" />
 
@@ -340,7 +349,6 @@
                 android:layout_height="55dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:onClick="ValidationFirstStage"
                 android:text="@string/btn_createAcount"
                 android:textColor="@color/white_light"
                 android:textSize="18sp"
@@ -349,20 +357,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/see_termsUse" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <include
-            layout="@layout/activity_register_for_purchases"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_termsUse" />
-
-        <!--TODO Adicionar Icone apos o texto "Pular essa Etapa" -->
-        <!-- Pular a etapa do Cadastro Completo (Opcional, mas Obrigatorio para Compras) -->
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

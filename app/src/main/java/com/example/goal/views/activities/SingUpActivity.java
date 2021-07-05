@@ -2,7 +2,7 @@ package com.example.goal.views.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
@@ -12,11 +12,14 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.example.goal.HandleSharedPreferences;
+import com.example.goal.models.HandleSharedPreferences;
 import com.example.goal.R;
 
 public class SingUpActivity extends AppCompatActivity {
 
+
+    private TextView errorOptionUser;
+    private TextView errorTermsUse;
     private EditText editName;
     private EditText editEmail;
     private EditText editConfirmEmail;
@@ -24,12 +27,7 @@ public class SingUpActivity extends AppCompatActivity {
     private EditText editConfirmPassword;
     private RadioButton opClient, opSeller;
     private CheckBox checkTermsUse;
-    private TextView errorOptionUser;
-    private TextView errorTermsUse;
-
-    private RadioButton cpf;
-    private RadioButton cnpj;
-    private Button skipStage;
+    private Button createAcount;
 
     private String name, email, confirmEmail, password, confirmPassword, optionUser;
 
@@ -46,6 +44,7 @@ public class SingUpActivity extends AppCompatActivity {
         editPassword = findViewById(R.id.editText_password);
         editConfirmPassword = findViewById(R.id.editText_confirmPassword);
         checkTermsUse = findViewById(R.id.cbx_termsUse);
+        createAcount = findViewById(R.id.btn_createAcount);
 
         errorOptionUser = findViewById(R.id.error_optionUser);
         errorTermsUse = findViewById(R.id.error_termsUse);
@@ -61,52 +60,15 @@ public class SingUpActivity extends AppCompatActivity {
         opSeller.setText(optionsUsers[0]);
         opClient.setText(optionsUsers[1]);
 
-        //2° Parte do Cadastro
-
-        //Botão de pular a 2° Parte do Cadastro
-        skipStage = findViewById(R.id.btn_nextStage);
-        skipStage.setOnClickListener(view -> {
-            RegisterForPurchases classRegister = new RegisterForPurchases();
-            classRegister.skipStep(view);
-        });
-
-        //Coloca o array CPF e CNPJ na Tela
-        Resources resources = getResources();
-        String[] optionsDocs = resources.getStringArray(R.array.cpf_cnpj);
-
-        cpf = findViewById(R.id.rbtn_cpf);
-        cnpj = findViewById(R.id.rbtn_cnpj);
-
-        cpf.setText(optionsDocs[0]);
-        cnpj.setText(optionsDocs[1]);
-
-        TextView txtCpf = findViewById(R.id.txt_cpf) ;
-        TextView txtCnpj = findViewById(R.id.txt_cnpj);
-        EditText editCpf = findViewById(R.id.edit_cpf);
-        EditText editCnpj = findViewById(R.id.edit_cnpj);
-
-        cpf.setOnClickListener(v -> {
-            txtCnpj.setVisibility(View.GONE);
-            editCnpj.setVisibility(View.GONE);
-            txtCpf.setVisibility(View.VISIBLE);
-            editCpf.setVisibility(View.VISIBLE);
-        });
-
-        cnpj.setOnClickListener(v -> {
-            txtCnpj.setVisibility(View.VISIBLE);
-            editCnpj.setVisibility(View.VISIBLE);
-            txtCpf.setVisibility(View.GONE);
-            editCpf.setVisibility(View.GONE);
-        });
+        createAcount.setOnClickListener(v -> validationSingUp(v));
 
     }
 
     //Valida as Informações
-    public void ValidationFirstStage(View view) {
+    public void validationSingUp(View view) {
 
         //Aciona os metodos de validação
         if(ValidationEditText() && ValidationTypeUser() && ValidationTermsUse()){
-
             // Validação retornando True
 
             HandleSharedPreferences preferences = new HandleSharedPreferences(
@@ -120,6 +82,10 @@ public class SingUpActivity extends AppCompatActivity {
                    "\nOpção Cliente: " + opClient.isChecked() + "\nOpção Vendedor: "+ optionUser +
                    "\nTermos de Uso: " + checkTermsUse.isChecked());
 
+           // Finaliza essa Activity e Inicia a Activity do Cadastro Completo
+            Intent completeSingUp = new Intent(this, RegisterForPurchases.class);
+            startActivity(completeSingUp);
+            finish();
         }
         else {
             System.out.println("Não foi Possivel Cadastrar o Usuario");
