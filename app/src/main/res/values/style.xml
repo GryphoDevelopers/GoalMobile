@@ -35,6 +35,8 @@
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
+
+        <item name="android:drawablePadding">20dp</item>
     </style>
 
     <style name="editText_icon">
@@ -44,7 +46,7 @@
 
         <item name="android:background">@drawable/edit_text_with_icon</item>
 
-        <item name="android:drawablePadding">12dp</item>
+        <item name="android:drawablePadding">15dp</item>
 
         <item name="android:paddingRight">8dp</item>
         <item name="android:paddingLeft">8dp</item>

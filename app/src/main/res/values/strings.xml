@@ -34,9 +34,11 @@
     <string name="label_confirmEmail">Confirme seu <b>E-mail</b></string>
     <string name="label_password">Digita sua <b>Senha</b></string>
     <string name="label_confirmPassword">Confirme sua <b>Senha</b></string>
+    <string name="label_nickname">Insira seu <b>Nome de Usuario</b></string>
     <string name="hint_name">Nome e Sobrenome</string>
     <string name="hint_confirmPassword">Confirmar Senha</string>
     <string name="hint_confirmEmail">Confirmar E-mail</string>
+    <string name="hint_nickname">Ex: "gabriel_souza"</string>
     <string name="txt_confirmTermsUse">Aceito os Termos e Condições de Uso</string>
     <string name="btn_seeTermsUse">Ler os Termos de Uso</string>
     <string name="btn_createAcount">Criar Conta</string>

@@ -8,8 +8,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Goal" >
-        <activity android:name=".views.activities.OptionActivity"/>
+        android:theme="@style/Theme.Goal">
+        <activity android:name=".views.activities.NavigationHeader"/>
+        <activity android:name=".views.activities.OptionActivity" />
         <activity android:name=".views.activities.RegisterForPurchases" />
         <activity android:name=".views.activities.IndexActivity" />
         <activity android:name=".views.activities.SingUpActivity" />
