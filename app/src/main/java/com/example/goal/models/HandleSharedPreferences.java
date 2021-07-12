@@ -18,8 +18,8 @@ public class HandleSharedPreferences {
         return preferences.getBoolean(LOGIN_KEY, false);
     }
 
-    public void setLogin(){
-        editor.putBoolean(LOGIN_KEY, true);
+    public void setLogin(boolean isLogin){
+        editor.putBoolean(LOGIN_KEY, isLogin);
         editor.apply();
     }
 

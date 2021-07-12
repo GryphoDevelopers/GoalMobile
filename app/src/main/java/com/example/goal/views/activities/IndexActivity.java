@@ -1,7 +1,9 @@
 package com.example.goal.views.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.goal.R;
+import com.example.goal.models.HandleSharedPreferences;
 import com.google.android.material.navigation.NavigationView;
 
 public class IndexActivity extends AppCompatActivity {
@@ -24,6 +27,17 @@ public class IndexActivity extends AppCompatActivity {
         configToolBar();
         configDrawerLayout();
         confiNavigation();
+
+        // TODO RETIRAR
+        Button home = findViewById(R.id.button_home);
+        home.setOnClickListener(v -> {
+            HandleSharedPreferences preferences = new HandleSharedPreferences(
+                    getSharedPreferences("EXISTS_LOGIN",0));
+            preferences.setLogin(false);
+            startActivity(new Intent(this, OpenActivity.class));
+            finish();
+        });
+
     }
 
 
