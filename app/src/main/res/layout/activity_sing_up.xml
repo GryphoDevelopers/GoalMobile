@@ -6,6 +6,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
     tools:context=".views.activities.SingUpActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,372 +16,453 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/tool_bar" android:id="@+id/toolBarSingIn"/>
+        <include
+            android:id="@+id/toolbar_singIn"
+            layout="@layout/tool_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/txt_singin"
+            android:id="@+id/txt_titleSingUp"
+            style="@style/title_activities"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/title_activities"
             android:gravity="center"
             android:text="@string/title_singUp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolBarSingIn" />
-
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_singIn" />
 
         <include
-            android:id="@+id/line_goal3"
+            android:id="@+id/line_goal2"
             layout="@layout/line_gol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_singin" />
-
+            app:layout_constraintTop_toBottomOf="@id/txt_titleSingUp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_dataPersonal"
+            android:id="@+id/layouts_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:orientation="vertical"
             android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@+id/line_goal3"
-            tools:layout_editor_absoluteX="56dp">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line_goal2">
 
-            <TextView
-                android:id="@+id/txt_dataSingIn"
-                style="@style/title_fields"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/layout_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title_personal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <View
-                android:id="@+id/line_grey2"
-                android:layout_width="0dp"
-                android:layout_height="3dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:background="@color/mediun_lightGrey"
-                app:layout_constraintEnd_toEndOf="@+id/txt_dataSingIn"
-                app:layout_constraintStart_toStartOf="@+id/txt_dataSingIn"
-                app:layout_constraintTop_toBottomOf="@+id/txt_dataSingIn" />
-
-            <TextView
-                android:id="@+id/txt_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/label_fields"
-                android:labelFor="@+id/editText_name"
-                android:text="@string/label_name"
-                app:layout_constraintStart_toStartOf="@+id/line_grey2"
-                app:layout_constraintTop_toBottomOf="@+id/line_grey2" />
-
-            <!--TODO Implementar AutoFillHint-->
-
-            <EditText
-                android:id="@+id/editText_name"
-                style="@style/editText_personalized"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:autofillHints="Nome"
-                android:ems="10"
-                android:hint="@string/hint_name"
-                android:inputType="textPersonName"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txt_name"
-                app:layout_constraintTop_toBottomOf="@+id/txt_name" />
-
-            <TextView
-                android:id="@+id/txt_nickname"
-                style="@style/label_fields"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:labelFor="@+id/editText_name"
-                android:text="@string/label_nickname"
-                app:layout_constraintStart_toStartOf="@+id/txt_name"
-                app:layout_constraintTop_toBottomOf="@+id/editText_name" />
-
-            <EditText
-                android:id="@+id/editText_nickname"
-                style="@style/editText_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:autofillHints="Nome"
-                android:drawableStart="@drawable/ic_group"
-                android:drawableLeft="@drawable/ic_group"
-                android:ems="10"
-                android:hint="@string/hint_nickname"
-                android:inputType="textPersonName"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txt_nickname"
-                app:layout_constraintTop_toBottomOf="@+id/txt_nickname" />
-
-            <TextView
-                android:id="@+id/txt_typeUser"
-                style="@style/label_fields"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_peopleType"
-                app:layout_constraintStart_toStartOf="@+id/txt_name"
-                app:layout_constraintTop_toBottomOf="@id/editText_nickname" />
-
-            <TextView
-                android:id="@+id/error_optionUser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                android:text="@string/errorInputs"
-                android:textColor="@color/ruby_red"
-                android:textStyle="bold"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="@+id/txt_typeUser"
-                app:layout_constraintTop_toBottomOf="@+id/txt_typeUser" />
-
-            <RadioGroup
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="26dp"
                 android:gravity="center"
                 android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="13dp">
+
+                <View
+                    android:id="@+id/view_stage1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/circle_view" />
+
+                <View
+                    android:id="@+id/view_stage2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/circle_view" />
+
+                <View
+                    android:id="@+id/view_stage3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/circle_view" />
+
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_dataPersonal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/button_nextSingUp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/error_optionUser">
+                app:layout_constraintTop_toBottomOf="@+id/layout_view">
 
-                <RadioButton
-                    android:id="@+id/rbtn_seller"
+                <TextView
+                    android:id="@+id/txt_dataSingIn"
+                    style="@style/title_fields"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginRight="20dp" />
+                    android:text="@string/title_personal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <RadioButton
-                    android:id="@+id/rbtn_client"
+                <View
+                    android:id="@+id/line_grey2"
+                    android:layout_width="0dp"
+                    android:layout_height="3dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@color/mediun_lightGrey"
+                    app:layout_constraintEnd_toEndOf="@+id/txt_dataSingIn"
+                    app:layout_constraintStart_toStartOf="@+id/txt_dataSingIn"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_dataSingIn" />
+
+                <TextView
+                    android:id="@+id/txt_name"
+                    style="@style/label_fields"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </RadioGroup>
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/editText_name"
+                    android:text="@string/label_name"
+                    app:layout_constraintStart_toStartOf="@+id/line_grey2"
+                    app:layout_constraintTop_toBottomOf="@+id/line_grey2" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <!--TODO Implementar AutoFillHint-->
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_dataLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@+id/layout_dataPersonal"
-            tools:layout_editor_absoluteX="56dp">
+                <EditText
+                    android:id="@+id/editText_name"
+                    style="@style/editText_personalized"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="Nome"
+                    android:ems="10"
+                    android:hint="@string/hint_name"
+                    android:inputType="textPersonName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/txt_name"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_name" />
+
+                <TextView
+                    android:id="@+id/txt_nickname"
+                    style="@style/label_fields"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/editText_name"
+                    android:text="@string/label_nickname"
+                    app:layout_constraintStart_toStartOf="@+id/txt_name"
+                    app:layout_constraintTop_toBottomOf="@+id/editText_name" />
+
+                <EditText
+                    android:id="@+id/editText_nickname"
+                    style="@style/editText_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="Nome"
+                    android:drawableStart="@drawable/ic_group"
+                    android:drawableLeft="@drawable/ic_group"
+                    android:ems="10"
+                    android:hint="@string/hint_nickname"
+                    android:inputType="textPersonName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/txt_nickname"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_nickname" />
+
+                <TextView
+                    android:id="@+id/txt_typeUser"
+                    style="@style/label_fields"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_peopleType"
+                    app:layout_constraintStart_toStartOf="@+id/txt_name"
+                    app:layout_constraintTop_toBottomOf="@id/editText_nickname" />
+
+                <TextView
+                    android:id="@+id/error_optionUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/errorInputs"
+                    android:textColor="@color/ruby_red"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="@+id/txt_typeUser"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_typeUser" />
+
+                <RadioGroup
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/error_optionUser">
+
+                    <RadioButton
+                        android:id="@+id/rbtn_seller"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginRight="20dp" />
+
+                    <RadioButton
+                        android:id="@+id/rbtn_client"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </RadioGroup>
 
 
-            <TextView
-                android:id="@+id/txt_dataforLogin"
-                android:layout_width="wrap_content"
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_dataLogin"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/title_fields"
-                android:text="@string/title_login"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <View
-                android:id="@+id/line_grey31"
-                android:layout_width="0dp"
-                android:layout_height="3dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:background="@color/mediun_lightGrey"
-                app:layout_constraintEnd_toEndOf="@+id/txt_dataforLogin"
-                app:layout_constraintStart_toStartOf="@+id/txt_dataforLogin"
-                app:layout_constraintTop_toBottomOf="@+id/txt_dataforLogin" />
-
-            <TextView
-                android:id="@+id/txt_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/label_fields"
-                android:labelFor="@+id/editText_email"
-                android:text="@string/label_email"
-                app:layout_constraintStart_toStartOf="@+id/line_grey31"
-                app:layout_constraintTop_toBottomOf="@+id/line_grey31" />
-
-            <EditText
-                android:id="@+id/editText_email"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="@style/editText_icon"
-                android:autofillHints="Email"
-                android:drawableStart="@drawable/ic_email"
-                android:drawableLeft="@drawable/ic_email"
-                android:ems="10"
-                android:freezesText="false"
-                android:hint="@string/hint_email"
-                android:inputType="textEmailAddress"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txt_email"
-                app:layout_constraintTop_toBottomOf="@+id/txt_email" />
-
-            <TextView
-                android:id="@+id/txt_confirmEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/label_fields"
-                android:labelFor="@+id/editText_confrimEmail"
-                android:text="@string/label_confirmEmail"
-                app:layout_constraintStart_toStartOf="@+id/txt_email"
-                app:layout_constraintTop_toBottomOf="@+id/editText_email" />
-
-            <EditText
-                android:id="@+id/editText_confrimEmail"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="@style/editText_icon"
-                android:autofillHints="Confirmar Email"
-                android:drawableStart="@drawable/ic_email"
-                android:drawableLeft="@drawable/ic_email"
-                android:ems="10"
-                android:hint="@string/hint_confirmEmail"
-                android:inputType="textEmailAddress"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txt_confirmEmail"
-                app:layout_constraintTop_toBottomOf="@+id/txt_confirmEmail" />
-
-            <TextView
-                android:id="@+id/txt_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/label_fields"
-                android:labelFor="@+id/editText_password"
-                android:text="@string/label_password"
-                app:layout_constraintStart_toStartOf="@+id/txt_confirmEmail"
-                app:layout_constraintTop_toBottomOf="@+id/editText_confrimEmail" />
-
-            <EditText
-                android:id="@+id/editText_password"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="@style/editText_personalized"
-                android:autofillHints="Senha"
-                android:ems="10"
-                android:hint="@string/hint_password"
-                android:inputType="textPassword"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txt_password"
-                app:layout_constraintTop_toBottomOf="@+id/txt_password" />
-
-            <TextView
-                android:id="@+id/txt_confirmPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/label_fields"
-                android:labelFor="@+id/editText_confirmPassword"
-                android:text="@string/label_confirmPassword"
-                app:layout_constraintStart_toStartOf="@+id/txt_password"
-                app:layout_constraintTop_toBottomOf="@+id/editText_password" />
-
-            <EditText
-                android:id="@+id/editText_confirmPassword"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="@style/editText_personalized"
-                android:autofillHints="Confirme a Senha"
-                android:ems="10"
-                android:hint="@string/hint_confirmPassword"
-                android:inputType="textPassword"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txt_confirmPassword"
-                app:layout_constraintTop_toBottomOf="@+id/txt_confirmPassword" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_termsUse"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@+id/layout_dataLogin">
-
-            <TextView
-                android:id="@+id/txt_termsUse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/title_fields"
-                android:text="@string/title_termsUse"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <View
-                android:id="@+id/line_grey3"
-                android:layout_width="0dp"
-                android:layout_height="3dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:background="@color/mediun_lightGrey"
-                app:layout_constraintEnd_toEndOf="@+id/txt_termsUse"
-                app:layout_constraintStart_toStartOf="@+id/txt_termsUse"
-                app:layout_constraintTop_toBottomOf="@+id/txt_termsUse" />
-
-            <TextView
-                android:id="@+id/error_termsUse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="-90dp"
-                android:layout_marginLeft="-90dp"
-                android:layout_marginTop="5dp"
-                android:text="@string/errorInputs"
-                android:textColor="@color/ruby_red"
-                android:textStyle="bold"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="@+id/line_grey3"
-                app:layout_constraintTop_toBottomOf="@+id/line_grey3" />
-
-            <CheckBox
-                android:id="@+id/cbx_termsUse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="-20dp"
-                android:layout_marginLeft="-20dp"
-                android:layout_marginTop="20dp"
-                android:text="@string/txt_confirmTermsUse"
-                app:layout_constraintStart_toStartOf="@+id/line_grey3"
-                app:layout_constraintTop_toBottomOf="@+id/line_grey3"
-                app:useMaterialThemeColors="false" />
-
-            <Button
-                android:id="@+id/see_termsUse"
-                style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="@string/btn_seeTermsUse"
-                android:textColor="@color/light_grey"
-                android:textSize="10sp"
-                app:layout_constraintStart_toStartOf="@+id/cbx_termsUse"
-                app:layout_constraintTop_toBottomOf="@+id/cbx_termsUse" />
-
-            <Button
-                android:id="@+id/btn_createAcount"
-                android:layout_width="200dp"
-                android:layout_height="55dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:text="@string/btn_createAcount"
-                android:textColor="@color/white_light"
-                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/button_nextSingUp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/see_termsUse" />
+                app:layout_constraintTop_toBottomOf="@+id/layout_view">
+
+
+                <TextView
+                    android:id="@+id/txt_dataforLogin"
+                    style="@style/title_fields"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_login"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/line_grey31"
+                    android:layout_width="0dp"
+                    android:layout_height="3dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@color/mediun_lightGrey"
+                    app:layout_constraintEnd_toEndOf="@+id/txt_dataforLogin"
+                    app:layout_constraintStart_toStartOf="@+id/txt_dataforLogin"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_dataforLogin" />
+
+                <TextView
+                    android:id="@+id/txt_email"
+                    style="@style/label_fields"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/editText_email"
+                    android:text="@string/label_email"
+                    app:layout_constraintStart_toStartOf="@+id/line_grey31"
+                    app:layout_constraintTop_toBottomOf="@+id/line_grey31" />
+
+                <EditText
+                    android:id="@+id/editText_email"
+                    style="@style/editText_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="Email"
+                    android:drawableStart="@drawable/ic_email"
+                    android:drawableLeft="@drawable/ic_email"
+                    android:ems="10"
+                    android:freezesText="false"
+                    android:hint="@string/hint_email"
+                    android:inputType="textEmailAddress"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/txt_email"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_email" />
+
+                <TextView
+                    android:id="@+id/txt_password"
+                    style="@style/label_fields"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/editText_password"
+                    android:text="@string/label_password"
+                    app:layout_constraintStart_toStartOf="@id/txt_email"
+                    app:layout_constraintTop_toBottomOf="@id/editText_email" />
+
+                <EditText
+                    android:id="@+id/editText_password"
+                    style="@style/editText_personalized"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="Senha"
+                    android:ems="10"
+                    android:hint="@string/hint_password"
+                    android:inputType="textPassword"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/txt_password"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_password" />
+
+                <TextView
+                    android:id="@+id/txt_confirmPassword"
+                    style="@style/label_fields"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/editText_confirmPassword"
+                    android:text="@string/label_confirmPassword"
+                    app:layout_constraintStart_toStartOf="@+id/txt_password"
+                    app:layout_constraintTop_toBottomOf="@+id/editText_password" />
+
+                <EditText
+                    android:id="@+id/editText_confirmPassword"
+                    style="@style/editText_personalized"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="Confirme a Senha"
+                    android:ems="10"
+                    android:hint="@string/hint_confirmPassword"
+                    android:inputType="textPassword"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/txt_confirmPassword"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_confirmPassword" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_termsUse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/button_nextSingUp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_view">
+
+                <TextView
+                    android:id="@+id/txt_termsUse"
+                    style="@style/title_fields"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_termsUse"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/line_grey3"
+                    android:layout_width="0dp"
+                    android:layout_height="3dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@color/mediun_lightGrey"
+                    app:layout_constraintEnd_toEndOf="@+id/txt_termsUse"
+                    app:layout_constraintStart_toStartOf="@+id/txt_termsUse"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_termsUse" />
+
+                <TextView
+                    android:id="@+id/error_termsUse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-90dp"
+                    android:layout_marginLeft="-90dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/errorInputs"
+                    android:textColor="@color/ruby_red"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="@+id/line_grey3"
+                    app:layout_constraintTop_toBottomOf="@+id/line_grey3" />
+
+                <CheckBox
+                    android:id="@+id/cbx_termsUse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/txt_confirmTermsUse"
+                    app:layout_constraintStart_toStartOf="@+id/line_grey3"
+                    app:layout_constraintTop_toBottomOf="@+id/line_grey3"
+                    app:useMaterialThemeColors="false" />
+
+                <Button
+                    android:id="@+id/see_termsUse"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="@string/btn_seeTermsUse"
+                    android:textColor="@color/light_grey"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="@+id/cbx_termsUse"
+                    app:layout_constraintTop_toBottomOf="@+id/cbx_termsUse" />
+
+                <Button
+                    android:id="@+id/button_createAcount"
+                    android:layout_width="200dp"
+                    android:layout_height="55dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:clickable="false"
+                    android:focusable="auto"
+                    android:text="@string/btn_createAcount"
+                    android:textColor="@color/white_light"
+                    android:textSize="18sp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/see_termsUse" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
+                    android:gravity="center"
+                    android:text="@string/error_singUp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button_createAcount" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/button_nextSingUp"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/btn_nextStage"
+                app:icon="@drawable/ic_next"
+                app:iconGravity="end"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <Button
+                android:id="@+id/button_backStage"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/btn_backStage"
+                android:visibility="gone"
+                app:icon="@drawable/ic_keyboard_arrow_left"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/button_nextSingUp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

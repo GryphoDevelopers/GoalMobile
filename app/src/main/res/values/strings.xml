@@ -40,8 +40,11 @@
     <string name="hint_confirmEmail">Confirmar E-mail</string>
     <string name="hint_nickname">Ex: "gabriel_souza"</string>
     <string name="txt_confirmTermsUse">Aceito os Termos e Condições de Uso</string>
+    <string name="btn_nextStage">Proxima Etapa</string>
+    <string name="btn_backStage">Voltar</string>
     <string name="btn_seeTermsUse">Ler os Termos de Uso</string>
     <string name="btn_createAcount">Criar Conta</string>
+    <string name="error_singUp">Existem Dados Faltando.<br/> Volte no Circulo Cinza e Insira os Dados Corretamente</string>
 
     <!-- Registro para Compras -->
     <string name="title_registerOptional">Poderia nos contar mais um Pouco ?</string>

@@ -30,26 +30,25 @@ public class LoginActivity extends AppCompatActivity {
         edit_password = findViewById(R.id.editTxt_passwordLogin);
         singUp = findViewById(R.id.btn_singUp);
 
-        singUp.setOnClickListener(v -> validationSingUp(v));
+        singUp.setOnClickListener(v -> validationLogin());
 
     }
 
     //Metodo acionado pelo botão 'Entrar'
     //Recupera os valores e realiza uma Validação
-    public void validationSingUp(View view){
+    public void validationLogin(){
 
         if (filledFields()) {
-            // Validação retornou True
+
             System.out.println("Email: " + email + "\nSenha: " + password);
 
             HandleSharedPreferences preferences = new HandleSharedPreferences(
                     getSharedPreferences(PREFERENCE_LOGIN,0));
-            // Define TRUE para login Realizado
-            preferences.setLogin();
+            // Login Realizado ---> Define nas SharedPreferences do Login como True
+            preferences.setLogin(true);
 
             // Inicia a Pagina Index (Produtos) e Finaliza essa Activity
-            Intent indexPage = new Intent(this, IndexActivity.class);
-            startActivity(indexPage);
+            startActivity(new Intent(this, IndexActivity.class));
             finish();
         } else {
             System.out.println("Não foi Possivel Logar o Usuario");
@@ -61,11 +60,11 @@ public class LoginActivity extends AppCompatActivity {
         email = edit_email.getText().toString();
         password = edit_password.getText().toString();
 
+        //TODO - É possivel adicionar um Icone apos a msg de erro
         if (email.equals("")) {
             edit_email.setError("Campo obrigatório");
             return false;
         } else if (password.equals("")) {
-            //TODO - É possivel adicionar um Icone apos a msg de erro
             edit_password.setError("Campo obrigatório");
             return false;
         } else{
