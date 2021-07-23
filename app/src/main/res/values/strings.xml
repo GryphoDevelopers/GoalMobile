@@ -23,7 +23,6 @@
     <string name="title_singUp">Nos fale um pouco sobre você !</string>
     <string name="title_personal">Dados Pessoais</string>
     <string name="title_termsUse">Termos de Uso:</string>
-    <string name="errorInputs">Campo obrigatório</string>
     <string-array name="options_peopleType">
         <item>Vendedor</item>
         <item>Cliente</item>
@@ -44,7 +43,7 @@
     <string name="btn_backStage">Voltar</string>
     <string name="btn_seeTermsUse">Ler os Termos de Uso</string>
     <string name="btn_createAcount">Criar Conta</string>
-    <string name="error_singUp">Existem Dados Faltando.<br/> Volte no Circulo Cinza e Insira os Dados Corretamente</string>
+    <string name="errorInputs">Campo obrigatório</string>
 
     <!-- Registro para Compras -->
     <string name="title_registerOptional">Poderia nos contar mais um Pouco ?</string>

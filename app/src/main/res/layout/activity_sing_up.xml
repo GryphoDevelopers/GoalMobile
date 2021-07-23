@@ -45,61 +45,40 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_titleSingUp" />
 
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line_goal2" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layouts_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:orientation="vertical"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line_goal2">
-
-            <LinearLayout
-                android:id="@+id/layout_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="26dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="13dp">
-
-                <View
-                    android:id="@+id/view_stage1"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/circle_view" />
-
-                <View
-                    android:id="@+id/view_stage2"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/circle_view" />
-
-                <View
-                    android:id="@+id/view_stage3"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/circle_view" />
-
-            </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@id/progress_horizontal">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_dataPersonal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@+id/button_nextSingUp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_view">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/txt_dataSingIn"
@@ -123,55 +102,57 @@
                     app:layout_constraintStart_toStartOf="@+id/txt_dataSingIn"
                     app:layout_constraintTop_toBottomOf="@+id/txt_dataSingIn" />
 
-                <TextView
-                    android:id="@+id/txt_name"
-                    style="@style/label_fields"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@+id/editText_name"
-                    android:text="@string/label_name"
-                    app:layout_constraintStart_toStartOf="@+id/line_grey2"
-                    app:layout_constraintTop_toBottomOf="@+id/line_grey2" />
 
-                <!--TODO Implementar AutoFillHint-->
-
-                <EditText
-                    android:id="@+id/editText_name"
-                    style="@style/editText_personalized"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutedit_name"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:autofillHints="Nome"
-                    android:ems="10"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
                     android:hint="@string/hint_name"
-                    android:inputType="textPersonName"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="60"
+                    app:endIconMode="clear_text"
+                    app:helperText="@string/label_name"
+                    app:helperTextEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/txt_name"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_name" />
+                    app:layout_constraintStart_toStartOf="@+id/txt_dataSingIn"
+                    app:layout_constraintTop_toBottomOf="@+id/line_grey2">
 
-                <TextView
-                    android:id="@+id/txt_nickname"
-                    style="@style/label_fields"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@+id/editText_name"
-                    android:text="@string/label_nickname"
-                    app:layout_constraintStart_toStartOf="@+id/txt_name"
-                    app:layout_constraintTop_toBottomOf="@+id/editText_name" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittext_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/editText_nickname"
-                    style="@style/editText_icon"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutedit_nickname"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:autofillHints="Nome"
-                    android:drawableStart="@drawable/ic_group"
-                    android:drawableLeft="@drawable/ic_group"
-                    android:ems="10"
-                    android:hint="@string/hint_nickname"
-                    android:inputType="textPersonName"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
+                    android:hint="@string/label_nickname"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="60"
+                    app:endIconMode="clear_text"
+                    app:helperText="@string/hint_nickname"
+                    app:helperTextEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/txt_nickname"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_nickname" />
+                    app:layout_constraintStart_toStartOf="@+id/layoutedit_name"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutedit_name"
+                    app:startIconDrawable="@drawable/ic_group">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittext_nickname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/txt_typeUser"
@@ -179,8 +160,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_peopleType"
-                    app:layout_constraintStart_toStartOf="@+id/txt_name"
-                    app:layout_constraintTop_toBottomOf="@id/editText_nickname" />
+                    app:layout_constraintStart_toStartOf="@+id/layoutedit_nickname"
+                    app:layout_constraintTop_toBottomOf="@id/layoutedit_nickname" />
 
                 <TextView
                     android:id="@+id/error_optionUser"
@@ -204,18 +185,18 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/error_optionUser">
+                    <RadioButton
+                        android:id="@+id/rbtn_client"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginRight="20dp"/>
 
                     <RadioButton
                         android:id="@+id/rbtn_seller"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginRight="20dp" />
-
-                    <RadioButton
-                        android:id="@+id/rbtn_client"
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
+
                 </RadioGroup>
 
 
@@ -231,8 +212,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/button_nextSingUp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_view">
-
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/txt_dataforLogin"
@@ -256,77 +236,85 @@
                     app:layout_constraintStart_toStartOf="@+id/txt_dataforLogin"
                     app:layout_constraintTop_toBottomOf="@+id/txt_dataforLogin" />
 
-                <TextView
-                    android:id="@+id/txt_email"
-                    style="@style/label_fields"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@+id/editText_email"
-                    android:text="@string/label_email"
-                    app:layout_constraintStart_toStartOf="@+id/line_grey31"
-                    app:layout_constraintTop_toBottomOf="@+id/line_grey31" />
-
-                <EditText
-                    android:id="@+id/editText_email"
-                    style="@style/editText_icon"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutedit_email"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:autofillHints="Email"
-                    android:drawableStart="@drawable/ic_email"
-                    android:drawableLeft="@drawable/ic_email"
-                    android:ems="10"
-                    android:freezesText="false"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
                     android:hint="@string/hint_email"
-                    android:inputType="textEmailAddress"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="60"
+                    app:endIconMode="clear_text"
+                    app:helperText="@string/label_email"
+                    app:helperTextEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/txt_email"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_email" />
+                    app:layout_constraintStart_toStartOf="@+id/line_grey31"
+                    app:layout_constraintTop_toBottomOf="@+id/line_grey31"
+                    app:startIconDrawable="@drawable/ic_email">
 
-                <TextView
-                    android:id="@+id/txt_password"
-                    style="@style/label_fields"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@+id/editText_password"
-                    android:text="@string/label_password"
-                    app:layout_constraintStart_toStartOf="@id/txt_email"
-                    app:layout_constraintTop_toBottomOf="@id/editText_email" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittext_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/editText_password"
-                    style="@style/editText_personalized"
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutedit_password"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:autofillHints="Senha"
-                    android:ems="10"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
                     android:hint="@string/hint_password"
-                    android:inputType="textPassword"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="60"
+                    app:endIconMode="password_toggle"
+                    app:helperText="@string/label_password"
+                    app:helperTextEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/txt_password"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_password" />
+                    app:layout_constraintStart_toStartOf="@+id/layoutedit_email"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutedit_email"
+                    app:startIconDrawable="@drawable/ic_https">
 
-                <TextView
-                    android:id="@+id/txt_confirmPassword"
-                    style="@style/label_fields"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@+id/editText_confirmPassword"
-                    android:text="@string/label_confirmPassword"
-                    app:layout_constraintStart_toStartOf="@+id/txt_password"
-                    app:layout_constraintTop_toBottomOf="@+id/editText_password" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittext_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/editText_confirmPassword"
-                    style="@style/editText_personalized"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutedit_confirmPassword"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:autofillHints="Confirme a Senha"
-                    android:ems="10"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
                     android:hint="@string/hint_confirmPassword"
-                    android:inputType="textPassword"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="60"
+                    app:endIconMode="password_toggle"
+                    app:helperText="@string/label_confirmPassword"
+                    app:helperTextEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/txt_confirmPassword"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_confirmPassword" />
+                    app:layout_constraintStart_toStartOf="@+id/layoutedit_password"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutedit_password"
+                    app:startIconDrawable="@drawable/ic_https">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittext_confirmPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -340,7 +328,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/button_nextSingUp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_view">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/txt_termsUse"
@@ -415,22 +403,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/see_termsUse" />
-
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginRight="30dp"
-                    android:gravity="center"
-                    android:text="@string/error_singUp"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/button_createAcount" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

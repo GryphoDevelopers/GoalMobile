@@ -78,8 +78,9 @@
             android:layout_height="0dp"
             android:layout_marginTop="24dp"
             android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@id/btn_nextStage"
-            tools:layout_editor_absoluteX="56dp">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_nextStage">
 
             <TextView
                 android:id="@+id/txt_dataSingIn"
@@ -151,92 +152,92 @@
                     android:layout_height="wrap_content" />
             </RadioGroup>
 
-            <TextView
-                android:id="@+id/txt_cpf"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/layout_typeData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutedit_cpf"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="33dp"
+                    android:layout_marginLeft="33dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
+                    android:hint="@string/label_cpf"
+                    android:visibility="gone"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="11"
+                    app:endIconMode="clear_text"
+                    app:helperText="@string/hint_cpf"
+                    app:helperTextEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_cpf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutedit_cnpj"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="33dp"
+                    android:layout_marginLeft="33dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
+                    android:hint="@string/label_cnpj"
+                    android:visibility="gone"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="11"
+                    app:endIconMode="clear_text"
+                    app:helperText="@string/hint_cnpj"
+                    app:helperTextEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_cnpj"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutedit_phone"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/label_cpf"
-                android:textSize="20sp"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="@+id/txt_typeData"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
-            <EditText
-                android:id="@+id/edit_cpf"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_marginEnd="30dp"
                 android:layout_marginRight="30dp"
-                android:autofillHints="Nome"
-                android:background="@drawable/edit_text_border"
-                android:ems="10"
-                android:hint="@string/hint_cpf"
-                android:inputType="number"
-                android:paddingLeft="5dp"
-                android:paddingTop="10dp"
-                android:paddingRight="5dp"
-                android:paddingBottom="10dp"
-                android:visibility="gone"
+                android:hint="@string/label_telephone"
+                app:counterEnabled="true"
+                app:counterMaxLength="11"
+                app:endIconMode="clear_text"
+                app:helperText="@string/hint_telephone"
+                app:helperTextEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txt_cpf"
-                app:layout_constraintTop_toBottomOf="@+id/txt_cpf" />
-
-            <TextView
-                android:id="@+id/txt_cnpj"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/label_cnpj"
-                android:textSize="20sp"
-                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/txt_typeData"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+                app:layout_constraintTop_toBottomOf="@id/layout_typeData">
 
-            <EditText
-                android:id="@+id/edit_cnpj"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="30dp"
-                android:layout_marginRight="30dp"
-                android:autofillHints="Nome"
-                android:background="@drawable/edit_text_border"
-                android:ems="10"
-                android:hint="@string/hint_cnpj"
-                android:inputType="number"
-                android:paddingLeft="5dp"
-                android:paddingTop="10dp"
-                android:paddingRight="5dp"
-                android:paddingBottom="10dp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txt_cnpj"
-                app:layout_constraintTop_toBottomOf="@+id/txt_cnpj" />
-
-            <TextView
-                android:id="@+id/txt_phone"
-                style="@style/label_fields"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_telephone"
-                app:layout_constraintStart_toStartOf="@+id/txt_typeData"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
-            <EditText
-                android:id="@+id/edit_phone"
-                style="@style/editText_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:autofillHints="Nome"
-                android:background="@drawable/edit_text_with_icon"
-                android:drawableStart="@drawable/ic_smartphone"
-                android:drawableLeft="@drawable/ic_smartphone"
-                android:ems="10"
-                android:hint="@string/hint_telephone"
-                android:inputType="phone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txt_phone"
-                app:layout_constraintTop_toBottomOf="@+id/txt_phone" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/textView"
@@ -244,8 +245,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/label_country"
-                app:layout_constraintStart_toStartOf="@+id/txt_phone"
-                app:layout_constraintTop_toBottomOf="@+id/edit_phone" />
+                app:layout_constraintStart_toStartOf="@+id/layoutedit_phone"
+                app:layout_constraintTop_toBottomOf="@+id/layoutedit_phone" />
 
             <Spinner
                 android:id="@+id/spinner_countries"
@@ -308,117 +309,129 @@
                 app:layout_constraintStart_toStartOf="@+id/textView2"
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-            <TextView
-                android:id="@+id/txt_cep"
-                style="@style/label_fields"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutedit_cep"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/label_cep"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:hint="@string/label_cep"
+                app:counterEnabled="true"
+                app:counterMaxLength="8"
+                app:endIconMode="clear_text"
+                app:helperText="@string/hint_cep"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView2"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_state" />
+                app:layout_constraintTop_toBottomOf="@id/spinner_state">
 
-            <EditText
-                android:id="@+id/edit_cep"
-                style="@style/editText_personalized"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_cep"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutedit_address"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:autofillHints="Nome"
-                android:hint="@string/hint_cep"
-                android:inputType="textPostalAddress"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:hint="@string/label_address"
+                app:counterEnabled="true"
+                app:counterMaxLength="60"
+                app:endIconMode="clear_text"
+                app:helperText="@string/hint_address"
+                app:helperTextEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txt_cep"
-                app:layout_constraintTop_toBottomOf="@+id/txt_cep" />
+                app:layout_constraintStart_toStartOf="@+id/layoutedit_cep"
+                app:layout_constraintTop_toBottomOf="@id/layoutedit_cep">
 
-            <TextView
-                android:id="@+id/txt_address"
-                style="@style/label_fields"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_address"
-                app:layout_constraintStart_toStartOf="@+id/txt_cep"
-                app:layout_constraintTop_toBottomOf="@+id/edit_cep" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/edit_address"
-                style="@style/editText_personalized"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutedit_district"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:autofillHints="Nome"
-                android:ems="10"
-                android:hint="@string/hint_address"
-                android:inputType="text"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:hint="@string/label_district"
+                app:counterEnabled="true"
+                app:counterMaxLength="60"
+                app:endIconMode="clear_text"
+                app:helperText="@string/hint_district"
+                app:helperTextEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.066"
-                app:layout_constraintStart_toStartOf="@+id/txt_cep"
-                app:layout_constraintTop_toBottomOf="@+id/txt_address" />
+                app:layout_constraintStart_toStartOf="@+id/layoutedit_address"
+                app:layout_constraintTop_toBottomOf="@id/layoutedit_address">
 
-            <TextView
-                android:id="@+id/txt_district"
-                style="@style/label_fields"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_district"
-                app:layout_constraintStart_toStartOf="@+id/txt_address"
-                app:layout_constraintTop_toBottomOf="@+id/edit_address" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_district"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/edit_district"
-                style="@style/editText_personalized"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutedit_number"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:autofillHints="Nome"
-                android:ems="10"
-                android:hint="@string/hint_district"
-                android:inputType="text"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:hint="@string/label_number"
+                app:endIconMode="clear_text"
+                app:helperText="@string/hint_number"
+                app:helperTextEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.066"
-                app:layout_constraintStart_toStartOf="@+id/txt_cep"
-                app:layout_constraintTop_toBottomOf="@+id/txt_district" />
+                app:layout_constraintStart_toStartOf="@+id/layoutedit_district"
+                app:layout_constraintTop_toBottomOf="@id/layoutedit_district">
 
-            <TextView
-                android:id="@+id/txt_number"
-                style="@style/label_fields"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_number"
-                app:layout_constraintStart_toStartOf="@+id/txt_district"
-                app:layout_constraintTop_toBottomOf="@+id/edit_district" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/edit_number"
-                style="@style/editText_personalized"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layotedit_complement"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:autofillHints="Nome"
-                android:ems="10"
-                android:hint="@string/hint_number"
-                android:inputType="number"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:hint="@string/label_complement"
+                app:counterEnabled="true"
+                app:counterMaxLength="30"
+                app:endIconMode="clear_text"
+                app:helperText="@string/hint_complement"
+                app:helperTextEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txt_number"
-                app:layout_constraintTop_toBottomOf="@+id/txt_number" />
+                app:layout_constraintStart_toStartOf="@+id/layoutedit_number"
+                app:layout_constraintTop_toBottomOf="@id/layoutedit_number">
 
-            <TextView
-                android:id="@+id/txt_complement"
-                style="@style/label_fields"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_complement"
-                app:layout_constraintStart_toStartOf="@+id/txt_number"
-                app:layout_constraintTop_toBottomOf="@+id/edit_number" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_complement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/edit_complement"
-                style="@style/editText_personalized"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:autofillHints="Nome"
-                android:ems="10"
-                android:hint="@string/hint_complement"
-                android:inputType="textPersonName"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/txt_complement"
-                app:layout_constraintTop_toBottomOf="@+id/txt_complement" />
 
             <Button
                 android:id="@+id/btn_completeAcount"
@@ -433,8 +446,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_complement" />
-
+                app:layout_constraintTop_toBottomOf="@+id/layotedit_complement" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
