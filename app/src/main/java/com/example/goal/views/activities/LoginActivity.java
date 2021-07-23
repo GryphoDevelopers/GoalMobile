@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.goal.controller.ManagerKeyboard;
 import com.example.goal.models.HandleSharedPreferences;
 import com.example.goal.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -19,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText edit_password;
     private Button singUp;
 
+    private ManagerKeyboard managerKeyboard;
     private String email, password;
 
     private static final String PREFERENCE_LOGIN = "EXISTS_LOGIN";
@@ -27,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        managerKeyboard = new ManagerKeyboard(getApplicationContext());
 
         edit_email = findViewById(R.id.editTxt_emailLogin);
         edit_password = findViewById(R.id.editTxt_passwordLogin);
@@ -41,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     public void validationLogin(){
 
         if (filledFields()) {
+            managerKeyboard.closeKeyboard(this);
 
             Log.e("LOGIN","Email: " + email + "\nSenha: " + password);
 
@@ -65,10 +70,12 @@ public class LoginActivity extends AppCompatActivity {
         if (email.equals("")) {
             edit_email.setError(getString(R.string.errorInputs));
             edit_email.requestFocus();
+            managerKeyboard.openKeyboard(edit_email);
             return false;
         } else if (password.equals("")) {
             edit_password.setError(getString(R.string.errorInputs), null);
             edit_password.requestFocus();
+            managerKeyboard.openKeyboard(edit_password);
             return false;
         } else{
             return true;

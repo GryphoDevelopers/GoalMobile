@@ -14,6 +14,7 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 
 import com.example.goal.R;
+import com.example.goal.controller.ManagerKeyboard;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -38,17 +39,17 @@ public class RegisterForPurchases extends AppCompatActivity {
     private RadioButton rdbtn_cpf, rdbtn_cnpj;
     private LinearLayout layout_typeData;
 
+    private ManagerKeyboard managerKeyboard;
     private boolean isCpf = false;
-    private String[] countriesOptions;
-    private String country;
-    private String[] stateOptions;
-    private String state;
+    private String[] countriesOptions, stateOptions;
+    private String country, state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_for_purchases);
 
+        managerKeyboard = new ManagerKeyboard(getApplicationContext());
         recoveryIds();
 
         Resources resources = getResources();
@@ -59,6 +60,7 @@ public class RegisterForPurchases extends AppCompatActivity {
 
         // Btn que Pula essa Etapa do Cadastro e Abre a Tela Incial
         next_stage.setOnClickListener(v ->{
+            managerKeyboard.closeKeyboard(this);
             startActivity(new Intent(this, IndexActivity.class));
             finish();
         });
@@ -105,6 +107,7 @@ public class RegisterForPurchases extends AppCompatActivity {
     private void registerForPurchases() {
         // TODO IMPLEMENTAR MEDOTOS DE VALIDAÇÕES
 
+        managerKeyboard.closeKeyboard(this);
         // Abre a pagina Index (Produtos) e Finaliza a Actvity
         startActivity(new Intent(this, IndexActivity.class));
         finish();

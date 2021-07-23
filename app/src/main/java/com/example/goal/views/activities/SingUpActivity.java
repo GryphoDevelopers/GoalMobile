@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.example.goal.controller.ManagerKeyboard;
 import com.example.goal.models.HandleSharedPreferences;
 import com.example.goal.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -25,29 +26,26 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class SingUpActivity extends AppCompatActivity {
 
-
     private TextView errorOptionUser;
     private TextView errorTermsUse;
+
     private TextInputEditText editName;
     private TextInputEditText editNickname;
     private TextInputEditText editEmail;
     private TextInputEditText editPassword;
     private TextInputEditText editConfirmPassword;
+
     private RadioButton opClient, opSeller;
     private CheckBox checkTermsUse;
     private Button createAcount;
     private Button see_termsUse;
     private Button next_stage;
     private Button back_stage;
-    private View circle1;
-    private View circle2;
-    private View circle3;
 
-    ConstraintLayout layout_personal, layout_login, layout_terms;
+    private ConstraintLayout layout_personal, layout_login, layout_terms;
 
+    private ManagerKeyboard managerKeyboard;
     private String name, nickname, email, password, confirmPassword, optionUser;
-   /* private final int empty_drawable = R.drawable.circle_view;
-    private final int fill_drawable = R.drawable.circle_view_fill;*/
     private int position = 1;
 
     private static final String PREFERENCE_LOGIN = "EXISTS_LOGIN";
@@ -58,6 +56,7 @@ public class SingUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sing_up);
 
         recoveryIds();
+        managerKeyboard = new ManagerKeyboard(getApplicationContext());
 
         //Recupera os valores colocados no Array (dentro do strings.xml)
         Resources res = getResources();
@@ -114,7 +113,7 @@ public class SingUpActivity extends AppCompatActivity {
                 layout_login.setVisibility(View.VISIBLE);
                 back_stage.setVisibility(View.VISIBLE);
                 position = 2;
-                closeKeyboard(this);
+                managerKeyboard.closeKeyboard(this);
             } else if(position == 2 && validationLoginInfo()){
                 // Abre a ultima parte do 1° Cadastro
                 layout_login.setVisibility(View.GONE);
@@ -122,7 +121,7 @@ public class SingUpActivity extends AppCompatActivity {
                 next_stage.setVisibility(View.INVISIBLE);
               //  circle2.setBackgroundResource(fill_drawable);
                 position = 3;
-                closeKeyboard(this);
+                managerKeyboard.closeKeyboard(this);
             }
         });
 
@@ -152,12 +151,12 @@ public class SingUpActivity extends AppCompatActivity {
          if(name.equals("")){
             editName.setError(getString(R.string.errorInputs));
             editName.requestFocus();
-            openKeyboard(editName);
+             managerKeyboard.openKeyboard(editName);
             return false;
         } else if(nickname.equals("")){
             editNickname.setError(getString(R.string.errorInputs));
             editNickname.requestFocus();
-            openKeyboard(editNickname);
+             managerKeyboard.openKeyboard(editNickname);
             return false;
         } else if (!validationTypeUser()) {
              errorOptionUser.setVisibility(View.VISIBLE);
@@ -189,17 +188,17 @@ public class SingUpActivity extends AppCompatActivity {
         if (email.equals("")){
             editEmail.setError(getString(R.string.errorInputs));
             editEmail.requestFocus();
-            openKeyboard(editEmail);
+            managerKeyboard.openKeyboard(editEmail);
             return false;
         }  else if (password.equals("")){
             editPassword.setError(getString(R.string.errorInputs), null);
             editPassword.requestFocus();
-            openKeyboard(editPassword);
+            managerKeyboard.openKeyboard(editPassword);
             return false;
         }  else if(confirmPassword.equals("")){
             editConfirmPassword.setError(getString(R.string.errorInputs), null);
             editConfirmPassword.requestFocus();
-            openKeyboard(editConfirmPassword);
+            managerKeyboard.openKeyboard(editConfirmPassword);
             return false;
         } else {
             return true;
@@ -242,28 +241,4 @@ public class SingUpActivity extends AppCompatActivity {
         // TODO IMPLEMENTAR UMA MSG DE ERRO ???
     }
 
-    // Abre o Teclado
-    public void openKeyboard(View view){
-        // Obtem o estado do Keyboard
-        InputMethodManager keyboardManager = (InputMethodManager)
-                getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        // Se ontem o controlador do Teclado = Abre
-        if(keyboardManager != null){
-            keyboardManager.showSoftInput(view,InputMethodManager.SHOW_IMPLICIT);
-        }
-    }
-
-    // Fecha o Teclaso
-    public void closeKeyboard(Activity activity){
-        // Obtem o estado do Keyboard
-        InputMethodManager keyboardManager = (InputMethodManager)
-                getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        // Se obtem o controlador do Teclado = Fecha
-        if(keyboardManager != null){
-            keyboardManager.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
 }
