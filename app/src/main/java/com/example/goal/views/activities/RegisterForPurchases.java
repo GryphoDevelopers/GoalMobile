@@ -137,7 +137,7 @@ public class RegisterForPurchases extends AppCompatActivity {
         next_stageRegister.setOnClickListener( v-> {
             if (validationPersonalInfo()){
                 back_stageRegister.setVisibility(View.VISIBLE);
-                next_stageRegister.setVisibility(View.GONE);
+                next_stageRegister.setVisibility(View.INVISIBLE);
                 managerKeyboard.closeKeyboard(this);
                 personal_info.setVisibility(View.GONE);
                 address_info.setVisibility(View.VISIBLE);

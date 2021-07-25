@@ -12,32 +12,28 @@
 
     <!-- Login -->
     <string name="title_pageLogin">Que bom nos reencontrarmos !</string>
-    <string name="title_login">Dados de Login</string>
-    <string name="label_emailLogin">Insira seu <b>E-Mail</b></string>
-    <string name="label_passwordLogin">Insira sua <b>Senha</b></string>
-    <string name="hint_email">E-mail</string>
-    <string name="hint_password">Senha</string>
+    <string name="title_login">Dados de Acesso</string>
     <string name="btn_singIn">Entrar</string>
 
     <!-- Cadastro (SingUp) -->
     <string name="title_singUp">Nos fale um pouco sobre você !</string>
     <string name="title_personal">Dados Pessoais</string>
-    <string name="title_termsUse">Termos de Uso:</string>
+    <string name="title_termsUse">Termos de Uso</string>
     <string-array name="options_peopleType">
         <item>Vendedor</item>
         <item>Cliente</item>
     </string-array>
-    <string name="label_name">Qual é o seu <b>Nome</b> ?</string>
+    <string name="label_name">Nome e Sobrenome</string>
+    <string name="label_nickname">Nome de Usuario</string>
     <string name="label_peopleType">Você é um <b>Vendedor</b> ou <b>Cliente</b> ?</string>
-    <string name="label_email">Digite seu endereço de <b>E-mail</b></string>
-    <string name="label_confirmEmail">Confirme seu <b>E-mail</b></string>
-    <string name="label_password">Digita sua <b>Senha</b></string>
-    <string name="label_confirmPassword">Confirme sua <b>Senha</b></string>
-    <string name="label_nickname">Insira seu <b>Nome de Usuario</b></string>
-    <string name="hint_name">Nome e Sobrenome</string>
-    <string name="hint_confirmPassword">Confirmar Senha</string>
-    <string name="hint_confirmEmail">Confirmar E-mail</string>
+    <string name="label_email">E-mail</string>
+    <string name="label_password">Senha</string>
+    <string name="label_confirmPassword">Confirmar Senha</string>
+    <string name="hint_name">Qual é o seu <b>Nome</b> ?</string>
     <string name="hint_nickname">Ex: "gabriel_souza"</string>
+    <string name="hint_email">Digite seu endereço de <b>E-mail</b></string>
+    <string name="hint_password">Digite sua <b>Senha</b></string>
+    <string name="hint_confirmPassword">Confirme sua <b>Senha</b></string>
     <string name="txt_confirmTermsUse">Aceito os Termos e Condições de Uso</string>
     <string name="btn_nextStage">Avançar</string>
     <string name="btn_backStage">Voltar</string>
@@ -51,23 +47,24 @@
     <!-- Registro para Compras -->
     <string name="title_registerOptional">Poderia nos contar mais um Pouco ?</string>
     <string name="title_address">Endereço</string>
-    <string name="description_registerOptional">Esses dados são necessarios
-        para realizar compras</string>
+    <string name="description_registerOptional">Esses dados são necessarios para realizar
+        compras</string>
     <string name="label_typeDocument">Usar <b>CPF</b> ou <b>CNPJ</b> ?</string>
     <string-array name="cpf_cnpj">
         <item>CPF</item>
         <item>CNPJ</item>
     </string-array>
-    <string name="label_cpf">Qual é seu <b>CPF</b> ?</string>
-    <string name="label_cnpj">Qual é seu <b>CNPJ</b> ?</string>
-    <string name="label_telephone">Digite seu <b>Telefone</b></string>
+    <string name="label_cpf">CPF</string>
+    <string name="label_cnpj">CNPJ</string>
+    <string name="label_telephone">Telefone</string>
     <string name="label_country">Qual seu <b>País</b> ?</string>
-    <string name="label_state">Escolha seu <b>Estado</b></string>
-    <string name="label_cep">Digite seu <b>CEP</b></string>
-    <string name="label_address">Digite seu <b>Endereço</b></string>
-    <string name="label_district">Digite seu <b>Bairro</b></string>
-    <string name="label_number">Digite seu <b>Numero</b></string>
-    <string name="label_complement"><b>Complemento</b></string>
+    <string name="label_state">Qual seu <b>Estado</b> ?</string>
+    <string name="label_cep">CEP</string>
+    <string name="label_address">Endereço</string>
+    <string name="label_district">Bairro</string>
+    <string name="label_number">Numero</string>
+    <string name="label_complement">Complemento</string>
+
     <string name="hint_cnpj">00.000.000/0000–00</string>
     <string name="hint_cpf">000.000.000-XX</string>
     <string name="hint_telephone">(XX) 90000–0000</string>
@@ -93,7 +90,6 @@
         <item>Rio de Janeiro</item>
     </string-array>
     <string name="btn_finishSingUp">Finalizar Cadastro</string>
-
 
     <!-- Index -->
     <string name="navigation_drawer_open">Abrir Menu Lateral</string>
