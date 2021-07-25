@@ -115,7 +115,6 @@ public class SingUpActivity extends AppCompatActivity {
                 layout_login.setVisibility(View.GONE);
                 layout_terms.setVisibility(View.VISIBLE);
                 next_stage.setVisibility(View.INVISIBLE);
-              //  circle2.setBackgroundResource(fill_drawable);
                 position = 3;
             }
 
@@ -152,14 +151,10 @@ public class SingUpActivity extends AppCompatActivity {
         nickname = editNickname.getText().toString();
 
          if(name.equals("")){
-            editName.setError(getString(R.string.errorInputs));
-            editName.requestFocus();
-             managerKeyboard.openKeyboard(editName);
+             errorInput(editName);
             return false;
         } else if(nickname.equals("")){
-            editNickname.setError(getString(R.string.errorInputs));
-            editNickname.requestFocus();
-             managerKeyboard.openKeyboard(editNickname);
+             errorInput(editNickname);
             return false;
         } else if (!validationTypeUser()) {
              errorOptionUser.setVisibility(View.VISIBLE);
@@ -189,9 +184,7 @@ public class SingUpActivity extends AppCompatActivity {
         confirmPassword = editConfirmPassword.getText().toString();
 
         if (email.equals("")){
-            editEmail.setError(getString(R.string.errorInputs));
-            editEmail.requestFocus();
-            managerKeyboard.openKeyboard(editEmail);
+            errorInput(editEmail);
             return false;
         }  else if (password.equals("")){
             editPassword.setError(getString(R.string.errorInputs), null);
@@ -248,6 +241,12 @@ public class SingUpActivity extends AppCompatActivity {
                 snackBar.makeDefaultSnackBar(R.string.error_singup).show();
             }
         }
+    }
+
+    private void errorInput(TextInputEditText inputEditText){
+        inputEditText.setError(getString(R.string.errorInputs));
+        inputEditText.requestFocus();
+        managerKeyboard.openKeyboard(inputEditText);
     }
 
 }

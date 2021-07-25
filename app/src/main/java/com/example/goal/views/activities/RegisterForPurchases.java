@@ -247,9 +247,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             error_documment.setVisibility(View.VISIBLE);
             return false;
         } else if (phone.equals("")){
-            edit_phone.setError(getString(R.string.errorInputs));
-            edit_phone.requestFocus();
-            managerKeyboard.openKeyboard(edit_phone);
+            errorInput(edit_phone);
             return false;
         } else {
             error_documment.setVisibility(View.GONE);
@@ -264,9 +262,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             cpf = edit_cpf.getText().toString();
 
             if (cpf.equals("")){
-                edit_cpf.setError(getString(R.string.errorInputs));
-                edit_cpf.requestFocus();
-                managerKeyboard.openKeyboard(edit_cpf);
+                errorInput(edit_cpf);
                 return false;
             } else {
                 return true;
@@ -275,9 +271,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             cnpj = edit_cnpj.getText().toString();
 
             if (cnpj.equals("")){
-                edit_cnpj.setError(getString(R.string.errorInputs));
-                edit_cnpj.requestFocus();
-                managerKeyboard.openKeyboard(edit_cnpj);
+                errorInput(edit_cnpj);
                 return false;
             } else {
                 return true;
@@ -308,35 +302,31 @@ public class RegisterForPurchases extends AppCompatActivity {
             managerKeyboard.openKeyboard(edit_state);
             return false;
         } else if (edit_cep.getText().toString().equals("")){
-            edit_cep.setError(getString(R.string.errorInputs));
-            edit_cep.requestFocus();
-            managerKeyboard.openKeyboard(edit_cep);
+            errorInput(edit_cep);
             return false;
         } else if (address.equals("")){
-            edit_address.setError(getString(R.string.errorInputs));
-            edit_address.requestFocus();
-            managerKeyboard.openKeyboard(edit_address);
+            errorInput(edit_address);
             return false;
         } else if (district.equals("")){
-            edit_district.setError(getString(R.string.errorInputs));
-            edit_district.requestFocus();
-            managerKeyboard.openKeyboard(edit_district);
+            errorInput(edit_district);
             return false;
         } else if (edit_number.getText().toString().equals("")){
-            edit_number.setError(getString(R.string.errorInputs));
-            edit_number.requestFocus();
-            managerKeyboard.openKeyboard(edit_number);
+            errorInput(edit_number);
             return false;
         } else if (complement.equals("")){
-            edit_complement.setError(getString(R.string.errorInputs));
-            edit_complement.requestFocus();
-            managerKeyboard.openKeyboard(edit_complement);
+            errorInput(edit_complement);
             return false;
         }  else {
             cep = Integer.parseInt(edit_cep.getText().toString());
             number = Integer.parseInt(edit_number.getText().toString());
             return true;
         }
+    }
+
+    private void errorInput(TextInputEditText inputEditText){
+        inputEditText.setError(getString(R.string.errorInputs));
+        inputEditText.requestFocus();
+        managerKeyboard.openKeyboard(inputEditText);
     }
 
 }
