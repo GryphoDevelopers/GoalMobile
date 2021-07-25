@@ -19,7 +19,7 @@
     <string name="hint_password">Senha</string>
     <string name="btn_singIn">Entrar</string>
 
-    <!-- Cadastro -->
+    <!-- Cadastro (SingUp) -->
     <string name="title_singUp">Nos fale um pouco sobre você !</string>
     <string name="title_personal">Dados Pessoais</string>
     <string name="title_termsUse">Termos de Uso:</string>
@@ -39,11 +39,14 @@
     <string name="hint_confirmEmail">Confirmar E-mail</string>
     <string name="hint_nickname">Ex: "gabriel_souza"</string>
     <string name="txt_confirmTermsUse">Aceito os Termos e Condições de Uso</string>
-    <string name="btn_nextStage">Proxima Etapa</string>
+    <string name="btn_nextStage">Avançar</string>
     <string name="btn_backStage">Voltar</string>
     <string name="btn_seeTermsUse">Ler os Termos de Uso</string>
     <string name="btn_createAcount">Criar Conta</string>
     <string name="errorInputs">Campo obrigatório</string>
+    <string name="status_page">%1$d / %2$d</string>
+    <string name="error_singup">Houve um Erro no Cadastro. Por favor, confirme os dados das
+        Etapas Anteriores</string>
 
     <!-- Registro para Compras -->
     <string name="title_registerOptional">Poderia nos contar mais um Pouco ?</string>

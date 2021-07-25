@@ -45,35 +45,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_titleSingUp" />
 
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/progress_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="40dp"
-            android:layout_marginRight="40dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/line_goal2" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layouts_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:orientation="vertical"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progress_horizontal">
+            app:layout_constraintTop_toBottomOf="@id/line_goal2">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_dataPersonal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@+id/button_nextSingUp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -185,12 +174,13 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/error_optionUser">
+
                     <RadioButton
                         android:id="@+id/rbtn_client"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="20dp"
-                        android:layout_marginRight="20dp"/>
+                        android:layout_marginRight="20dp" />
 
                     <RadioButton
                         android:id="@+id/rbtn_seller"
@@ -206,8 +196,8 @@
                 android:id="@+id/layout_dataLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/button_nextSingUp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -322,8 +312,8 @@
                 android:id="@+id/layout_termsUse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/button_nextSingUp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -407,6 +397,19 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Button
+                android:id="@+id/button_backStage"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:text="@string/btn_backStage"
+                android:visibility="invisible"
+                app:icon="@drawable/ic_keyboard_arrow_left"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/button_nextSingUp" />
+
+            <Button
                 android:id="@+id/button_nextSingUp"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
@@ -418,23 +421,20 @@
                 android:text="@string/btn_nextStage"
                 app:icon="@drawable/ic_next"
                 app:iconGravity="end"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/txt_statusProgress"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <Button
-                android:id="@+id/button_backStage"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+            <TextView
+                android:id="@+id/txt_statusProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginBottom="10dp"
-                android:text="@string/btn_backStage"
-                android:visibility="gone"
-                app:icon="@drawable/ic_keyboard_arrow_left"
+                android:layout_marginBottom="20dp"
+                android:text="@string/status_page"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button_nextSingUp" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/button_nextSingUp"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

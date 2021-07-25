@@ -1,33 +1,29 @@
 package com.example.goal.views.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.example.goal.R;
 import com.example.goal.controller.ManagerKeyboard;
 import com.example.goal.models.HandleSharedPreferences;
-import com.example.goal.R;
+import com.example.goal.views.SnackBarPersonalized;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 public class SingUpActivity extends AppCompatActivity {
 
     private TextView errorOptionUser;
     private TextView errorTermsUse;
+    private TextView progress_page;
 
     private TextInputEditText editName;
     private TextInputEditText editNickname;
@@ -66,11 +62,10 @@ public class SingUpActivity extends AppCompatActivity {
         opSeller.setText(optionsUsers[0]);
         opClient.setText(optionsUsers[1]);
 
-        listenersButtonsStages();
+        // Configura o Texto das Etapas
+        progress_page.setText(getString(R.string.status_page, 1, 3));
 
-        checkTermsUse.setOnClickListener(v ->{
-            // TODO IMPLEMENTAR PREENCHIMENTO FINAL DO PROGRESS BAR
-        });
+        listenersButtonsStages();
 
         see_termsUse.setOnClickListener(v ->{
             // TODO IMPLEMENTAR LEITURA DO TERMO DE USO ---> NOVA ACTIVITY});
@@ -92,6 +87,7 @@ public class SingUpActivity extends AppCompatActivity {
 
         errorOptionUser = findViewById(R.id.error_optionUser);
         errorTermsUse = findViewById(R.id.error_termsUse);
+        progress_page = findViewById(R.id.txt_statusProgress);
 
         next_stage = findViewById(R.id.button_nextSingUp);
         back_stage = findViewById(R.id.button_backStage);
@@ -107,13 +103,13 @@ public class SingUpActivity extends AppCompatActivity {
 
         // Listener do Botão "Proxima Etapa"
         next_stage.setOnClickListener(v -> {
+
             if (position == 1 && validationPersonalInfo()){
                 // Mostra o Proximo Layout, Preenche o Circulo e muda o valor da variavel
                 layout_personal.setVisibility(View.GONE);
                 layout_login.setVisibility(View.VISIBLE);
                 back_stage.setVisibility(View.VISIBLE);
                 position = 2;
-                managerKeyboard.closeKeyboard(this);
             } else if(position == 2 && validationLoginInfo()){
                 // Abre a ultima parte do 1° Cadastro
                 layout_login.setVisibility(View.GONE);
@@ -121,15 +117,19 @@ public class SingUpActivity extends AppCompatActivity {
                 next_stage.setVisibility(View.INVISIBLE);
               //  circle2.setBackgroundResource(fill_drawable);
                 position = 3;
-                managerKeyboard.closeKeyboard(this);
             }
+
+            managerKeyboard.closeKeyboard(this);
+            progress_page.setText(getString(R.string.status_page, position, 3));
+
         });
 
         // Listener do Botão "Voltar"
         back_stage.setOnClickListener(v -> {
+
             if(position == 2){
                 // Volta p/ os Dados Pessoais
-                back_stage.setVisibility(View.GONE);
+                back_stage.setVisibility(View.INVISIBLE);
                 layout_login.setVisibility(View.GONE);
                 layout_personal.setVisibility(View.VISIBLE);
                 position = 1;
@@ -140,6 +140,9 @@ public class SingUpActivity extends AppCompatActivity {
                 layout_login.setVisibility(View.VISIBLE);
                 position = 2;
             }
+
+            managerKeyboard.closeKeyboard(this);
+            progress_page.setText(getString(R.string.status_page, position, 3));
         });
     }
 
@@ -218,27 +221,33 @@ public class SingUpActivity extends AppCompatActivity {
 
     // Cadastra o Usuario
     public void listenerSingUp() {
-        // Valida Novamente as Etapas de Cadastros
-        if (validationPersonalInfo() && validationLoginInfo() && validationTermsUse()){
+        if (validationTermsUse()){
+            // Valida Novamente as Etapas de Cadastros
+            if (validationPersonalInfo() && validationLoginInfo()){
 
-            // Todas as validações estão corretas ---> Fim do Cadastro
-            HandleSharedPreferences preferences = new HandleSharedPreferences(
-                    getSharedPreferences(PREFERENCE_LOGIN, 0));
+                // Todas as validações estão corretas ---> Fim do Cadastro
+                HandleSharedPreferences preferences = new HandleSharedPreferences(
+                        getSharedPreferences(PREFERENCE_LOGIN, 0));
 
-            // Define TRUE para login Realizado
-            preferences.setLogin(true);
+                // Define TRUE para login Realizado
+                preferences.setLogin(true);
 
-            Log.e("SING UP", "Nome: " + name + "\nEmail: " + email + "\nNickname:" +
-                    nickname + "\nSenha: " + password + "\nConfirmar Senha: " +
-                    confirmPassword + "\nOpção Cliente: " + opClient.isChecked() +
-                    "\nOpção Vendedor: " + optionUser + "\nTermos de Uso: " +
-                    checkTermsUse.isChecked());
+                // TODO RETIRAR
+                Log.e("SING UP", "Nome: " + name + "\nEmail: " + email + "\nNickname:" +
+                        nickname + "\nSenha: " + password + "\nConfirmar Senha: " +
+                        confirmPassword + "\nOpção Cliente: " + opClient.isChecked() +
+                        "\nOpção Vendedor: " + optionUser + "\nTermos de Uso: " +
+                        checkTermsUse.isChecked());
 
-            // Finaliza essa Activity e Inicia a Activity do Cadastro Completo
-            startActivity(new Intent(this, RegisterForPurchases.class));
-            finish();
+                // Finaliza essa Activity e Inicia a Activity do Cadastro Completo
+                startActivity(new Intent(this, RegisterForPurchases.class));
+                finish();
+            } else {
+                // Erro no Cadastro
+                SnackBarPersonalized snackBar = new SnackBarPersonalized(findViewById(R.id.layouts_register));
+                snackBar.makeDefaultSnackBar(R.string.error_singup).show();
+            }
         }
-        // TODO IMPLEMENTAR UMA MSG DE ERRO ???
     }
 
 }

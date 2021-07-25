@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Goal">
         <activity android:name=".views.activities.OptionActivity" />
-        <activity android:name=".views.activities.RegisterForPurchases" />
+        <activity android:name=".views.activities.RegisterForPurchases"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".views.activities.IndexActivity" />
         <activity android:name=".views.activities.SingUpActivity" />
         <activity android:name=".views.activities.LoginActivity" />
