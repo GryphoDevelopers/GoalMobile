@@ -3,6 +3,9 @@
 
     <!-- Main - 1° Tela -->
     <string name="title_index">Aguarde enquanto recuperamos seus Dados…</string>
+    <string name="description_goal">Logo GOAL</string>
+    <string name="description_app">O seu E-Commerce</string>
+    
 
     <!-- OptionsActivity - Tela de Opções  -->
     <string name="title_options">Olá. Vamos nos conhecer um pouco.</string>

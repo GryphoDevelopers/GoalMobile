@@ -12,60 +12,28 @@ import com.example.goal.R;
 
 public class OpenActivity extends AppCompatActivity {
 
-    private ProgressDialog progressDialog;
-    private Handler handler = new Handler();
+    private HandleSharedPreferences preferences;
+    private final Handler handler = new Handler();
 
     private static final String PREFERENCE_LOGIN = "EXISTS_LOGIN";
-    private int progressStatus = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open);
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Carregando dados");
-        progressDialog.setMessage("\n" + getString(R.string.title_index));
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setProgress(0);
-        progressDialog.setMax(100);
-        progressDialog.show();
+        // Lê o arquivo da SharedPreferences ---> Existe ou não Login
+        preferences = new HandleSharedPreferences(getSharedPreferences(PREFERENCE_LOGIN, 0));
 
-
-        new Thread(() -> {
-
-            // Lê o arquivo da SharedPreferences ---> Existe ou não Login
-            HandleSharedPreferences preferences = new HandleSharedPreferences(
-                    getSharedPreferences(PREFERENCE_LOGIN, 0));
-
-            while (progressStatus <100){
-
-                progressStatus++;
-                handler.post(() -> progressDialog.setProgress(progressStatus));
-
-                try{
-                    // Implementa +1 no Contador a cada 50 milisegundos
-                    Thread.sleep(50);
-                } catch (InterruptedException i){
-                    i.printStackTrace();
-                }
-
-            }
-
-            progressDialog.dismiss();
-
-            // return true = Já foi feito Login; false = não foi feito Login
+        handler.postDelayed(() ->{
             if(preferences.existLogin()){
-                Intent indexPage = new Intent(getApplicationContext(), IndexActivity.class);
-                startActivity(indexPage);
+                startActivity(new Intent(getApplicationContext(), IndexActivity.class));
+                finish();
             } else{
-                Intent optionPage = new Intent(getApplicationContext(), OptionActivity.class);
-                startActivity(optionPage);
+                startActivity(new Intent(getApplicationContext(), OptionActivity.class));
+                finish();
             }
-
-            // Encerra o cliclo de vida da atividade atual
-            finish();
-        }).start();
+        }, 2000);
 
     }
 
