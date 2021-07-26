@@ -8,19 +8,20 @@
     
 
     <!-- OptionsActivity - Tela de Opções  -->
-    <string name="title_options">Olá. Vamos nos conhecer um pouco.</string>
+    <string name="title_options">Olá, Bem Vindo à GOAL.</string>
     <string name="btn_login">Já Possuo Cadastro</string>
     <string name="btn_register">Realizar Cadastro</string>
     <string name="next_stage"><u>Pular essa Etapa</u></string>
-
-    <!-- Login -->
-    <string name="title_pageLogin">Que bom nos reencontrarmos !</string>
-    <string name="title_login">Dados de Acesso</string>
+    <string name="login_withEmail">Login com <b>E-mail</b></string>
+    <string name="text_newUser">Não possui Cadastro ?</string>
+    <string name="btn_newUser">Cadastre-se</string>
     <string name="btn_singIn">Entrar</string>
+    <string name="error_login">Erro ao Buscar o Usuario. Tente Novamente</string>
 
     <!-- Cadastro (SingUp) -->
     <string name="title_singUp">Nos fale um pouco sobre você !</string>
     <string name="title_personal">Dados Pessoais</string>
+    <string name="title_login">Dados de Login</string>
     <string name="title_termsUse">Termos de Uso</string>
     <string-array name="options_peopleType">
         <item>Vendedor</item>
