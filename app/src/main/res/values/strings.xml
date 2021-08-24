@@ -50,9 +50,7 @@
 
     <!-- Registro para Compras -->
     <string name="title_registerOptional">Poderia nos contar mais um Pouco ?</string>
-    <string name="title_address">Endereço</string>
-    <string name="description_registerOptional">Esses dados são necessarios para realizar
-        compras</string>
+    <string name="title_address">Dados do Endereço</string>
     <string name="label_typeDocument">Usar <b>CPF</b> ou <b>CNPJ</b> ?</string>
     <string-array name="cpf_cnpj">
         <item>CPF</item>
@@ -63,6 +61,7 @@
     <string name="label_telephone">Telefone</string>
     <string name="label_country">Qual seu <b>País</b> ?</string>
     <string name="label_state">Qual seu <b>Estado</b> ?</string>
+    <string name="label_city">Qual sua <b>Cidade</b> ?</string>
     <string name="label_cep">CEP</string>
     <string name="label_address">Endereço</string>
     <string name="label_district">Bairro</string>
@@ -78,20 +77,37 @@
     <string name="hint_number">Ex: "130"</string>
     <string name="hint_complement">Ex: "Apto 401, Bl 06"</string>
     <string-array name="pays">
-        <item>Argentina</item>
         <item>Brasil</item>
-        <item>Chile</item>
-        <item>Colombia</item>
-        <item>Equador</item>
-        <item>Mexico</item>
-        <item>Paraguai</item>
-        <item>Peru</item>
-        <item>Uruguai</item>
-        <item>Venezuela</item>
+        <item>Estrangeiro</item>
     </string-array>
     <string-array name="state">
-        <item>São Paulo</item>
+        <item>Acre</item>
+        <item>Alagoas</item>
+        <item>Amapá</item>
+        <item>Amazonas</item>
+        <item>Bahia</item>
+        <item>Ceará</item>
+        <item>Distrito Federal</item>
+        <item>Espírito Santo</item>
+        <item>Goiás</item>
+        <item>Maranhão</item>
+        <item>Mato Grosso</item>
+        <item>Mato Grosso do Sul</item>
+        <item>Minas Gerais</item>
+        <item>Pará</item>
+        <item>Paraíba</item>
+        <item>Paraná</item>
+        <item>Pernambuco</item>
+        <item>Piauí</item>
         <item>Rio de Janeiro</item>
+        <item>Rio Grande do Norte</item>
+        <item>Rio Grande do Sul</item>
+        <item>Rondônia</item>
+        <item>Roraima</item>
+        <item>Santa Catarina</item>
+        <item>São Paulo</item>
+        <item>Sergipe</item>
+        <item>Tocantins</item>
     </string-array>
     <string name="btn_finishSingUp">Finalizar Cadastro</string>
 

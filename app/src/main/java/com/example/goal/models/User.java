@@ -16,6 +16,8 @@ public class User {
     private String cpf;
     private String password;
     private String confirmPassword;
+    private String phone;
+    private String cnpj;
     private boolean isSeller;
     private boolean checkedTermsUse;
 
@@ -65,14 +67,31 @@ public class User {
 
     public String validationCpf(String cpf) {
         if (cpf == null || cpf.equals("")) {
-            return "O campo deve ser preenchido";
+            return INPUT_NULL;
         } else if (cpf.length() != 11) {
-            return "O campo deve ter no minimo 11 Caracteres";
-        } else return OK;
+            return String.format(INPUT_NOT_FORMAT, "CPF", "os Numeros (Sem Hifen/Ponto/Virgula)");
+        } else if(!validationNumberCpf(cpf)){
+            return "CPF Invalido";
+        }  else return OK;
     }
 
     private boolean validationNumberCpf(String cpf) {
         // todo: Codigo de Validação do CPF
+        return true;
+    }
+
+    public String validationCnpj(String cnpj) {
+        if (cnpj == null || cnpj.equals("")) {
+            return INPUT_NULL;
+        } else if (cnpj.length() != 14) {
+            return String.format(INPUT_NOT_FORMAT, "CPF", "os Numeros (Sem Hifen/Ponto/Virgula)");
+        } else if (!validationNumberCnpj(cnpj)){
+            return "CNPJ Invalido";
+        } else return OK;
+    }
+
+    private boolean validationNumberCnpj(String cnpj) {
+        // todo: Codigo de Validação do CNPJ
         return true;
     }
 
@@ -109,6 +128,16 @@ public class User {
     private int strengthPassword(String password) {
         // todo: implementar requisitos e mensagens de erro para força da senha
         return OK_STRENGHT;
+    }
+
+    public String validationPhone(String phone) {
+        if (phone == null || phone.equals("")) {
+            return INPUT_NULL;
+        } else if (phone.length() != 11) {
+            return String.format(INPUT_NOT_FORMAT, "Telefone", "11 Digitos (DDD + Numero)");
+        } else if (phone.matches("^[0-9]*")) {
+            return String.format(INPUT_NOT_FORMAT, "Telefone", "os Numeros (Sem Hifen/Ponto/Virgula)");
+        } else return OK;
     }
 
     public String getName() {
@@ -173,5 +202,21 @@ public class User {
 
     public void setCheckedTermsUse(boolean checkedTermsUse) {
         this.checkedTermsUse = checkedTermsUse;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getCnpj() {
+        return cnpj;
+    }
+
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
     }
 }

@@ -11,9 +11,9 @@
         android:id="@+id/layout_purchases"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".views.activities.RegisterForPurchases"
         android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:focusableInTouchMode="true"
+        tools:context=".views.activities.RegisterForPurchases">
 
         <include
             android:id="@+id/include2"
@@ -30,32 +30,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include2" />
 
-        <TextView
-            android:id="@+id/txt_description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="40dp"
-            android:layout_marginRight="40dp"
-            android:gravity="center"
-            android:text="@string/description_registerOptional"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_secondStage" />
-
-        <include
-            android:id="@+id/line_goal4"
-            layout="@layout/line_gol"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_description" />
-
         <Button
             android:id="@+id/btn_skipStage"
             style="@style/Widget.AppCompat.Button.Borderless"
@@ -70,19 +44,28 @@
             app:iconTint="@color/light_grey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/line_goal4" />
+            app:layout_constraintTop_toBottomOf="@id/txt_secondStage" />
+
+        <include
+            android:id="@+id/line_goal4"
+            layout="@layout/line_gol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_skipStage" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_dataPersonal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/button_nextStagePurchases"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_skipStage">
+            app:layout_constraintTop_toBottomOf="@+id/line_goal4">
 
             <TextView
                 android:id="@+id/txt_dataSingIn"
@@ -307,6 +290,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginRight="30dp"
+                android:enabled="false"
                 android:hint="@string/label_state"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/edit_countries"
@@ -322,6 +306,79 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutEdit_exState"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:hint="@string/label_state"
+                android:visibility="gone"
+                app:counterEnabled="true"
+                app:counterMaxLength="100"
+                app:endIconMode="clear_text"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/edit_states"
+                app:layout_constraintTop_toBottomOf="@id/edit_states">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_exState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_city"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:enabled="false"
+                android:hint="@string/label_city"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/layoutEdit_exState"
+                app:layout_constraintTop_toBottomOf="@+id/layoutEdit_exState">
+
+                <AutoCompleteTextView
+                    android:id="@+id/autoCompleteCity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    tools:targetApi="JELLY_BEAN_MR1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutEdit_exCity"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:hint="@string/label_state"
+                android:visibility="gone"
+                app:counterEnabled="true"
+                app:counterMaxLength="100"
+                app:endIconMode="clear_text"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/edit_city"
+                app:layout_constraintTop_toBottomOf="@id/edit_city">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_exCity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutedit_cep"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -329,6 +386,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginRight="30dp"
+                android:enabled="false"
                 android:hint="@string/label_cep"
                 app:counterEnabled="true"
                 app:counterMaxLength="8"
@@ -336,8 +394,8 @@
                 app:helperText="@string/hint_cep"
                 app:helperTextEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/edit_states"
-                app:layout_constraintTop_toBottomOf="@id/edit_states">
+                app:layout_constraintStart_toStartOf="@+id/layoutEdit_exCity"
+                app:layout_constraintTop_toBottomOf="@id/layoutEdit_exCity">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_cep"
@@ -446,7 +504,7 @@
 
 
             <Button
-                android:id="@+id/btn_completeAcount"
+                android:id="@+id/btn_registerCompleteUser"
                 android:layout_width="wrap_content"
                 android:layout_height="55dp"
                 android:layout_gravity="center"

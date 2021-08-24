@@ -8,8 +8,8 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goal.R;
-import com.example.goal.controller.InputErrors;
-import com.example.goal.controller.ManagerKeyboard;
+import com.example.goal.controllers.InputErrors;
+import com.example.goal.controllers.ManagerKeyboard;
 import com.example.goal.models.HandleSharedPreferences;
 import com.example.goal.models.User;
 import com.example.goal.views.SnackBarPersonalized;

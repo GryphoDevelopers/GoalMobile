@@ -1,4 +1,4 @@
-package com.example.goal.controller;
+package com.example.goal.controllers;
 
 import android.content.Context;
 
@@ -17,6 +17,12 @@ public class InputErrors {
         inputEditText.setError(textError);
         inputEditText.requestFocus();
         managerKeyboard.openKeyboard(inputEditText);
+    }
+
+    public void errorInputLayout(TextInputLayout textInputLayout, String textError) {
+        textInputLayout.setError(textError);
+        textInputLayout.requestFocus();
+        managerKeyboard.openKeyboard(textInputLayout);
     }
 
     public void errorInputWithoutIcon(TextInputEditText inputEditText, String textError) {

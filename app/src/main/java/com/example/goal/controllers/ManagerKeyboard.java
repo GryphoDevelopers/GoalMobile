@@ -1,4 +1,4 @@
-package com.example.goal.controller;
+package com.example.goal.controllers;
 
 import android.app.Activity;
 import android.content.Context;
