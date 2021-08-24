@@ -14,12 +14,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.goal.R;
+import com.example.goal.controller.InputErrors;
 import com.example.goal.controller.ManagerKeyboard;
 import com.example.goal.models.HandleSharedPreferences;
+import com.example.goal.models.User;
 import com.example.goal.views.SnackBarPersonalized;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.Objects;
+
 public class SingUpActivity extends AppCompatActivity {
+
+    private static final String PREFERENCE_LOGIN = "EXISTS_LOGIN";
 
     private TextView errorOptionUser;
     private TextView errorTermsUse;
@@ -38,46 +44,42 @@ public class SingUpActivity extends AppCompatActivity {
     private Button next_stage;
     private Button back_stage;
 
-    private ConstraintLayout layout_personal, layout_login, layout_terms;
+    private ConstraintLayout layout_personal, layout_login;
 
     private ManagerKeyboard managerKeyboard;
-    private String name, nickname, email, password, confirmPassword, optionUser;
-    private int position = 1;
+    private InputErrors inputErrors;
+    private User userSingUp;
 
-    private static final String PREFERENCE_LOGIN = "EXISTS_LOGIN";
+    private int position = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sing_up);
 
-        recoveryIds();
-        managerKeyboard = new ManagerKeyboard(getApplicationContext());
-
-        //Recupera os valores colocados no Array (dentro do strings.xml)
-        Resources res = getResources();
-        String[] optionsUsers = res.getStringArray(R.array.options_peopleType);
-
-        //Coloca os valores do Array nas respectivas opções
-        opSeller.setText(optionsUsers[0]);
-        opClient.setText(optionsUsers[1]);
+        instanceItens();
+        configTypeUser();
 
         // Configura o Texto das Etapas
-        progress_page.setText(getString(R.string.status_page, 1, 3));
+        progress_page.setText(getString(R.string.status_page, 1, 2));
 
-        listenersButtonsStages();
-
-        see_termsUse.setOnClickListener(v ->{
+        // Listeners dos Botões
+        listenerNextStage();
+        listenerBackStage();
+        see_termsUse.setOnClickListener(v -> {
             // TODO IMPLEMENTAR LEITURA DO TERMO DE USO ---> NOVA ACTIVITY});
         });
-
-        createAcount.setOnClickListener(v -> listenerSingUp());
+        listenerSingUp();
     }
 
-    private void recoveryIds(){
+    private void instanceItens() {
+
+        userSingUp = new User();
+        managerKeyboard = new ManagerKeyboard(getApplicationContext());
+        inputErrors = new InputErrors(this);
+
         layout_personal = findViewById(R.id.layout_dataPersonal);
         layout_login = findViewById(R.id.layout_dataLogin);
-        layout_terms = findViewById(R.id.layout_termsUse);
 
         editName = findViewById(R.id.edittext_name);
         editNickname = findViewById(R.id.edittext_nickname);
@@ -98,155 +100,145 @@ public class SingUpActivity extends AppCompatActivity {
         opSeller = findViewById(R.id.rbtn_seller);
     }
 
-    // Listener dos Botões Inferiores
-    private void listenersButtonsStages() {
+    //Recupera os valores colocados no Array (dentro do strings.xml) e coloca nas Opções
+    private void configTypeUser() {
+        Resources res = getResources();
+        String[] optionsUsers = res.getStringArray(R.array.options_peopleType);
+        opSeller.setText(optionsUsers[0]);
+        opClient.setText(optionsUsers[1]);
+    }
 
-        // Listener do Botão "Proxima Etapa"
+    // Listener do Botão Inferiro "Proxima Etapa"
+    private void listenerNextStage() {
         next_stage.setOnClickListener(v -> {
 
-            if (position == 1 && validationPersonalInfo()){
-                // Mostra o Proximo Layout, Preenche o Circulo e muda o valor da variavel
+            if (position == 1 && validationPersonalInfo()) {
+                back_stage.setVisibility(View.VISIBLE);
                 layout_personal.setVisibility(View.GONE);
                 layout_login.setVisibility(View.VISIBLE);
-                back_stage.setVisibility(View.VISIBLE);
                 position = 2;
-            } else if(position == 2 && validationLoginInfo()){
-                // Abre a ultima parte do 1° Cadastro
-                layout_login.setVisibility(View.GONE);
-                layout_terms.setVisibility(View.VISIBLE);
-                next_stage.setVisibility(View.INVISIBLE);
-                position = 3;
             }
 
             managerKeyboard.closeKeyboard(this);
-            progress_page.setText(getString(R.string.status_page, position, 3));
+            progress_page.setText(getString(R.string.status_page, position, 2));
 
         });
+    }
 
-        // Listener do Botão "Voltar"
+    // Listener do Botão Inferior "Voltar"
+    private void listenerBackStage() {
         back_stage.setOnClickListener(v -> {
 
-            if(position == 2){
+            if (position == 2) {
                 // Volta p/ os Dados Pessoais
                 back_stage.setVisibility(View.INVISIBLE);
                 layout_login.setVisibility(View.GONE);
                 layout_personal.setVisibility(View.VISIBLE);
                 position = 1;
-            } else if(position == 3){
-                // Volta p/ o Login
-                layout_terms.setVisibility(View.GONE);
-                next_stage.setVisibility(View.VISIBLE);
-                layout_login.setVisibility(View.VISIBLE);
-                position = 2;
             }
 
             managerKeyboard.closeKeyboard(this);
-            progress_page.setText(getString(R.string.status_page, position, 3));
+            progress_page.setText(getString(R.string.status_page, position, 2));
         });
     }
 
     // Validação do Nome, Nickname e Tipo do Usuario
-    public boolean validationPersonalInfo(){
-        name = editName.getText().toString();
-        nickname = editNickname.getText().toString();
+    private boolean validationPersonalInfo() {
+        // Obtem os Valores dos Inputs
+        User user = new User();
+        user.setName(Objects.requireNonNull(editName.getText()).toString());
+        user.setNickname(Objects.requireNonNull(editNickname.getText()).toString());
 
-         if(name.equals("")){
-             errorInput(editName);
+        // Obtem a String de Validação ---> Ok = Validado, se não = Mensagem de Erro
+        String validationName = user.validationName(user.getName());
+        String validationNickname = user.validationNickname(user.getNickname());
+
+        if (!validationName.equals(User.OK)) {
+            inputErrors.errorInputEditText(editName, validationName);
             return false;
-        } else if(nickname.equals("")){
-             errorInput(editNickname);
+        } else if (!validationNickname.equals(User.OK)) {
+            inputErrors.errorInputEditText(editNickname, validationNickname);
             return false;
-        } else if (!validationTypeUser()) {
-             errorOptionUser.setVisibility(View.VISIBLE);
+        } else if (!opClient.isChecked() && !opSeller.isChecked()) {
+            errorOptionUser.setVisibility(View.VISIBLE);
             return false;
         } else {
-             errorOptionUser.setVisibility(View.GONE);
+            errorOptionUser.setVisibility(View.GONE);
+            userSingUp.setName(editName.getText().toString());
+            userSingUp.setNickname(editNickname.getText().toString());
+            userSingUp.setSeller(opSeller.isChecked());
             return true;
         }
-    }
-
-    // Validação do Tipo de Usuario
-    public boolean validationTypeUser(){
-        if(opClient.isChecked()){
-            optionUser="Cliente";
-            return true;
-        } else if (opSeller.isChecked()){
-            optionUser="Vendedor";
-            return true;
-        } else return false;
     }
 
     // Validação do Email e Senha
-    public boolean validationLoginInfo(){
+    private boolean validationLoginInfo() {
+        User user = new User();
 
-        email = editEmail.getText().toString();
-        password = editPassword.getText().toString();
-        confirmPassword = editConfirmPassword.getText().toString();
+        // Obtem os Valores dos Inputs
+        user.setEmail(Objects.requireNonNull(editEmail.getText()).toString());
+        user.setPassword(Objects.requireNonNull(editPassword.getText()).toString());
+        user.setConfirmPassword(Objects.requireNonNull(editConfirmPassword.getText()).toString());
 
-        if (email.equals("")){
-            errorInput(editEmail);
-            return false;
-        }  else if (password.equals("")){
-            editPassword.setError(getString(R.string.errorInputs), null);
-            editPassword.requestFocus();
-            managerKeyboard.openKeyboard(editPassword);
-            return false;
-        }  else if(confirmPassword.equals("")){
-            editConfirmPassword.setError(getString(R.string.errorInputs), null);
-            editConfirmPassword.requestFocus();
-            managerKeyboard.openKeyboard(editConfirmPassword);
-            return false;
-        } else {
-            return true;
-        }
-    }
+        // Obtem a String de Validação ---> Ok = Validado, se não = Mensagem de Erro
+        String validationEmail = user.validationEmail(user.getEmail());
+        String validationPassword = user.validationPassword(user.getPassword());
+        String validationConfirmPassword = user.validationConfirmPassword(user);
 
-    // Valida do Termo de Uso
-    public boolean validationTermsUse(){
-        if(checkTermsUse.isChecked()) {
-            errorTermsUse.setVisibility(View.GONE);
-            return true;
-        }  else {
+        if (!validationEmail.equals(User.OK)) {
+            inputErrors.errorInputEditText(editEmail, validationEmail);
+            return false;
+        } else if (!validationPassword.equals(User.OK)) {
+            inputErrors.errorInputWithoutIcon(editPassword, validationPassword);
+            return false;
+        } else if (!validationConfirmPassword.equals(User.OK)) {
+            inputErrors.errorInputWithoutIcon(editConfirmPassword, validationConfirmPassword);
+            return false;
+        } else if (!checkTermsUse.isChecked()) {
             errorTermsUse.setVisibility(View.VISIBLE);
             return false;
+        } else {
+            errorTermsUse.setVisibility(View.GONE);
+            userSingUp.setEmail(editEmail.getText().toString());
+            userSingUp.setPassword(editPassword.getText().toString());
+            userSingUp.setConfirmPassword(editConfirmPassword.getText().toString());
+            userSingUp.setCheckedTermsUse(true);
+            return true;
         }
     }
 
     // Cadastra o Usuario
     public void listenerSingUp() {
-        if (validationTermsUse()){
-            // Valida Novamente as Etapas de Cadastros
-            if (validationPersonalInfo() && validationLoginInfo()){
 
-                // Todas as validações estão corretas ---> Fim do Cadastro
-                HandleSharedPreferences preferences = new HandleSharedPreferences(
-                        getSharedPreferences(PREFERENCE_LOGIN, 0));
+        createAcount.setOnClickListener(v -> {
+
+            // Valida Novamente o Cadatro --->  Insere o Cadastro na API
+            if (userSingUp.isCheckedTermsUse() && validationPersonalInfo() && validationLoginInfo()) {
+
+                managerKeyboard.closeKeyboard(this);
 
                 // Define TRUE para login Realizado
+                HandleSharedPreferences preferences = new HandleSharedPreferences(
+                        getSharedPreferences(PREFERENCE_LOGIN, 0));
                 preferences.setLogin(true);
 
-                // TODO RETIRAR
-                Log.e("SING UP", "Nome: " + name + "\nEmail: " + email + "\nNickname:" +
-                        nickname + "\nSenha: " + password + "\nConfirmar Senha: " +
-                        confirmPassword + "\nOpção Cliente: " + opClient.isChecked() +
-                        "\nOpção Vendedor: " + optionUser + "\nTermos de Uso: " +
-                        checkTermsUse.isChecked());
+                // TODO RETIRAR e implementar POST p/ API
+                Log.e("SING UP", "Nome: " + userSingUp.getName() + "\nEmail: " +
+                        userSingUp.getEmail() + "\nNickname:" + userSingUp.getNickname() +
+                        "\nSenha: " + userSingUp.getPassword() + "\nConfirmar Senha: " +
+                        userSingUp.getConfirmPassword() + "\nOpção Usuario: " +
+                        userSingUp.isSeller() + "\nTermos de Uso: " + userSingUp.getConfirmPassword());
 
                 // Finaliza essa Activity e Inicia a Activity do Cadastro Completo
                 startActivity(new Intent(this, RegisterForPurchases.class));
                 finish();
-            } else {
-                // Erro no Cadastro
-                SnackBarPersonalized snackBar = new SnackBarPersonalized(findViewById(R.id.layouts_register));
-                snackBar.makeDefaultSnackBar(R.string.error_singup).show();
+                return;
             }
-        }
-    }
 
-    private void errorInput(TextInputEditText inputEditText){
-        inputEditText.setError(getString(R.string.errorInputs));
-        inputEditText.requestFocus();
-        managerKeyboard.openKeyboard(inputEditText);
+            // Erro no Cadastro
+            SnackBarPersonalized snackBar = new SnackBarPersonalized(findViewById(R.id.layouts_register));
+            snackBar.makeDefaultSnackBar(R.string.error_singup).show();
+        });
     }
 
 }
