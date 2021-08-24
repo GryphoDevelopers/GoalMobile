@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 import com.example.goal.R;
@@ -14,7 +13,7 @@ import com.example.goal.models.HandleSharedPreferences;
 import com.example.goal.views.SnackBarPersonalized;
 import com.google.android.material.textfield.TextInputEditText;
 
-public class OptionActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText edit_email;
     private TextInputEditText edit_password;
@@ -27,7 +26,7 @@ public class OptionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_option);
+        setContentView(R.layout.activity_login);
 
         managerKeyboard = new ManagerKeyboard(getApplicationContext());
 
@@ -41,8 +40,10 @@ public class OptionActivity extends AppCompatActivity {
         btn_register.setOnClickListener(v -> startActivity(new
                 Intent(this, SingUpActivity.class)));
 
-        btn_nextStage.setOnClickListener(v -> startActivity(new
-                Intent(this, IndexActivity.class)));
+        btn_nextStage.setOnClickListener(v -> {
+            startActivity(new Intent(this, IndexActivity.class));
+            finish();
+        });
 
         singUp.setOnClickListener(v -> validationLogin());
 

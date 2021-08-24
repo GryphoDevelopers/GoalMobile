@@ -2,7 +2,6 @@ package com.example.goal.views.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,7 +29,7 @@ public class OpenActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), IndexActivity.class));
                 finish();
             } else{
-                startActivity(new Intent(getApplicationContext(), OptionActivity.class));
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                 finish();
             }
         }, 2000);

@@ -8,7 +8,7 @@
     
 
     <!-- OptionsActivity - Tela de Opções  -->
-    <string name="title_options">Olá, Bem Vindo à GOAL.</string>
+    <string name="title_options">Olá, Bem Vindo à GOAL</string>
     <string name="btn_login">Já Possuo Cadastro</string>
     <string name="btn_register">Realizar Cadastro</string>
     <string name="next_stage"><u>Pular essa Etapa</u></string>
