@@ -68,10 +68,10 @@
     <string name="label_number">Numero</string>
     <string name="label_complement">Complemento</string>
 
-    <string name="hint_cnpj">00.000.000/0000–00</string>
-    <string name="hint_cpf">000.000.000-XX</string>
-    <string name="hint_telephone">(XX) 90000–0000</string>
-    <string name="hint_cep">00000–000</string>
+    <string name="hint_cnpj">00000000000XYY</string>
+    <string name="hint_cpf">000000000XX</string>
+    <string name="hint_telephone">XX900000000</string>
+    <string name="hint_cep">00000000</string>
     <string name="hint_address">Ex: "Avenida Paulista"</string>
     <string name="hint_district">Ex: "Bela Vista"</string>
     <string name="hint_number">Ex: "130"</string>

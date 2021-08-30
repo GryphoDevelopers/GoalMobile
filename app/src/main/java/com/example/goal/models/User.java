@@ -4,11 +4,11 @@ public class User {
 
     public static final String OK = "Campo Validado";
     private static final String INPUT_NULL = "Campo Obrigatorio";
-    private static final String INPUT_MIN_LENGHT = "%1$s deve ter no Minimo %2$s Caracteres";
-    private static final String INPUT_MAX_LENGHT = "%1$s deve ter no Maximo %2$s Caracteres";
+    private static final String INPUT_MIN_LENGTH = "%1$s deve ter no Minimo %2$s Caracteres";
+    private static final String INPUT_MAX_LENGTH = "%1$s deve ter no Maximo %2$s Caracteres";
     private static final String INPUT_NOT_FORMAT = "%1$s deve ter conter apenas %2$s";
-    private static final int LOW_STRENGHT = 1;
-    private static final int OK_STRENGHT = 2;
+    private static final int LOW_STRENGTH = 1;
+    private static final int OK_STRENGTH = 2;
 
     private String name;
     private String email;
@@ -28,9 +28,9 @@ public class User {
         if (name == null || name.equals("")) {
             return INPUT_NULL;
         } else if (name.length() < 3) {
-            return String.format(INPUT_MIN_LENGHT, "Nome", 3);
+            return String.format(INPUT_MIN_LENGTH, "Nome", 3);
         } else if (name.length() > 80) {
-            return String.format(INPUT_MAX_LENGHT, "Nome", 80);
+            return String.format(INPUT_MAX_LENGTH, "Nome", 80);
         } else if (!name.matches("^[A-ZÀ-úà-úa-zçÇ\\s]*")) {
             return String.format(INPUT_NOT_FORMAT, "Nome", "Letras");
         } else return OK;
@@ -40,9 +40,9 @@ public class User {
         if (email == null || email.equals("")) {
             return INPUT_NULL;
         } else if (email.length() < 15) {
-            return String.format(INPUT_MIN_LENGHT, "Email", 15);
-        } else if (email.length() > 80) {
-            return String.format(INPUT_MAX_LENGHT, "Email", 80);
+            return String.format(INPUT_MIN_LENGTH, "Email", 15);
+        } else if (email.length() > 120) {
+            return String.format(INPUT_MAX_LENGTH, "Email", 120);
         } else if (!email.matches("^[A-Za-z0-9.@_]*")) {
             return String.format(INPUT_NOT_FORMAT, "Email",
                     "Letras, Numeros, Underline, Pontos ou Arroba");
@@ -60,11 +60,12 @@ public class User {
         if (nickname == null || nickname.equals("")) {
             return INPUT_NULL;
         } else if (nickname.length() < 5) {
-            return String.format(INPUT_MIN_LENGHT, "Nome de Usuario", 5);
-        } else if (nickname.length() > 80) {
-            return String.format(INPUT_MAX_LENGHT, "Nome de Usuario", 80);
+            return String.format(INPUT_MIN_LENGTH, "Nome de Usuario", 5);
+        } else if (nickname.length() > 60) {
+            return String.format(INPUT_MAX_LENGTH, "Nome de Usuario", 60);
         } else if (!nickname.matches("^[A-Za-z0-9._]*")) {
-            return String.format(INPUT_NOT_FORMAT, "Nome de Usuario", "Letras, Numeros, Underline ou Pontos");
+            return String.format(INPUT_NOT_FORMAT, "Nome de Usuario",
+                    "Letras, Numeros, Underline ou Pontos");
         } else return OK;
     }
 
@@ -91,7 +92,7 @@ public class User {
         if (cnpj == null || cnpj.equals("")) {
             return INPUT_NULL;
         } else if (cnpj.length() != 14) {
-            return String.format(INPUT_NOT_FORMAT, "CPF",
+            return String.format(INPUT_NOT_FORMAT, "CNPJ",
                     "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");
         } else if (!validationNumberCnpj(cnpj)) {
             return "CNPJ Invalido";
@@ -107,13 +108,13 @@ public class User {
         if (password == null || password.equals("")) {
             return INPUT_NULL;
         } else if (password.length() < 5) {
-            return String.format(INPUT_MIN_LENGHT, "Senha", 5);
+            return String.format(INPUT_MIN_LENGTH, "Senha", 5);
         } else if (password.length() > 40) {
-            return String.format(INPUT_MIN_LENGHT, "Senha", 40);
+            return String.format(INPUT_MIN_LENGTH, "Senha", 40);
         } else if (!password.matches("^[\\S]*")) {
             return String.format(INPUT_NOT_FORMAT,
                     "Senha", "Caracteres (Sem espaços em Branco)");
-        } else if (strengthPassword(password) == LOW_STRENGHT) {
+        } else if (strengthPassword(password) == LOW_STRENGTH) {
             //TODO : mensagem de erro da senha
             return "A senha deve conter....";
         } else return OK;
@@ -139,14 +140,15 @@ public class User {
 
     private int strengthPassword(String password) {
         // todo: implementar requisitos e mensagens de erro para força da senha
-        return OK_STRENGHT;
+        return OK_STRENGTH;
     }
 
     public String validationPhone(String phone) {
         if (phone == null || phone.equals("")) {
             return INPUT_NULL;
         } else if (phone.length() != 11) {
-            return String.format(INPUT_NOT_FORMAT, "Telefone", "11 Digitos (DDD + Numero)");
+            return String.format(INPUT_NOT_FORMAT, "Telefone",
+                    "11 Digitos (DDD + Numero)");
         } else if (!phone.matches("^[0-9]*")) {
             return String.format(INPUT_NOT_FORMAT, "Telefone",
                     "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");

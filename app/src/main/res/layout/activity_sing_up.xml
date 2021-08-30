@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="20dp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@+id/button_nextSingUp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -102,7 +102,7 @@
                     android:layout_marginRight="30dp"
                     android:hint="@string/label_name"
                     app:counterEnabled="true"
-                    app:counterMaxLength="60"
+                    app:counterMaxLength="80"
                     app:endIconMode="clear_text"
                     app:helperText="@string/hint_name"
                     app:helperTextEnabled="true"
@@ -197,7 +197,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="20dp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/button_nextSingUp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -236,7 +236,7 @@
                     android:layout_marginRight="30dp"
                     android:hint="@string/label_email"
                     app:counterEnabled="true"
-                    app:counterMaxLength="60"
+                    app:counterMaxLength="120"
                     app:endIconMode="clear_text"
                     app:helperText="@string/hint_email"
                     app:helperTextEnabled="true"
@@ -263,7 +263,7 @@
                     android:layout_marginRight="30dp"
                     android:hint="@string/label_password"
                     app:counterEnabled="true"
-                    app:counterMaxLength="60"
+                    app:counterMaxLength="40"
                     app:endIconMode="password_toggle"
                     app:helperText="@string/hint_password"
                     app:helperTextEnabled="true"
@@ -289,7 +289,7 @@
                     android:layout_marginRight="30dp"
                     android:hint="@string/label_confirmPassword"
                     app:counterEnabled="true"
-                    app:counterMaxLength="60"
+                    app:counterMaxLength="40"
                     app:endIconMode="password_toggle"
                     app:helperText="@string/hint_confirmPassword"
                     app:helperTextEnabled="true"
@@ -334,7 +334,7 @@
                     android:id="@+id/see_termsUse"
                     style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:text="@string/btn_seeTermsUse"
                     android:textColor="@color/light_grey"
                     android:textSize="12sp"
@@ -367,7 +367,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:text="@string/btn_backStage"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:icon="@drawable/ic_keyboard_arrow_left"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/button_nextSingUp" />
@@ -384,20 +384,8 @@
                 android:text="@string/btn_nextStage"
                 app:icon="@drawable/ic_next"
                 app:iconGravity="end"
-                app:layout_constraintBottom_toTopOf="@+id/txt_statusProgress"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <TextView
-                android:id="@+id/txt_statusProgress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:text="@string/status_page"
-                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/button_nextSingUp"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

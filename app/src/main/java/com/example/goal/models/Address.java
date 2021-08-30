@@ -12,8 +12,8 @@ public class Address {
     // Constantes Usadas nos Erros
     public static final String OK = "Campo Validado";
     private static final String INPUT_NULL = "Campo Obrigatorio";
-    private static final String INPUT_MIN_LENGHT = "%1$s deve ter no Minimo %2$s Caracteres";
-    private static final String INPUT_MAX_LENGHT = "%1$s deve ter no Maximo %2$s Caracteres";
+    private static final String INPUT_MIN_LENGTH = "%1$s deve ter no Minimo %2$s Caracteres";
+    private static final String INPUT_MAX_LENGTH = "%1$s deve ter no Maximo %2$s Caracteres";
     private static final String INPUT_NOT_FORMAT = "%1$s deve ter conter apenas %2$s";
 
     // Atrobitos da Classe
@@ -27,22 +27,24 @@ public class Address {
     private int number;
     private String cep;
 
-    public Address() {
-    }
-
     public Address(Context context) {
         this.context = context;
     }
 
     public String validationCountry(String country) {
-        List<String> countries_list =
-                Arrays.asList(context.getResources().getStringArray(R.array.pays));
+
+        String[] countries = context.getResources().getStringArray(R.array.pays);
 
         if (country == null || country.equals("")) {
             return INPUT_NULL;
-        } else if (countries_list.contains(country)) {
-            return "País Invalido. Escolha um País Valido";
-        } else return OK;
+        }
+
+        // Busca no Array se Existe a Opção Passada
+        for (String itemCountry: countries) {
+            if (itemCountry.equals(country)) return OK;
+        }
+
+        return INPUT_NULL;
     }
 
     public String validationState(Address address) {
@@ -56,17 +58,18 @@ public class Address {
         } else if (address.getCountry().equals("Estrangeiro")) {
             // Validação do Estado Digitado pelo Usuario
             if (state.length() < 5) {
-                return String.format(INPUT_MIN_LENGHT, "Estado", 5);
+                return String.format(INPUT_MIN_LENGTH, "Estado", 5);
             } else if (state.length() > 100) {
-                return String.format(INPUT_MAX_LENGHT, "Estado", 100);
+                return String.format(INPUT_MAX_LENGTH, "Estado", 100);
             } else return OK;
-        } else if (states_list.contains(state)) {
+        } else if (!states_list.contains(state)) {
             return "Estado Invalido. Escolha um Estado Valido";
         } else return OK;
     }
 
     public String validationCity(Address address) {
-        List<String> states_list =
+        // todo: alterar p/ array de cidades
+        List<String> city_list =
                 Arrays.asList(context.getResources().getStringArray(R.array.state));
 
         String city = address.getState();
@@ -76,10 +79,12 @@ public class Address {
         } else if (address.getCountry().equals("Estrangeiro")) {
             // Validação do Estado Digitado pelo Usuario
             if (city.length() < 5) {
-                return String.format(INPUT_MIN_LENGHT, "Cidade", 5);
+                return String.format(INPUT_MIN_LENGTH, "Cidade", 5);
             } else if (city.length() > 100) {
-                return String.format(INPUT_MAX_LENGHT, "Cidade", 100);
+                return String.format(INPUT_MAX_LENGTH, "Cidade", 100);
             } else return OK;
+        } else if (!city_list.contains(city)) {
+            return "Estado Invalido. Escolha um Estado Valido";
         } else return OK;
     }
 
@@ -89,9 +94,9 @@ public class Address {
         if (address == null || address.equals("")) {
             return INPUT_NULL;
         } else if (address.length() < 3) {
-            return String.format(INPUT_MIN_LENGHT, "Endereço", 3);
+            return String.format(INPUT_MIN_LENGTH, "Endereço", 3);
         } else if (address.length() > 120) {
-            return String.format(INPUT_MAX_LENGHT, "Endereço", 200);
+            return String.format(INPUT_MAX_LENGTH, "Endereço", 200);
         } else if (!address.matches("^[A-ZÀ-úà-úa-zçÇ\\s]*")) {
             return String.format(INPUT_NOT_FORMAT, "Endereço", "Letras");
         } else return OK;
@@ -103,9 +108,9 @@ public class Address {
         if (district == null || district.equals("")) {
             return INPUT_NULL;
         } else if (district.length() < 3) {
-            return String.format(INPUT_MIN_LENGHT, "Bairro", 3);
+            return String.format(INPUT_MIN_LENGTH, "Bairro", 3);
         } else if (district.length() > 120) {
-            return String.format(INPUT_MAX_LENGHT, "Bairro", 80);
+            return String.format(INPUT_MAX_LENGTH, "Bairro", 80);
         } else if (!district.matches("^[A-ZÀ-úà-úa-zçÇ\\s]*")) {
             return String.format(INPUT_NOT_FORMAT, "Bairro", "Letras");
         } else return OK;
@@ -128,11 +133,12 @@ public class Address {
             return OK;
         } else {
             if (district.length() < 5) {
-                return String.format(INPUT_MIN_LENGHT, "Complemento", 5);
+                return String.format(INPUT_MIN_LENGTH, "Complemento", 5);
             } else if (district.length() > 120) {
-                return String.format(INPUT_MAX_LENGHT, "Complemento", 80);
+                return String.format(INPUT_MAX_LENGTH, "Complemento", 80);
             } else if (!district.matches("^[A-ZÀ-úà-úa-zçÇ,\\-\\s]*")) {
-                return String.format(INPUT_NOT_FORMAT, "Complemento", "Letras, Virgulas ou Hifen ");
+                return String.format(INPUT_NOT_FORMAT, "Complemento",
+                        "Letras, Virgulas ou Hifen ");
             } else return OK;
         }
     }
@@ -146,7 +152,8 @@ public class Address {
         } else if (Integer.parseInt(cep) < 0) {
             return String.format(INPUT_NOT_FORMAT, "CEP", "Numeros Positivos");
         } else if (cep.length() != 8 || Integer.parseInt(cep) > 100000000) {
-            return String.format(INPUT_NOT_FORMAT, "CEP", "Numeros no Formato 'xxxxx-xxx'");
+            return String.format(INPUT_NOT_FORMAT, "CEP",
+                    "Numeros no Formato 'XXXXXXXX'");
         } else if (!checkCEP(address)) {
             return "CEP Invalido";
         } else return OK;

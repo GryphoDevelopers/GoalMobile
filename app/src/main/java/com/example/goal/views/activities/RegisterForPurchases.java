@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -29,17 +28,18 @@ import java.util.Objects;
 public class RegisterForPurchases extends AppCompatActivity {
 
     private LinearLayout layout_typeData;
+    private LinearLayout layout_stateCity;
     private ConstraintLayout personal_info;
     private ConstraintLayout address_info;
 
-    private TextInputLayout layout_cpf;
-    private TextInputLayout layout_cnpj;
-    private TextInputLayout edit_country;
-    private TextInputLayout edit_state;
-    private TextInputLayout edit_city;
-
-    private TextView error_document;
-    private TextView progress_stages;
+    private TextInputLayout layoutEdit_cpf;
+    private TextInputLayout layoutEdit_cnpj;
+    private TextInputLayout layoutEdit_country;
+    private TextInputLayout layoutEdit_state;
+    private TextInputLayout layoutEdit_city;
+    private TextInputLayout layoutEdit_cep;
+    private TextInputLayout layoutEdit_exState;
+    private TextInputLayout layoutEdit_exCity;
 
     private TextInputEditText edit_cpf;
     private TextInputEditText edit_cnpj;
@@ -52,8 +52,7 @@ public class RegisterForPurchases extends AppCompatActivity {
     private TextInputEditText edit_exState;
     private TextInputEditText edit_exCity;
 
-    private TextInputLayout layoutEdit_exState;
-    private TextInputLayout layoutEdit_exCity;
+    private TextView error_document;
 
     private AutoCompleteTextView autoComplete_country;
     private AutoCompleteTextView autoComplete_state;
@@ -83,8 +82,6 @@ public class RegisterForPurchases extends AppCompatActivity {
         setUpDocument();
         listenerDocument();
 
-        progress_stages.setText(getString(R.string.status_page, 1, 2));
-
         // Botão que Pula essa Etapa do Cadastro e Abre a Tela Incial
         skip_stage.setOnClickListener(v -> {
             managerKeyboard.closeKeyboard(this);
@@ -108,15 +105,12 @@ public class RegisterForPurchases extends AppCompatActivity {
     private void instanceItems() {
         managerKeyboard = new ManagerKeyboard(getApplicationContext());
         inputErrors = new InputErrors(this);
-        addressRegister = new Address();
+        addressRegister = new Address(this);
         userRegister = new User();
 
         error_document = findViewById(R.id.error_document);
-        progress_stages = findViewById(R.id.txt_statusProgressPurchases);
-
         layout_typeData = findViewById(R.id.layout_typeData);
-        layout_cpf = findViewById(R.id.layoutedit_cpf);
-        layout_cnpj = findViewById(R.id.layoutedit_cnpj);
+        layout_stateCity = findViewById(R.id.layout_stateCity);
         personal_info = findViewById(R.id.layout_dataPersonal);
         address_info = findViewById(R.id.layout_address);
 
@@ -128,9 +122,13 @@ public class RegisterForPurchases extends AppCompatActivity {
         edit_district = findViewById(R.id.edit_district);
         edit_number = findViewById(R.id.edit_number);
         edit_complement = findViewById(R.id.edit_complement);
-        edit_country = findViewById(R.id.edit_countries);
-        edit_state = findViewById(R.id.edit_states);
-        edit_city = findViewById(R.id.edit_city);
+
+        layoutEdit_cpf = findViewById(R.id.layoutEdit_cpf);
+        layoutEdit_cnpj = findViewById(R.id.layoutEdit_cnpj);
+        layoutEdit_country = findViewById(R.id.layoutEdit_countries);
+        layoutEdit_state = findViewById(R.id.layoutEdit_states);
+        layoutEdit_city = findViewById(R.id.layoutEdit_city);
+        layoutEdit_cep = findViewById(R.id.layoutEdit_cep);
 
         edit_exState = findViewById(R.id.edit_exState);
         edit_exCity = findViewById(R.id.edit_exCity);
@@ -160,16 +158,16 @@ public class RegisterForPurchases extends AppCompatActivity {
         // Caso clique no CPF, esconde os campos do CNPJ e mostra os do CPF
         rdBtn_cpf.setOnClickListener(v -> {
             layout_typeData.setVisibility(View.VISIBLE);
-            layout_cnpj.setVisibility(View.GONE);
-            layout_cpf.setVisibility(View.VISIBLE);
+            layoutEdit_cpf.setVisibility(View.VISIBLE);
+            layoutEdit_cnpj.setVisibility(View.GONE);
             error_document.setVisibility(View.GONE);
         });
 
         // Caso clique no CNPJ, esconde os campos do CPF e mostra os do CNPJ
         rdBtn_cnpj.setOnClickListener(v -> {
             layout_typeData.setVisibility(View.VISIBLE);
-            layout_cnpj.setVisibility(View.VISIBLE);
-            layout_cpf.setVisibility(View.GONE);
+            layoutEdit_cnpj.setVisibility(View.VISIBLE);
+            layoutEdit_cpf.setVisibility(View.GONE);
             error_document.setVisibility(View.GONE);
         });
     }
@@ -215,7 +213,6 @@ public class RegisterForPurchases extends AppCompatActivity {
                 managerKeyboard.closeKeyboard(this);
                 personal_info.setVisibility(View.GONE);
                 address_info.setVisibility(View.VISIBLE);
-                progress_stages.setText(getString(R.string.status_page, 2, 2));
             }
         });
     }
@@ -228,81 +225,66 @@ public class RegisterForPurchases extends AppCompatActivity {
             managerKeyboard.closeKeyboard(this);
             personal_info.setVisibility(View.VISIBLE);
             address_info.setVisibility(View.GONE);
-            progress_stages.setText(getString(R.string.status_page, 1, 2));
         });
     }
 
     // Listener do Dropdown dos Paises
     private void listenerCountries() {
-        autoComplete_country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Obtem o Valor selecionado e Habilita o Input dos Estados
-                addressRegister.setCountry(array_countries[position]);
+        autoComplete_country.setOnItemClickListener((parent, view, position, id) -> {
 
-                // Disponibiliza para os Estrangeiro um Input para eles Inserirem o Estado
-                if (addressRegister.getCountry().equals("Estrangeiro")) {
-                    layoutEdit_exState.setVisibility(View.VISIBLE);
-                    edit_exCity.setVisibility(View.VISIBLE);
-                } else {
-                    setUpDropdownState();
-                    edit_state.setEnabled(true);
-                    layoutEdit_exState.setVisibility(View.GONE);
-                    edit_exCity.setVisibility(View.GONE);
-                }
-            }
+            // Obtem o Valor selecionado
+            addressRegister.setCountry(array_countries[position]);
+            layout_stateCity.setVisibility(View.VISIBLE);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                edit_state.setEnabled(false);
-                addressRegister.setCountry("");
+            // Configura os Inputs diferentes para Extrangeiros e Brasileiros
+            if (addressRegister.getCountry().equals("Estrangeiro")) {
+                visibilityInputs(true);
+            } else {
+                setUpDropdownState();
+                layoutEdit_state.setEnabled(true);
+                visibilityInputs(false);
             }
         });
     }
 
+    private void visibilityInputs(boolean showForeign) {
+
+        int visibilityBrazilian = showForeign ? View.GONE : View.VISIBLE;
+        int visibilityForeign = showForeign ? View.VISIBLE : View.GONE;
+
+        // IFs para evitar a repetição da ação.
+        // Caso a visibilidade já está de acordo com o tipo de 'Paìs', não altera
+        if (layoutEdit_city.getVisibility() != visibilityBrazilian
+                || layoutEdit_state.getVisibility() != visibilityBrazilian) {
+            layoutEdit_city.setVisibility(visibilityBrazilian);
+            layoutEdit_state.setVisibility(visibilityBrazilian);
+            layoutEdit_cep.setVisibility(visibilityBrazilian);
+        }
+
+        if (layoutEdit_exState.getVisibility() != visibilityForeign
+                || layoutEdit_exCity.getVisibility() != visibilityForeign
+                || layoutEdit_cep.getVisibility() != visibilityForeign) {
+            layoutEdit_exState.setVisibility(visibilityForeign);
+            layoutEdit_exCity.setVisibility(visibilityForeign);
+        }
+    }
+
     // Listener do Dropdown dos Estados
     private void listenerStates() {
-        autoComplete_state.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Obtem o Valor selecionado
-                addressRegister.setState(array_state[position]);
-
-                // Disponibiliza para os Estrangeiro um Input para eles Inserirem a Cidade
-                if (addressRegister.getState().equals("Estrangeiro")) {
-                    layoutEdit_exCity.setVisibility(View.VISIBLE);
-                    edit_exCity.setVisibility(View.VISIBLE);
-                } else {
-                    setUpDropdownCity();
-                    edit_city.setEnabled(true);
-                    layoutEdit_exCity.setVisibility(View.GONE);
-                    edit_exCity.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                edit_city.setEnabled(false);
-                addressRegister.setState("");
-            }
+        autoComplete_state.setOnItemClickListener((parent, view, position, id) -> {
+            // Obtem o Valor selecionado e Configura o DropDown City
+            addressRegister.setState(array_state[position]);
+            setUpDropdownCity();
+            layoutEdit_city.setEnabled(true);
         });
     }
 
     // Listener dos Inputs das Cidades
     private void listenerCity() {
-        autoComplete_city.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Obtem o Valor selecionado e Habilita o Input do CEP
-                addressRegister.setCity(array_city[position]);
-                edit_cep.setEnabled(true);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                edit_cep.setEnabled(false);
-                addressRegister.setCity("");
-            }
+        autoComplete_city.setOnItemClickListener((parent, view, position, id) -> {
+            // Obtem o Valor selecionado e Configura o EditText CEP
+            addressRegister.setCity(array_city[position]);
+            layoutEdit_cep.setEnabled(true);
         });
     }
 
@@ -325,11 +307,11 @@ public class RegisterForPurchases extends AppCompatActivity {
                 return true;
             }
 
-        } else if (rdBtn_cpf.isChecked()) {
+        } else if (rdBtn_cnpj.isChecked()) {
             error_document.setVisibility(View.GONE);
 
             user.setCnpj(Objects.requireNonNull(edit_cnpj.getText()).toString());
-            String validationCnpj = user.validationCpf(user.getCnpj());
+            String validationCnpj = user.validationCnpj(user.getCnpj());
 
             if (!validationCnpj.equals(User.OK)) {
                 inputErrors.errorInputEditText(edit_cpf, validationCnpj);
@@ -361,8 +343,9 @@ public class RegisterForPurchases extends AppCompatActivity {
         }
     }
 
+    // Valida as Informações da Localização (País, Estado, Cidade)
     private boolean validationLocale() {
-        Address address = new Address();
+        Address address = new Address(this);
 
         address.setCountry(autoComplete_country.getText().toString());
         address.setState(autoComplete_state.getText().toString());
@@ -377,21 +360,21 @@ public class RegisterForPurchases extends AppCompatActivity {
         boolean isForeign;
 
         if (!validationCountry.equals(User.OK)) {
-            inputErrors.errorInputLayout(edit_country, validationCountry);
+            inputErrors.errorInputLayout(layoutEdit_country, validationCountry);
             return false;
         }
 
         // Verifica se o País selecionado é = Brasil
-        isForeign = address.getAddress().equals("Estrangeiro");
+        isForeign = address.getCountry().equals("Estrangeiro");
 
         // Validação dos dados diferentes entre Brasileiros e Estrangeiros
         if (!validationState.equals(User.OK)) {
             if (isForeign) inputErrors.errorInputEditText(edit_exState, validationState);
-            inputErrors.errorInputLayout(edit_state, validationState);
+            inputErrors.errorInputLayout(layoutEdit_state, validationState);
             return false;
         } else if (!validationCity.equals(User.OK)) {
             if (isForeign) inputErrors.errorInputEditText(edit_exCity, validationCity);
-            inputErrors.errorInputLayout(edit_city, validationCity);
+            inputErrors.errorInputLayout(layoutEdit_city, validationCity);
             return false;
         }
 
@@ -412,15 +395,17 @@ public class RegisterForPurchases extends AppCompatActivity {
         return true;
     }
 
-    // Valida se os Campos do Endereço foi Preenchidos
+    // Valida as Informações do Endereço (Endereço, Bairro, Numero, Complemento)
     private boolean validationAddress() {
-        Address address = new Address();
+        Address address = new Address(this);
 
         address.setAddress(Objects.requireNonNull(edit_address.getText()).toString());
         address.setDistrict(Objects.requireNonNull(edit_district.getText()).toString());
         address.setComplement(Objects.requireNonNull(edit_complement.getText()).toString());
-        address.setNumber(Integer.parseInt(
-                Objects.requireNonNull(edit_number.getText()).toString()));
+
+        // Evita erros ao Convertes EmptyString em Int
+        String number = Objects.requireNonNull(edit_number.getText()).toString();
+        address.setNumber(number.equals("") ? 0 : Integer.parseInt(number));
 
         String validationAddress = address.validationAddress(address.getAddress());
         String validationDistrict = address.validationDistrict(address.getDistrict());
@@ -451,7 +436,7 @@ public class RegisterForPurchases extends AppCompatActivity {
     // Botão "Finalizar Cadastro" ---> Realiza o Cadastro, caso passe pelas validações
     private void completeRegister() {
 
-        if (validationDocument() && validationPhone() && validationAddress() && validationLocale()) {
+        if (validationDocument() && validationPhone() && validationLocale() && validationAddress()) {
             managerKeyboard.closeKeyboard(this);
 
             // TODO RETIRAR e Implementar Cadastro POST API
