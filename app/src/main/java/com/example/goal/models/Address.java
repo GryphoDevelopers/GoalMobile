@@ -92,7 +92,7 @@ public class Address {
             return String.format(INPUT_MIN_LENGHT, "Endereço", 3);
         } else if (address.length() > 120) {
             return String.format(INPUT_MAX_LENGHT, "Endereço", 200);
-        } else if (address.matches("^[A-ZÀ-úà-úa-zçÇ\\s]*")) {
+        } else if (!address.matches("^[A-ZÀ-úà-úa-zçÇ\\s]*")) {
             return String.format(INPUT_NOT_FORMAT, "Endereço", "Letras");
         } else return OK;
     }
@@ -106,7 +106,7 @@ public class Address {
             return String.format(INPUT_MIN_LENGHT, "Bairro", 3);
         } else if (district.length() > 120) {
             return String.format(INPUT_MAX_LENGHT, "Bairro", 80);
-        } else if (district.matches("^[A-ZÀ-úà-úa-zçÇ\\s]*")) {
+        } else if (!district.matches("^[A-ZÀ-úà-úa-zçÇ\\s]*")) {
             return String.format(INPUT_NOT_FORMAT, "Bairro", "Letras");
         } else return OK;
     }
@@ -131,7 +131,7 @@ public class Address {
                 return String.format(INPUT_MIN_LENGHT, "Complemento", 5);
             } else if (district.length() > 120) {
                 return String.format(INPUT_MAX_LENGHT, "Complemento", 80);
-            } else if (district.matches("^[A-ZÀ-úà-úa-zçÇ,\\-\\s]*")) {
+            } else if (!district.matches("^[A-ZÀ-úà-úa-zçÇ,\\-\\s]*")) {
                 return String.format(INPUT_NOT_FORMAT, "Complemento", "Letras, Virgulas ou Hifen ");
             } else return OK;
         }

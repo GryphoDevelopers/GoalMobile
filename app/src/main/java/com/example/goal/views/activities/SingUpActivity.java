@@ -29,7 +29,6 @@ public class SingUpActivity extends AppCompatActivity {
 
     private TextView errorOptionUser;
     private TextView errorTermsUse;
-    private TextView progress_page;
 
     private TextInputEditText editName;
     private TextInputEditText editNickname;
@@ -60,9 +59,6 @@ public class SingUpActivity extends AppCompatActivity {
         instanceItens();
         configTypeUser();
 
-        // Configura o Texto das Etapas
-        progress_page.setText(getString(R.string.status_page, 1, 2));
-
         // Listeners dos Botões
         listenerNextStage();
         listenerBackStage();
@@ -89,7 +85,6 @@ public class SingUpActivity extends AppCompatActivity {
 
         errorOptionUser = findViewById(R.id.error_optionUser);
         errorTermsUse = findViewById(R.id.error_termsUse);
-        progress_page = findViewById(R.id.txt_statusProgress);
 
         next_stage = findViewById(R.id.button_nextSingUp);
         back_stage = findViewById(R.id.button_backStage);
@@ -113,6 +108,7 @@ public class SingUpActivity extends AppCompatActivity {
         next_stage.setOnClickListener(v -> {
 
             if (position == 1 && validationPersonalInfo()) {
+                next_stage.setVisibility(View.INVISIBLE);
                 back_stage.setVisibility(View.VISIBLE);
                 layout_personal.setVisibility(View.GONE);
                 layout_login.setVisibility(View.VISIBLE);
@@ -120,8 +116,6 @@ public class SingUpActivity extends AppCompatActivity {
             }
 
             managerKeyboard.closeKeyboard(this);
-            progress_page.setText(getString(R.string.status_page, position, 2));
-
         });
     }
 
@@ -131,6 +125,7 @@ public class SingUpActivity extends AppCompatActivity {
 
             if (position == 2) {
                 // Volta p/ os Dados Pessoais
+                next_stage.setVisibility(View.VISIBLE);
                 back_stage.setVisibility(View.INVISIBLE);
                 layout_login.setVisibility(View.GONE);
                 layout_personal.setVisibility(View.VISIBLE);
@@ -138,7 +133,6 @@ public class SingUpActivity extends AppCompatActivity {
             }
 
             managerKeyboard.closeKeyboard(this);
-            progress_page.setText(getString(R.string.status_page, position, 2));
         });
     }
 
@@ -213,7 +207,7 @@ public class SingUpActivity extends AppCompatActivity {
         createAcount.setOnClickListener(v -> {
 
             // Valida Novamente o Cadatro --->  Insere o Cadastro na API
-            if (userSingUp.isCheckedTermsUse() && validationPersonalInfo() && validationLoginInfo()) {
+            if (validationPersonalInfo() && validationLoginInfo() && userSingUp.isCheckedTermsUse()) {
 
                 managerKeyboard.closeKeyboard(this);
 

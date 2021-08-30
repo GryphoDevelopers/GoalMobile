@@ -31,7 +31,7 @@ public class User {
             return String.format(INPUT_MIN_LENGHT, "Nome", 3);
         } else if (name.length() > 80) {
             return String.format(INPUT_MAX_LENGHT, "Nome", 80);
-        } else if (name.matches("^[A-ZÀ-úà-úa-zçÇ\\s]*")) {
+        } else if (!name.matches("^[A-ZÀ-úà-úa-zçÇ\\s]*")) {
             return String.format(INPUT_NOT_FORMAT, "Nome", "Letras");
         } else return OK;
     }
@@ -43,6 +43,9 @@ public class User {
             return String.format(INPUT_MIN_LENGHT, "Email", 15);
         } else if (email.length() > 80) {
             return String.format(INPUT_MAX_LENGHT, "Email", 80);
+        } else if (!email.matches("^[A-Za-z0-9.@_]*")) {
+            return String.format(INPUT_NOT_FORMAT, "Email",
+                    "Letras, Numeros, Underline, Pontos ou Arroba");
         } else if (!validationEmailAPI(email)) {
             return "Endereço de E-mail não Valido";
         } else return OK;
@@ -60,8 +63,8 @@ public class User {
             return String.format(INPUT_MIN_LENGHT, "Nome de Usuario", 5);
         } else if (nickname.length() > 80) {
             return String.format(INPUT_MAX_LENGHT, "Nome de Usuario", 80);
-        } else if (nickname.matches("^[A-Za-z._]*")) {
-            return String.format(INPUT_NOT_FORMAT, "Nome de Usuario", "Letras, Underline ou Pontos");
+        } else if (!nickname.matches("^[A-Za-z0-9._]*")) {
+            return String.format(INPUT_NOT_FORMAT, "Nome de Usuario", "Letras, Numeros, Underline ou Pontos");
         } else return OK;
     }
 
@@ -69,10 +72,14 @@ public class User {
         if (cpf == null || cpf.equals("")) {
             return INPUT_NULL;
         } else if (cpf.length() != 11) {
-            return String.format(INPUT_NOT_FORMAT, "CPF", "os Numeros (Sem Hifen/Ponto/Virgula)");
-        } else if(!validationNumberCpf(cpf)){
+            return String.format(INPUT_NOT_FORMAT,
+                    "CPF", "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");
+        } else if (!cpf.matches("^[0-9]*")) {
+            return String.format(INPUT_NOT_FORMAT, "CPF",
+                    "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");
+        } else if (!validationNumberCpf(cpf)) {
             return "CPF Invalido";
-        }  else return OK;
+        } else return OK;
     }
 
     private boolean validationNumberCpf(String cpf) {
@@ -84,8 +91,9 @@ public class User {
         if (cnpj == null || cnpj.equals("")) {
             return INPUT_NULL;
         } else if (cnpj.length() != 14) {
-            return String.format(INPUT_NOT_FORMAT, "CPF", "os Numeros (Sem Hifen/Ponto/Virgula)");
-        } else if (!validationNumberCnpj(cnpj)){
+            return String.format(INPUT_NOT_FORMAT, "CPF",
+                    "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");
+        } else if (!validationNumberCnpj(cnpj)) {
             return "CNPJ Invalido";
         } else return OK;
     }
@@ -102,6 +110,9 @@ public class User {
             return String.format(INPUT_MIN_LENGHT, "Senha", 5);
         } else if (password.length() > 40) {
             return String.format(INPUT_MIN_LENGHT, "Senha", 40);
+        } else if (!password.matches("^[\\S]*")) {
+            return String.format(INPUT_NOT_FORMAT,
+                    "Senha", "Caracteres (Sem espaços em Branco)");
         } else if (strengthPassword(password) == LOW_STRENGHT) {
             //TODO : mensagem de erro da senha
             return "A senha deve conter....";
@@ -115,11 +126,12 @@ public class User {
 
         if (confirmPassword == null || confirmPassword.equals("")) {
             return INPUT_NULL;
-        } else if (confirmPassword.length() < 5) {
-            return String.format(INPUT_MIN_LENGHT, "Confirmar Senha", 5);
-        } else if (confirmPassword.length() > 40) {
-            return String.format(INPUT_MAX_LENGHT, "Confirmar Senha", 40);
-        } else if (password.equals(confirmPassword)) {
+        }
+
+        String validationPassword = validationPassword(confirmPassword);
+        if (!validationPassword.equals(OK)) {
+            return validationPassword;
+        } else if (!password.equals(confirmPassword)) {
             return "As Senhas não são Iguais";
         } else return OK;
     }
@@ -135,8 +147,9 @@ public class User {
             return INPUT_NULL;
         } else if (phone.length() != 11) {
             return String.format(INPUT_NOT_FORMAT, "Telefone", "11 Digitos (DDD + Numero)");
-        } else if (phone.matches("^[0-9]*")) {
-            return String.format(INPUT_NOT_FORMAT, "Telefone", "os Numeros (Sem Hifen/Ponto/Virgula)");
+        } else if (!phone.matches("^[0-9]*")) {
+            return String.format(INPUT_NOT_FORMAT, "Telefone",
+                    "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");
         } else return OK;
     }
 
