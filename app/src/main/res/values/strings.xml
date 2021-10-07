@@ -45,7 +45,7 @@
     <string name="btn_createAcount">Criar Conta</string>
     <string name="errorInputs">Campo obrigatório</string>
     <string name="status_page">%1$d / %2$d</string>
-    <string name="error_singup">Houve um Erro no Cadastro. Por favor, confirme os dados das
+    <string name="error_singup">Dados Incorretos. Por favor, confirme os dados das
         Etapas Anteriores</string>
 
     <!-- Registro para Compras -->

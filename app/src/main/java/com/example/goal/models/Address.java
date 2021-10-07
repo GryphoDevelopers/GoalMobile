@@ -72,7 +72,7 @@ public class Address {
         List<String> city_list =
                 Arrays.asList(context.getResources().getStringArray(R.array.state));
 
-        String city = address.getState();
+        String city = address.getCity();
 
         if (city == null || city.equals("")) {
             return INPUT_NULL;

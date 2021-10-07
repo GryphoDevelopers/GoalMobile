@@ -12,7 +12,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.goal.R;
 import com.example.goal.controllers.InputErrors;
@@ -20,6 +19,7 @@ import com.example.goal.controllers.ManagerKeyboard;
 import com.example.goal.models.Address;
 import com.example.goal.models.User;
 import com.example.goal.views.SnackBarPersonalized;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -29,8 +29,7 @@ public class RegisterForPurchases extends AppCompatActivity {
 
     private LinearLayout layout_typeData;
     private LinearLayout layout_stateCity;
-    private ConstraintLayout personal_info;
-    private ConstraintLayout address_info;
+    private MaterialCardView card_dataPersonal, card_dataAddress;
 
     private TextInputLayout layoutEdit_cpf;
     private TextInputLayout layoutEdit_cnpj;
@@ -58,10 +57,7 @@ public class RegisterForPurchases extends AppCompatActivity {
     private AutoCompleteTextView autoComplete_state;
     private AutoCompleteTextView autoComplete_city;
 
-    private Button skip_stage;
     private Button registerCompleteUser;
-    private Button next_stageRegister;
-    private Button back_stageRegister;
     private RadioButton rdBtn_cpf, rdBtn_cnpj;
 
     private String[] array_countries, array_state, array_city;
@@ -83,6 +79,7 @@ public class RegisterForPurchases extends AppCompatActivity {
         listenerDocument();
 
         // Botão que Pula essa Etapa do Cadastro e Abre a Tela Incial
+        Button skip_stage = findViewById(R.id.btn_skipStage);
         skip_stage.setOnClickListener(v -> {
             managerKeyboard.closeKeyboard(this);
             startActivity(new Intent(this, IndexActivity.class));
@@ -90,15 +87,12 @@ public class RegisterForPurchases extends AppCompatActivity {
             finishAffinity();
         });
 
-        // Configura os Botões Inferiores "Voltar" e "Proximo"
-        listenerNextStage();
-        listenerBackStage();
-
         // Configura o Dropdown dos Países (Ao selecionar uma Opção, Configura o Dropdown do Estado)
         setUpDropdownCountry();
         listenerCountries();
 
-        registerCompleteUser.setOnClickListener(v -> completeRegister());
+        // Listener do Botão "Finalizar Cadastro"
+        completeRegister();
     }
 
     // Instancia os Itens (ID, Classes...)
@@ -111,8 +105,8 @@ public class RegisterForPurchases extends AppCompatActivity {
         error_document = findViewById(R.id.error_document);
         layout_typeData = findViewById(R.id.layout_typeData);
         layout_stateCity = findViewById(R.id.layout_stateCity);
-        personal_info = findViewById(R.id.layout_dataPersonal);
-        address_info = findViewById(R.id.layout_address);
+        card_dataPersonal = findViewById(R.id.card_doccument);
+        card_dataAddress = findViewById(R.id.card_address);
 
         edit_cpf = findViewById(R.id.edit_cpf);
         edit_cnpj = findViewById(R.id.edit_cnpj);
@@ -138,15 +132,12 @@ public class RegisterForPurchases extends AppCompatActivity {
         autoComplete_country = findViewById(R.id.autoCompleteCountry);
         autoComplete_city = findViewById(R.id.autoCompleteCity);
 
-        skip_stage = findViewById(R.id.btn_skipStage);
         registerCompleteUser = findViewById(R.id.btn_registerCompleteUser);
-        next_stageRegister = findViewById(R.id.button_nextStagePurchases);
-        back_stageRegister = findViewById(R.id.button_backStagePurchases);
         rdBtn_cpf = findViewById(R.id.rbtn_cpf);
         rdBtn_cnpj = findViewById(R.id.rbtn_cnpj);
     }
 
-    // Configura o Checkbox do CPF/CNPj
+    // Configura os Textos nos Checkbox do CPF/CNPj
     private void setUpDocument() {
         String[] optionsDocs = getResources().getStringArray(R.array.cpf_cnpj);
         rdBtn_cpf.setText(optionsDocs[0]);
@@ -204,34 +195,9 @@ public class RegisterForPurchases extends AppCompatActivity {
         listenerCity();
     }
 
-    // Botão Inferior que Avança no Cadastro CPF + Endereço
-    private void listenerNextStage() {
-        next_stageRegister.setOnClickListener(v -> {
-            if (validationDocument() && validationPhone()) {
-                back_stageRegister.setVisibility(View.VISIBLE);
-                next_stageRegister.setVisibility(View.INVISIBLE);
-                managerKeyboard.closeKeyboard(this);
-                personal_info.setVisibility(View.GONE);
-                address_info.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-
-    // Botão Inferior que Volta no Cadastro CPF + Endereço
-    private void listenerBackStage() {
-        back_stageRegister.setOnClickListener(v -> {
-            next_stageRegister.setVisibility(View.VISIBLE);
-            back_stageRegister.setVisibility(View.INVISIBLE);
-            managerKeyboard.closeKeyboard(this);
-            personal_info.setVisibility(View.VISIBLE);
-            address_info.setVisibility(View.GONE);
-        });
-    }
-
     // Listener do Dropdown dos Paises
     private void listenerCountries() {
         autoComplete_country.setOnItemClickListener((parent, view, position, id) -> {
-
             // Obtem o Valor selecionado
             addressRegister.setCountry(array_countries[position]);
             layout_stateCity.setVisibility(View.VISIBLE);
@@ -248,25 +214,15 @@ public class RegisterForPurchases extends AppCompatActivity {
     }
 
     private void visibilityInputs(boolean showForeign) {
-
+        // Configura a Visibilidade dos Inputs
         int visibilityBrazilian = showForeign ? View.GONE : View.VISIBLE;
         int visibilityForeign = showForeign ? View.VISIBLE : View.GONE;
 
-        // IFs para evitar a repetição da ação.
-        // Caso a visibilidade já está de acordo com o tipo de 'Paìs', não altera
-        if (layoutEdit_city.getVisibility() != visibilityBrazilian
-                || layoutEdit_state.getVisibility() != visibilityBrazilian) {
-            layoutEdit_city.setVisibility(visibilityBrazilian);
-            layoutEdit_state.setVisibility(visibilityBrazilian);
-            layoutEdit_cep.setVisibility(visibilityBrazilian);
-        }
-
-        if (layoutEdit_exState.getVisibility() != visibilityForeign
-                || layoutEdit_exCity.getVisibility() != visibilityForeign
-                || layoutEdit_cep.getVisibility() != visibilityForeign) {
-            layoutEdit_exState.setVisibility(visibilityForeign);
-            layoutEdit_exCity.setVisibility(visibilityForeign);
-        }
+        layoutEdit_city.setVisibility(visibilityBrazilian);
+        layoutEdit_state.setVisibility(visibilityBrazilian);
+        layoutEdit_cep.setVisibility(visibilityBrazilian);
+        layoutEdit_exState.setVisibility(visibilityForeign);
+        layoutEdit_exCity.setVisibility(visibilityForeign);
     }
 
     // Listener do Dropdown dos Estados
@@ -289,116 +245,134 @@ public class RegisterForPurchases extends AppCompatActivity {
     }
 
     // Validação dos Documentos (CPF ou CNPJ)
-    private boolean validationDocument() {
+    private boolean validationPersonalInfos() {
         User user = new User();
 
-        // Valdiação CPF e CNPJ
         if (rdBtn_cpf.isChecked()) {
-            error_document.setVisibility(View.GONE);
-
+            // Obtem os Dados do CPF para Validação
             user.setCpf(Objects.requireNonNull(edit_cpf.getText()).toString());
             String validationCpf = user.validationCpf(user.getCpf());
 
             if (!validationCpf.equals(User.OK)) {
-                inputErrors.errorInputEditText(edit_cpf, validationCpf);
+                inputErrors.errorInputWithoutIcon(edit_cpf, validationCpf);
+                card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
-            } else {
-                user.setCpf(edit_cpf.getText().toString());
-                return true;
             }
-
         } else if (rdBtn_cnpj.isChecked()) {
-            error_document.setVisibility(View.GONE);
-
+            // Obtem os dados do CNPJ para Validar
             user.setCnpj(Objects.requireNonNull(edit_cnpj.getText()).toString());
             String validationCnpj = user.validationCnpj(user.getCnpj());
 
             if (!validationCnpj.equals(User.OK)) {
-                inputErrors.errorInputEditText(edit_cpf, validationCnpj);
+                inputErrors.errorInputWithoutIcon(edit_cnpj, validationCnpj);
+                card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
-            } else {
-                user.setCnpj(edit_cnpj.getText().toString());
-                return true;
             }
-
         } else {
+            // Nenhuma opção foi Selecionada
+            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             error_document.setVisibility(View.VISIBLE);
             return false;
         }
-    }
-
-    // Valida o Numero de Telefone
-    private boolean validationPhone() {
-        User user = new User();
 
         user.setPhone(Objects.requireNonNull(edit_phone.getText()).toString());
         String validationPhone = user.validationPhone(user.getPhone());
-
         if (!validationPhone.equals(User.OK)) {
-            inputErrors.errorInputEditText(edit_phone, validationPhone);
+            inputErrors.errorInputWithoutIcon(edit_phone, validationPhone);
+            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
-        } else {
-            userRegister.setPhone(edit_phone.getText().toString());
-            return true;
         }
+
+        // Remove o Erro e Define o valor no Usuario
+        if (rdBtn_cnpj.isChecked()) {
+            error_document.setVisibility(View.GONE);
+            user.setCnpj(edit_cnpj.getText().toString());
+        } else {
+            error_document.setVisibility(View.GONE);
+            user.setCpf(edit_cpf.getText().toString());
+        }
+        userRegister.setPhone(edit_phone.getText().toString());
+        card_dataPersonal.setStrokeColor(getResources().getColor(R.color.lime_green));
+        return true;
     }
 
     // Valida as Informações da Localização (País, Estado, Cidade)
     private boolean validationLocale() {
+
         Address address = new Address(this);
+        address.setCountry(addressRegister.getCountry());
 
-        address.setCountry(autoComplete_country.getText().toString());
-        address.setState(autoComplete_state.getText().toString());
-        address.setCity(autoComplete_city.getText().toString());
-        address.setCep(Objects.requireNonNull(edit_cep.getText()).toString());
-
+        // Valida as Opções de país (Brasil X Estrangeiro)
         String validationCountry = address.validationCountry(address.getCountry());
-        String validationState = address.validationState(address);
-        String validationCity = address.validationCity(address);
-        String validationCep = address.validationCEP(address);
-
-        boolean isForeign;
-
         if (!validationCountry.equals(User.OK)) {
             inputErrors.errorInputLayout(layoutEdit_country, validationCountry);
+            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
+        } else layoutEdit_country.setErrorEnabled(false);
+
+        // Verifica o país para obter os Dados
+        boolean isForeign = address.getCountry().equals("Estrangeiro");
+        if (isForeign){
+            // Obtem os Valores dos InputText dos Estrangeiros
+            address.setState(Objects.requireNonNull(edit_exState.getText()).toString());
+            address.setCity(Objects.requireNonNull(edit_exCity.getText()).toString());
+        } else{
+            // Obtem os Valores dos AutoCompleteText dos Brasileiros
+            address.setState(addressRegister.getState());
+            address.setCity(addressRegister.getCity());
         }
 
-        // Verifica se o País selecionado é = Brasil
-        isForeign = address.getCountry().equals("Estrangeiro");
-
-        // Validação dos dados diferentes entre Brasileiros e Estrangeiros
+        // Valida o Estado e Cidade
+        String validationState = address.validationState(address);
         if (!validationState.equals(User.OK)) {
-            if (isForeign) inputErrors.errorInputEditText(edit_exState, validationState);
-            inputErrors.errorInputLayout(layoutEdit_state, validationState);
+            if (isForeign) inputErrors.errorInputWithoutIcon(edit_exState, validationState);
+            else inputErrors.errorInputLayout(layoutEdit_state, validationState);
+
+            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
-        } else if (!validationCity.equals(User.OK)) {
-            if (isForeign) inputErrors.errorInputEditText(edit_exCity, validationCity);
-            inputErrors.errorInputLayout(layoutEdit_city, validationCity);
-            return false;
+        } else {
+            // Remove o Erro do InputLayout dos Estados Brasileiros
+            if (!isForeign) layoutEdit_state.setErrorEnabled(false);
         }
 
-        // Validação do CEP somente para Brasileiros
+        String validationCity = address.validationCity(address);
+        if (!validationCity.equals(User.OK)) {
+            if (isForeign) inputErrors.errorInputWithoutIcon(edit_exCity, validationCity);
+            else inputErrors.errorInputLayout(layoutEdit_city, validationCity);
+
+            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
+            return false;
+        } else {
+            // Remove o Erro do InputLayout das Cidades Brasileiras
+            if (!isForeign) layoutEdit_city.setErrorEnabled(false);
+        }
+
+        // Finalização das Validações e Atribuição dos Valores a classe Global addressRegister
         if (!isForeign) {
+            // Validação do CEP (somente para Brasileiros)
+            address.setCep(Objects.requireNonNull(edit_cep.getText()).toString());
+            String validationCep = address.validationCEP(address);
             if (!validationCep.equals(User.OK)) {
-                inputErrors.errorInputEditText(edit_cep, validationCep);
+                inputErrors.errorInputWithoutIcon(edit_cep, validationCep);
+                card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
-            } else {
-                addressRegister.setCep(edit_cep.getText().toString());
-            }
+            } else addressRegister.setCep(edit_cep.getText().toString());
+
+        } else{
+            // Define o Estado e Cidade do Estrangeiro
+            addressRegister.setState(address.getState());
+            addressRegister.setCity(address.getCity());
         }
 
         // Passou por todas as dados da Validação
-        addressRegister.setCountry(autoComplete_country.getText().toString());
-        addressRegister.setState(autoComplete_state.getText().toString());
-        addressRegister.setCity(autoComplete_city.getText().toString());
+        card_dataAddress.setStrokeColor(getResources().getColor(R.color.lime_green));
         return true;
     }
 
     // Valida as Informações do Endereço (Endereço, Bairro, Numero, Complemento)
     private boolean validationAddress() {
+        // Obtem os Valores
         Address address = new Address(this);
-
         address.setAddress(Objects.requireNonNull(edit_address.getText()).toString());
         address.setDistrict(Objects.requireNonNull(edit_district.getText()).toString());
         address.setComplement(Objects.requireNonNull(edit_complement.getText()).toString());
@@ -413,18 +387,23 @@ public class RegisterForPurchases extends AppCompatActivity {
         String validationComplement = address.validationComplement(address.getComplement());
 
         if (!validationAddress.equals(User.OK)) {
-            inputErrors.errorInputEditText(edit_address, validationAddress);
+            inputErrors.errorInputWithoutIcon(edit_address, validationAddress);
+            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!validationDistrict.equals(User.OK)) {
-            inputErrors.errorInputEditText(edit_district, validationDistrict);
+            inputErrors.errorInputWithoutIcon(edit_district, validationDistrict);
+            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!validationNumber.equals(User.OK)) {
-            inputErrors.errorInputEditText(edit_number, validationNumber);
+            inputErrors.errorInputWithoutIcon(edit_number, validationNumber);
+            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!validationComplement.equals(User.OK)) {
-            inputErrors.errorInputEditText(edit_complement, validationComplement);
+            inputErrors.errorInputWithoutIcon(edit_complement, validationComplement);
+            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else {
+            card_dataAddress.setStrokeColor(getResources().getColor(R.color.lime_green));
             addressRegister.setAddress(edit_address.getText().toString());
             addressRegister.setDistrict(edit_district.getText().toString());
             addressRegister.setComplement(edit_complement.getText().toString());
@@ -435,28 +414,27 @@ public class RegisterForPurchases extends AppCompatActivity {
 
     // Botão "Finalizar Cadastro" ---> Realiza o Cadastro, caso passe pelas validações
     private void completeRegister() {
+        registerCompleteUser.setOnClickListener(v -> {
+            if (validationPersonalInfos() && validationLocale() && validationAddress()) {
+                managerKeyboard.closeKeyboard(this);
 
-        if (validationDocument() && validationPhone() && validationLocale() && validationAddress()) {
-            managerKeyboard.closeKeyboard(this);
+                // TODO RETIRAR e Implementar Cadastro POST API
+                Log.e("PURCHASES", addressRegister.getCountry() + "\n" +
+                        addressRegister.getState() + "\n" + addressRegister.getCity() + "\n" +
+                        addressRegister.getAddress() + "\n" + addressRegister.getDistrict() + "\n" +
+                        addressRegister.getNumber() + "\n" + addressRegister.getCep() + "\n" +
+                        addressRegister.getComplement() + "\n" + userRegister.getCpf() + "\n" +
+                        userRegister.getCnpj() + "\n" + userRegister.getPhone());
 
-            // TODO RETIRAR e Implementar Cadastro POST API
-            Log.e("PURCHASES", addressRegister.getCountry() + "\n" +
-                    addressRegister.getState() + "\n" + addressRegister.getCity() + "\n" +
-                    addressRegister.getAddress() + "\n" + addressRegister.getDistrict() + "\n" +
-                    addressRegister.getNumber() + "\n" + addressRegister.getCep() + "\n" +
-                    addressRegister.getComplement() + "\n" + userRegister.getCpf() + "\n" +
-                    userRegister.getCnpj() + "\n" + userRegister.getPhone());
-
-            // Abre a pagina Index (Produtos) e Finaliza a Actvity
-            startActivity(new Intent(this, IndexActivity.class));
-            finish();
-
-        } else {
-            // Validações Não Validas ou Erro no Cadastro
-            SnackBarPersonalized snackBar =
-                    new SnackBarPersonalized(findViewById(R.id.layout_purchases));
-            snackBar.makeDefaultSnackBar(R.string.error_singup).show();
-        }
+                // Abre a pagina Index (Produtos) e Finaliza a Actvity
+                startActivity(new Intent(this, IndexActivity.class));
+                finish();
+            } else {
+                // Validações Não Validas ou Erro no Cadastro
+                SnackBarPersonalized snackBar = new SnackBarPersonalized(findViewById(R.id.layout_purchases));
+                snackBar.makeDefaultSnackBar(R.string.error_singup).show();
+            }
+        });
     }
 
 }

@@ -1,7 +1,9 @@
 package com.example.goal.views.activities;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +13,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import com.example.goal.R;
 import com.example.goal.controllers.InputErrors;
@@ -19,6 +21,7 @@ import com.example.goal.controllers.ManagerKeyboard;
 import com.example.goal.models.HandleSharedPreferences;
 import com.example.goal.models.User;
 import com.example.goal.views.SnackBarPersonalized;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
@@ -40,16 +43,12 @@ public class SingUpActivity extends AppCompatActivity {
     private CheckBox checkTermsUse;
     private Button createAcount;
     private Button see_termsUse;
-    private Button next_stage;
-    private Button back_stage;
 
-    private ConstraintLayout layout_personal, layout_login;
+    //private ConstraintLayout layout_personal, layout_login;
+    private MaterialCardView card_dataPersonal, card_dataLogin, card_terms;
 
     private ManagerKeyboard managerKeyboard;
-    private InputErrors inputErrors;
     private User userSingUp;
-
-    private int position = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +56,9 @@ public class SingUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sing_up);
 
         instanceItens();
-        configTypeUser();
+        setTypeUser();
 
         // Listeners dos Botões
-        listenerNextStage();
-        listenerBackStage();
         see_termsUse.setOnClickListener(v -> {
             // TODO IMPLEMENTAR LEITURA DO TERMO DE USO ---> NOVA ACTIVITY});
         });
@@ -72,10 +69,6 @@ public class SingUpActivity extends AppCompatActivity {
 
         userSingUp = new User();
         managerKeyboard = new ManagerKeyboard(getApplicationContext());
-        inputErrors = new InputErrors(this);
-
-        layout_personal = findViewById(R.id.layout_dataPersonal);
-        layout_login = findViewById(R.id.layout_dataLogin);
 
         editName = findViewById(R.id.edittext_name);
         editNickname = findViewById(R.id.edittext_nickname);
@@ -86,8 +79,10 @@ public class SingUpActivity extends AppCompatActivity {
         errorOptionUser = findViewById(R.id.error_optionUser);
         errorTermsUse = findViewById(R.id.error_termsUse);
 
-        next_stage = findViewById(R.id.button_nextSingUp);
-        back_stage = findViewById(R.id.button_backStage);
+        card_dataPersonal = findViewById(R.id.card_personalData);
+        card_dataLogin = findViewById(R.id.card_loginData);
+        card_terms = findViewById(R.id.card_terms_use);
+
         createAcount = findViewById(R.id.button_createAcount);
         see_termsUse = findViewById(R.id.see_termsUse);
         checkTermsUse = findViewById(R.id.cbx_termsUse);
@@ -96,118 +91,86 @@ public class SingUpActivity extends AppCompatActivity {
     }
 
     //Recupera os valores colocados no Array (dentro do strings.xml) e coloca nas Opções
-    private void configTypeUser() {
+    private void setTypeUser() {
         Resources res = getResources();
         String[] optionsUsers = res.getStringArray(R.array.options_peopleType);
         opSeller.setText(optionsUsers[0]);
         opClient.setText(optionsUsers[1]);
     }
 
-    // Listener do Botão Inferiro "Proxima Etapa"
-    private void listenerNextStage() {
-        next_stage.setOnClickListener(v -> {
-
-            if (position == 1 && validationPersonalInfo()) {
-                next_stage.setVisibility(View.INVISIBLE);
-                back_stage.setVisibility(View.VISIBLE);
-                layout_personal.setVisibility(View.GONE);
-                layout_login.setVisibility(View.VISIBLE);
-                position = 2;
-            }
-
-            managerKeyboard.closeKeyboard(this);
-        });
-    }
-
-    // Listener do Botão Inferior "Voltar"
-    private void listenerBackStage() {
-        back_stage.setOnClickListener(v -> {
-
-            if (position == 2) {
-                // Volta p/ os Dados Pessoais
-                next_stage.setVisibility(View.VISIBLE);
-                back_stage.setVisibility(View.INVISIBLE);
-                layout_login.setVisibility(View.GONE);
-                layout_personal.setVisibility(View.VISIBLE);
-                position = 1;
-            }
-
-            managerKeyboard.closeKeyboard(this);
-        });
-    }
-
-    // Validação do Nome, Nickname e Tipo do Usuario
-    private boolean validationPersonalInfo() {
-        // Obtem os Valores dos Inputs
+    // Validação do Nome, Nickname, Tipo do Usuario, Email, Senhas e Termo de Uso
+    private boolean validationsSingUp() {
         User user = new User();
-        user.setName(Objects.requireNonNull(editName.getText()).toString());
-        user.setNickname(Objects.requireNonNull(editNickname.getText()).toString());
+        InputErrors inputErrors = new InputErrors(this);
 
         // Obtem a String de Validação ---> Ok = Validado, se não = Mensagem de Erro
-        String validationName = user.validationName(user.getName());
-        String validationNickname = user.validationNickname(user.getNickname());
-
-        if (!validationName.equals(User.OK)) {
-            inputErrors.errorInputEditText(editName, validationName);
-            return false;
-        } else if (!validationNickname.equals(User.OK)) {
-            inputErrors.errorInputEditText(editNickname, validationNickname);
-            return false;
-        } else if (!opClient.isChecked() && !opSeller.isChecked()) {
-            errorOptionUser.setVisibility(View.VISIBLE);
-            return false;
-        } else {
-            errorOptionUser.setVisibility(View.GONE);
-            userSingUp.setName(editName.getText().toString());
-            userSingUp.setNickname(editNickname.getText().toString());
-            userSingUp.setSeller(opSeller.isChecked());
-            return true;
-        }
-    }
-
-    // Validação do Email e Senha
-    private boolean validationLoginInfo() {
-        User user = new User();
-
-        // Obtem os Valores dos Inputs
+        user.setName(Objects.requireNonNull(editName.getText()).toString());
+        user.setNickname(Objects.requireNonNull(editNickname.getText()).toString());
         user.setEmail(Objects.requireNonNull(editEmail.getText()).toString());
         user.setPassword(Objects.requireNonNull(editPassword.getText()).toString());
         user.setConfirmPassword(Objects.requireNonNull(editConfirmPassword.getText()).toString());
-
-        // Obtem a String de Validação ---> Ok = Validado, se não = Mensagem de Erro
+        String validationName = user.validationName(user.getName());
+        String validationNickname = user.validationNickname(user.getNickname());
         String validationEmail = user.validationEmail(user.getEmail());
         String validationPassword = user.validationPassword(user.getPassword());
         String validationConfirmPassword = user.validationConfirmPassword(user);
 
+        if (!validationName.equals(User.OK)) {
+            inputErrors.errorInputWithoutIcon(editName, validationName);
+            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
+            return false;
+        } else if (!validationNickname.equals(User.OK)) {
+            inputErrors.errorInputWithoutIcon(editNickname, validationNickname);
+            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
+            return false;
+        } else if (!opClient.isChecked() && !opSeller.isChecked()) {
+            errorOptionUser.setVisibility(View.VISIBLE);
+            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
+            return false;
+        } else card_dataPersonal.setStrokeColor(getResources().getColor(R.color.lime_green));
+
         if (!validationEmail.equals(User.OK)) {
-            inputErrors.errorInputEditText(editEmail, validationEmail);
+            inputErrors.errorInputWithoutIcon(editEmail, validationEmail);
+            card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!validationPassword.equals(User.OK)) {
             inputErrors.errorInputWithoutIcon(editPassword, validationPassword);
+            card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!validationConfirmPassword.equals(User.OK)) {
             inputErrors.errorInputWithoutIcon(editConfirmPassword, validationConfirmPassword);
+            card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
-        } else if (!checkTermsUse.isChecked()) {
+        } else card_dataLogin.setStrokeColor(getResources().getColor(R.color.lime_green));
+
+        if (!checkTermsUse.isChecked()) {
+            card_dataLogin.setStrokeColor(getResources().getColor(R.color.lime_green));
             errorTermsUse.setVisibility(View.VISIBLE);
+            card_terms.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else {
+            card_terms.setStrokeColor(getResources().getColor(R.color.lime_green));
             errorTermsUse.setVisibility(View.GONE);
+            errorOptionUser.setVisibility(View.GONE);
+
             userSingUp.setEmail(editEmail.getText().toString());
             userSingUp.setPassword(editPassword.getText().toString());
             userSingUp.setConfirmPassword(editConfirmPassword.getText().toString());
+            userSingUp.setName(editName.getText().toString());
+            userSingUp.setNickname(editNickname.getText().toString());
+            userSingUp.setSeller(opSeller.isChecked());
             userSingUp.setCheckedTermsUse(true);
             return true;
         }
     }
 
+
     // Cadastra o Usuario
     public void listenerSingUp() {
-
         createAcount.setOnClickListener(v -> {
 
-            // Valida Novamente o Cadatro --->  Insere o Cadastro na API
-            if (validationPersonalInfo() && validationLoginInfo() && userSingUp.isCheckedTermsUse()) {
+            // Valida o Cadatro e Insere o Cadastro na API
+            if (validationsSingUp()) {
 
                 managerKeyboard.closeKeyboard(this);
 
@@ -230,7 +193,7 @@ public class SingUpActivity extends AppCompatActivity {
             }
 
             // Erro no Cadastro
-            SnackBarPersonalized snackBar = new SnackBarPersonalized(findViewById(R.id.layouts_register));
+            SnackBarPersonalized snackBar = new SnackBarPersonalized(findViewById(R.id.layout_singup));
             snackBar.makeDefaultSnackBar(R.string.error_singup).show();
         });
     }
