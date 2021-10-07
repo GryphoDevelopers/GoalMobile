@@ -5,7 +5,14 @@
     <string name="title_index">Aguarde enquanto recuperamos seus Dados…</string>
     <string name="description_goal">Logo GOAL</string>
     <string name="description_app">O seu E-Commerce</string>
-    
+
+    <string name="validation_empty">Campo Obrigatorio</string>
+    <string name="validation_min_length">%1$s deve ter no Minimo %2$s Caracteres</string>
+    <string name="validation_max_length">%1$s deve ter no Maximo %2$s Caracteres</string>
+    <string name="validation_format">%1$s deve ter conter apenas %2$s</string>
+    <string name="validation_not_disponible">%s Invalido. Tente Novamente</string>
+    <string name="validation_password">A senha deve conter %s</string>
+    <string name="validation_equal_password">As Senhas não são Iguais</string>
 
     <!-- OptionsActivity - Tela de Opções  -->
     <string name="title_options">Olá, Bem Vindo à GOAL</string>

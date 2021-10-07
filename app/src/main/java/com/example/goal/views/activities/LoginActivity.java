@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
         managerKeyboard = new ManagerKeyboard(getApplicationContext());
         inputErrors = new InputErrors(this);
-        userLogin = new User();
+        userLogin = new User(this);
 
         edit_email = findViewById(R.id.editTxt_emailLogin);
         edit_password = findViewById(R.id.editTxt_passwordLogin);
@@ -86,22 +86,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean validationInputs() {
-        User user = new User();
+        // Obtem os Dados do Input
+        User user = new User(this);
+        user.setEmail(Objects.requireNonNull(edit_email.getText()).toString());
+        user.setPassword(Objects.requireNonNull(edit_password.getText()).toString());
 
-        String validationEmail = user.validationEmail(Objects.requireNonNull(
-                edit_email.getText()).toString());
-        String validationPassword = user.validationPassword(Objects.requireNonNull(
-                edit_password.getText()).toString());
-
-        if (!validationEmail.equals(User.OK)) {
-            inputErrors.errorInputEditText(edit_email, validationEmail);
+        if (!user.validationEmail(user.getEmail())) {
+            inputErrors.errorInputEditText(edit_email, user.getError_validation());
             return false;
-        } else if (!validationPassword.equals(User.OK)) {
-            inputErrors.errorInputWithoutIcon(edit_password, validationPassword);
+        } else if (!user.validationPassword(user.getPassword())) {
+            inputErrors.errorInputWithoutIcon(edit_password, user.getError_validation());
             return false;
         } else {
-            user.setEmail(edit_email.getText().toString());
-            user.setPassword(edit_password.getText().toString());
+            userLogin.setEmail(edit_email.getText().toString());
+            userLogin.setPassword(edit_password.getText().toString());
             return true;
         }
     }

@@ -10,14 +10,14 @@ import java.util.List;
 public class Address {
 
     // Constantes Usadas nos Erros
-    public static final String OK = "Campo Validado";
-    private static final String INPUT_NULL = "Campo Obrigatorio";
-    private static final String INPUT_MIN_LENGTH = "%1$s deve ter no Minimo %2$s Caracteres";
-    private static final String INPUT_MAX_LENGTH = "%1$s deve ter no Maximo %2$s Caracteres";
-    private static final String INPUT_NOT_FORMAT = "%1$s deve ter conter apenas %2$s";
+    private final String INPUT_NULL;
+    private final String INPUT_MIN_LENGTH;
+    private final String INPUT_MAX_LENGTH;
+    private final String INPUT_NOT_FORMAT;
+    private final String INPUT_INVALID;
 
-    // Atrobitos da Classe
-    private Context context;
+    // Atributos da Classe
+    private final Context context;
     private String country;
     private String state;
     private String city;
@@ -27,138 +27,168 @@ public class Address {
     private int number;
     private String cep;
 
+    private String error_validation;
+
     public Address(Context context) {
         this.context = context;
+
+        // Obtem as Strings de Erro
+        INPUT_NULL = context.getString(R.string.validation_empty);
+        INPUT_MIN_LENGTH = context.getString(R.string.validation_min_length);
+        INPUT_MAX_LENGTH = context.getString(R.string.validation_max_length);
+        INPUT_NOT_FORMAT = context.getString(R.string.validation_format);
+        INPUT_INVALID = context.getString(R.string.validation_not_disponible);
     }
 
-    public String validationCountry(String country) {
-
+    public boolean validationCountry(String country) {
         String[] countries = context.getResources().getStringArray(R.array.pays);
 
         if (country == null || country.equals("")) {
-            return INPUT_NULL;
+            error_validation = INPUT_NULL;
+            return false;
         }
 
         // Busca no Array se Existe a Opção Passada
-        for (String itemCountry: countries) {
-            if (itemCountry.equals(country)) return OK;
+        for (String itemCountry : countries) {
+            if (itemCountry.equals(country)) return true;
         }
 
-        return INPUT_NULL;
+        error_validation = INPUT_NULL;
+        return false;
     }
 
-    public String validationState(Address address) {
+    public boolean validationState(Address address) {
         List<String> states_list =
                 Arrays.asList(context.getResources().getStringArray(R.array.state));
 
         String state = address.getState();
 
         if (state == null || state.equals("")) {
-            return INPUT_NULL;
+            error_validation = INPUT_NULL;
+            return false;
         } else if (address.getCountry().equals("Estrangeiro")) {
             // Validação do Estado Digitado pelo Usuario
             if (state.length() < 5) {
-                return String.format(INPUT_MIN_LENGTH, "Estado", 5);
+                error_validation = String.format(INPUT_MIN_LENGTH, "Estado", 5);
+                return false;
             } else if (state.length() > 100) {
-                return String.format(INPUT_MAX_LENGTH, "Estado", 100);
-            } else return OK;
+                error_validation = String.format(INPUT_MAX_LENGTH, "Estado", 100);
+                return false;
+            } else return true;
         } else if (!states_list.contains(state)) {
-            return "Estado Invalido. Escolha um Estado Valido";
-        } else return OK;
+            error_validation = String.format(INPUT_INVALID, "Estado");
+            return false;
+        } else return true;
     }
 
-    public String validationCity(Address address) {
-        // todo: alterar p/ array de cidades
+    public boolean validationCity(Address address) {
+        // todo: alterar p/ array de cidades de acordo com o Estado
         List<String> city_list =
                 Arrays.asList(context.getResources().getStringArray(R.array.state));
 
         String city = address.getCity();
 
         if (city == null || city.equals("")) {
-            return INPUT_NULL;
+            error_validation = INPUT_NULL;
+            return false;
         } else if (address.getCountry().equals("Estrangeiro")) {
             // Validação do Estado Digitado pelo Usuario
             if (city.length() < 5) {
-                return String.format(INPUT_MIN_LENGTH, "Cidade", 5);
+                error_validation = String.format(INPUT_MIN_LENGTH, "Cidade", 5);
+                return false;
             } else if (city.length() > 100) {
-                return String.format(INPUT_MAX_LENGTH, "Cidade", 100);
-            } else return OK;
+                error_validation = String.format(INPUT_MAX_LENGTH, "Cidade", 100);
+                return false;
+            } else return true;
         } else if (!city_list.contains(city)) {
-            return "Estado Invalido. Escolha um Estado Valido";
-        } else return OK;
+            error_validation = String.format(INPUT_INVALID, "Cidade");
+            return false;
+        } else return true;
     }
 
 
-    public String validationAddress(String address) {
-
+    public boolean validationAddress(String address) {
         if (address == null || address.equals("")) {
-            return INPUT_NULL;
+            error_validation = INPUT_NULL;
+            return false;
         } else if (address.length() < 3) {
-            return String.format(INPUT_MIN_LENGTH, "Endereço", 3);
+            error_validation = String.format(INPUT_MIN_LENGTH, "Endereço", 3);
+            return false;
         } else if (address.length() > 120) {
-            return String.format(INPUT_MAX_LENGTH, "Endereço", 200);
+            error_validation = String.format(INPUT_MAX_LENGTH, "Endereço", 200);
+            return false;
         } else if (!address.matches("^[A-ZÀ-úà-úa-zçÇ\\s]*")) {
-            return String.format(INPUT_NOT_FORMAT, "Endereço", "Letras");
-        } else return OK;
+            error_validation = String.format(INPUT_NOT_FORMAT, "Endereço", "Letras");
+            return false;
+        } else return true;
     }
 
     // validação do Bairro
-    public String validationDistrict(String district) {
-
+    public boolean validationDistrict(String district) {
         if (district == null || district.equals("")) {
-            return INPUT_NULL;
+            error_validation = INPUT_NULL;
+            return false;
         } else if (district.length() < 3) {
-            return String.format(INPUT_MIN_LENGTH, "Bairro", 3);
+            error_validation = String.format(INPUT_MIN_LENGTH, "Bairro", 3);
+            return false;
         } else if (district.length() > 120) {
-            return String.format(INPUT_MAX_LENGTH, "Bairro", 80);
+            error_validation = String.format(INPUT_MAX_LENGTH, "Bairro", 80);
+            return false;
         } else if (!district.matches("^[A-ZÀ-úà-úa-zçÇ\\s]*")) {
-            return String.format(INPUT_NOT_FORMAT, "Bairro", "Letras");
-        } else return OK;
+            error_validation = String.format(INPUT_NOT_FORMAT, "Bairro", "Letras");
+            return false;
+        } else return true;
     }
 
-    public String validationNumber(int number) {
+    public boolean validationNumber(int number) {
         if (number == 0) {
-            return INPUT_NULL;
+            error_validation = INPUT_NULL;
+            return false;
         } else if (number < 0) {
-            return String.format(INPUT_NOT_FORMAT, "Numero", "Numeros Positivos");
+            error_validation = String.format(INPUT_NOT_FORMAT, "Numero", "Numeros Positivos");
+            return false;
         } else if (number > 1000000) {
-            return String.format(INPUT_NOT_FORMAT, "Numero", "Numeros até 1000000");
-        } else return OK;
+            error_validation = String.format(INPUT_NOT_FORMAT, "Numero", "Numeros até 1000000");
+            return false;
+        } else return true;
     }
 
     // Validação do Complemento ---> Dado Opicional
-    public String validationComplement(String district) {
-
+    public boolean validationComplement(String district) {
         if (district == null || district.equals("")) {
-            return OK;
+            return true;
         } else {
+            // Caso Preenchido, tem que ser validado
             if (district.length() < 5) {
-                return String.format(INPUT_MIN_LENGTH, "Complemento", 5);
+                error_validation = String.format(INPUT_MIN_LENGTH, "Complemento", 5);
+                return false;
             } else if (district.length() > 120) {
-                return String.format(INPUT_MAX_LENGTH, "Complemento", 80);
+                error_validation = String.format(INPUT_MAX_LENGTH, "Complemento", 80);
+                return false;
             } else if (!district.matches("^[A-ZÀ-úà-úa-zçÇ,\\-\\s]*")) {
-                return String.format(INPUT_NOT_FORMAT, "Complemento",
+                error_validation = String.format(INPUT_NOT_FORMAT, "Complemento",
                         "Letras, Virgulas ou Hifen ");
-            } else return OK;
+                return false;
+            } else return true;
         }
     }
 
-    public String validationCEP(Address address) {
-
+    public boolean validationCEP(Address address) {
         String cep = address.getCep();
-
         if (cep == null || cep.equals("")) {
-            return INPUT_NULL;
+            error_validation = INPUT_NULL;
+            return false;
         } else if (Integer.parseInt(cep) < 0) {
-            return String.format(INPUT_NOT_FORMAT, "CEP", "Numeros Positivos");
+            error_validation = String.format(INPUT_NOT_FORMAT, "CEP", "Numeros Positivos");
+            return false;
         } else if (cep.length() != 8 || Integer.parseInt(cep) > 100000000) {
-            return String.format(INPUT_NOT_FORMAT, "CEP",
-                    "Numeros no Formato 'XXXXXXXX'");
+            error_validation = String.format(INPUT_NOT_FORMAT, "CEP", "Numeros no Formato 'XXXXXXXX'");
+            return false;
         } else if (!checkCEP(address)) {
-            return "CEP Invalido";
-        } else return OK;
+            error_validation = String.format(INPUT_INVALID, "CEP");
+            return false;
+        } else return true;
     }
-
 
     // Todo: implementar validação do CEP (API EXTERNA) com o Endereço Informado
     private boolean checkCEP(Address address) {
@@ -229,4 +259,10 @@ public class Address {
     public void setCity(String city) {
         this.city = city;
     }
+
+    // Obtem os Erros das Etapas de Validação
+    public String getError_validation() {
+        return error_validation;
+    }
+
 }

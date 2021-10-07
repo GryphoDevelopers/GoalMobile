@@ -1,9 +1,7 @@
 package com.example.goal.views.activities;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +11,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.example.goal.R;
 import com.example.goal.controllers.InputErrors;
@@ -67,7 +64,7 @@ public class SingUpActivity extends AppCompatActivity {
 
     private void instanceItens() {
 
-        userSingUp = new User();
+        userSingUp = new User(this);
         managerKeyboard = new ManagerKeyboard(getApplicationContext());
 
         editName = findViewById(R.id.edittext_name);
@@ -100,27 +97,22 @@ public class SingUpActivity extends AppCompatActivity {
 
     // Validação do Nome, Nickname, Tipo do Usuario, Email, Senhas e Termo de Uso
     private boolean validationsSingUp() {
-        User user = new User();
+        User user = new User(this);
         InputErrors inputErrors = new InputErrors(this);
 
-        // Obtem a String de Validação ---> Ok = Validado, se não = Mensagem de Erro
+        // Obtem os Dados Inseridos nos Inputs
         user.setName(Objects.requireNonNull(editName.getText()).toString());
         user.setNickname(Objects.requireNonNull(editNickname.getText()).toString());
         user.setEmail(Objects.requireNonNull(editEmail.getText()).toString());
         user.setPassword(Objects.requireNonNull(editPassword.getText()).toString());
         user.setConfirmPassword(Objects.requireNonNull(editConfirmPassword.getText()).toString());
-        String validationName = user.validationName(user.getName());
-        String validationNickname = user.validationNickname(user.getNickname());
-        String validationEmail = user.validationEmail(user.getEmail());
-        String validationPassword = user.validationPassword(user.getPassword());
-        String validationConfirmPassword = user.validationConfirmPassword(user);
 
-        if (!validationName.equals(User.OK)) {
-            inputErrors.errorInputWithoutIcon(editName, validationName);
+        if (!user.validationName(user.getName())) {
+            inputErrors.errorInputWithoutIcon(editName, user.getError_validation());
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
-        } else if (!validationNickname.equals(User.OK)) {
-            inputErrors.errorInputWithoutIcon(editNickname, validationNickname);
+        } else if (!user.validationNickname(user.getNickname())) {
+            inputErrors.errorInputWithoutIcon(editNickname, user.getError_validation());
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!opClient.isChecked() && !opSeller.isChecked()) {
@@ -129,16 +121,16 @@ public class SingUpActivity extends AppCompatActivity {
             return false;
         } else card_dataPersonal.setStrokeColor(getResources().getColor(R.color.lime_green));
 
-        if (!validationEmail.equals(User.OK)) {
-            inputErrors.errorInputWithoutIcon(editEmail, validationEmail);
+        if (!user.validationEmail(user.getEmail())) {
+            inputErrors.errorInputWithoutIcon(editEmail, user.getError_validation());
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
-        } else if (!validationPassword.equals(User.OK)) {
-            inputErrors.errorInputWithoutIcon(editPassword, validationPassword);
+        } else if (!user.validationPassword(user.getPassword())) {
+            inputErrors.errorInputWithoutIcon(editPassword, user.getError_validation());
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
-        } else if (!validationConfirmPassword.equals(User.OK)) {
-            inputErrors.errorInputWithoutIcon(editConfirmPassword, validationConfirmPassword);
+        } else if (!user.validationConfirmPassword(user)) {
+            inputErrors.errorInputWithoutIcon(editConfirmPassword, user.getError_validation());
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else card_dataLogin.setStrokeColor(getResources().getColor(R.color.lime_green));
