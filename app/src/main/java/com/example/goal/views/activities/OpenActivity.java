@@ -1,39 +1,35 @@
 package com.example.goal.views.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.example.goal.models.HandleSharedPreferences;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.goal.R;
+import com.example.goal.models.HandlerSharedPreferences;
 
+/**
+ * OpenActivity: Activity que sempre controlará a primeira tela app
+ */
 public class OpenActivity extends AppCompatActivity {
-
-    private HandleSharedPreferences preferences;
-    private final Handler handler = new Handler();
-
-    private static final String PREFERENCE_LOGIN = "EXISTS_LOGIN";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open);
 
-        // Lê o arquivo da SharedPreferences ---> Existe ou não Login
-        preferences = new HandleSharedPreferences(getSharedPreferences(PREFERENCE_LOGIN, 0));
+        // Instancia o Controlador de Preferences para verificar se existe ou não Login no APP
+        HandlerSharedPreferences preferences = new HandlerSharedPreferences(this,
+                HandlerSharedPreferences.NAME_PREFERENCE);
 
-        handler.postDelayed(() ->{
-            if(preferences.existLogin()){
-                startActivity(new Intent(getApplicationContext(), IndexActivity.class));
-                finish();
-            } else{
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                finish();
-            }
+        // Deixa nessa Activity por 2 Segundos
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            // Inicia a Activity de Produtos ou Login
+            startActivity(new Intent(getApplicationContext(),
+                    preferences.existLogin() ? IndexActivity.class : LoginActivity.class));
+            finish();
         }, 2000);
-
     }
-
 }

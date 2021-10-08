@@ -6,7 +6,7 @@
     <string name="description_goal">Logo GOAL</string>
     <string name="description_app">O seu E-Commerce</string>
 
-    <!-- Mensagem de Erro na Validação do user/Address -->
+    <!-- Mensagem de Erro na Validação do User/Address -->
     <string name="validation_empty">Campo Obrigatorio</string>
     <string name="validation_min_length">%1$s deve ter no Minimo %2$s Caracteres</string>
     <string name="validation_max_length">%1$s deve ter no Maximo %2$s Caracteres</string>
@@ -65,6 +65,10 @@
     <string name="btn_createAcount">Criar Conta</string>
     <string name="errorInputs">Campo obrigatório</string>
     <string name="status_page">%1$d / %2$d</string>
+
+    <string name="title_no_register_api">Falha no Cadastro</string>
+    <string name="error_register_api">Não conseguimos Cadastrar o Usuario no Sistema. Por favor,
+        Tente Novamente !</string>
     <string name="error_singup">Dados Incorretos. Por favor, confirme os dados das
         Etapas Anteriores</string>
 

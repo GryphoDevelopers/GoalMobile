@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.goal.R;
 import com.example.goal.controllers.InputErrors;
 import com.example.goal.controllers.ManagerKeyboard;
-import com.example.goal.models.HandleSharedPreferences;
+import com.example.goal.models.HandlerSharedPreferences;
 import com.example.goal.models.User;
 import com.example.goal.views.SnackBarPersonalized;
 import com.google.android.material.textfield.TextInputEditText;
@@ -19,7 +19,6 @@ import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String PREFERENCE_LOGIN = "EXISTS_LOGIN";
     private TextInputEditText edit_email;
     private TextInputEditText edit_password;
     private Button btn_login;
@@ -69,8 +68,8 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("LOGIN", "Email: " + userLogin.getEmail() + "\nSenha: " + userLogin.getPassword());
 
                 // Login Realizado ---> Define nas SharedPreferences do Login como True
-                HandleSharedPreferences preferences = new HandleSharedPreferences(
-                        getSharedPreferences(PREFERENCE_LOGIN, 0));
+                HandlerSharedPreferences preferences = new HandlerSharedPreferences(this,
+                        HandlerSharedPreferences.NAME_PREFERENCE);
                 preferences.setLogin(true);
 
                 // Inicia a Pagina Index (Produtos) e Finaliza essa Activity

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,8 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.goal.R;
 import com.example.goal.controllers.InputErrors;
 import com.example.goal.controllers.ManagerKeyboard;
-import com.example.goal.models.HandleSharedPreferences;
+import com.example.goal.models.HandlerSharedPreferences;
 import com.example.goal.models.User;
+import com.example.goal.views.AlertDialogPersonalized;
 import com.example.goal.views.SnackBarPersonalized;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -24,8 +26,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.Objects;
 
 public class SingUpActivity extends AppCompatActivity {
-
-    private static final String PREFERENCE_LOGIN = "EXISTS_LOGIN";
 
     private TextView errorOptionUser;
     private TextView errorTermsUse;
@@ -41,8 +41,8 @@ public class SingUpActivity extends AppCompatActivity {
     private Button createAcount;
     private Button see_termsUse;
 
-    //private ConstraintLayout layout_personal, layout_login;
     private MaterialCardView card_dataPersonal, card_dataLogin, card_terms;
+    private ScrollView scrollView;
 
     private ManagerKeyboard managerKeyboard;
     private User userSingUp;
@@ -62,10 +62,13 @@ public class SingUpActivity extends AppCompatActivity {
         listenerSingUp();
     }
 
+    /**
+     * Instancia Itens que serão usados (Classes, Widgets)
+     */
     private void instanceItens() {
-
         userSingUp = new User(this);
         managerKeyboard = new ManagerKeyboard(getApplicationContext());
+        scrollView = findViewById(R.id.scrollView_singUp);
 
         editName = findViewById(R.id.edittext_name);
         editNickname = findViewById(R.id.edittext_nickname);
@@ -87,7 +90,9 @@ public class SingUpActivity extends AppCompatActivity {
         opSeller = findViewById(R.id.rbtn_seller);
     }
 
-    //Recupera os valores colocados no Array (dentro do strings.xml) e coloca nas Opções
+    /**
+     * Recupera os valores (string.xml) do Array e coloca nas Opções
+     */
     private void setTypeUser() {
         Resources res = getResources();
         String[] optionsUsers = res.getStringArray(R.array.options_peopleType);
@@ -95,7 +100,9 @@ public class SingUpActivity extends AppCompatActivity {
         opClient.setText(optionsUsers[1]);
     }
 
-    // Validação do Nome, Nickname, Tipo do Usuario, Email, Senhas e Termo de Uso
+    /**
+     * Validação do Usuario (Nome, Nickname, Tipo do Usuario, Email, Senhas e Termo de Uso)
+     */
     private boolean validationsSingUp() {
         User user = new User(this);
         InputErrors inputErrors = new InputErrors(this);
@@ -107,6 +114,7 @@ public class SingUpActivity extends AppCompatActivity {
         user.setPassword(Objects.requireNonNull(editPassword.getText()).toString());
         user.setConfirmPassword(Objects.requireNonNull(editConfirmPassword.getText()).toString());
 
+        // Valida a Primeira Parte (Nome, Nickname e Tipo de Usuario)
         if (!user.validationName(user.getName())) {
             inputErrors.errorInputWithoutIcon(editName, user.getError_validation());
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
@@ -116,11 +124,14 @@ public class SingUpActivity extends AppCompatActivity {
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!opClient.isChecked() && !opSeller.isChecked()) {
+            scrollView.fullScroll(ScrollView.FOCUS_UP);
             errorOptionUser.setVisibility(View.VISIBLE);
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else card_dataPersonal.setStrokeColor(getResources().getColor(R.color.lime_green));
+        errorOptionUser.setVisibility(View.GONE);
 
+        // Valida a Segunda Parte (Email e Senhas)
         if (!user.validationEmail(user.getEmail())) {
             inputErrors.errorInputWithoutIcon(editEmail, user.getError_validation());
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
@@ -135,48 +146,55 @@ public class SingUpActivity extends AppCompatActivity {
             return false;
         } else card_dataLogin.setStrokeColor(getResources().getColor(R.color.lime_green));
 
+        // Valida os Temos de Uso
         if (!checkTermsUse.isChecked()) {
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.lime_green));
             errorTermsUse.setVisibility(View.VISIBLE);
             card_terms.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else {
+            // Passou por todas as validações: Define na Classe userSingUp (Usada p/ fazer o Cadastro)
             card_terms.setStrokeColor(getResources().getColor(R.color.lime_green));
-            errorTermsUse.setVisibility(View.GONE);
             errorOptionUser.setVisibility(View.GONE);
+            errorTermsUse.setVisibility(View.GONE);
 
-            userSingUp.setEmail(editEmail.getText().toString());
-            userSingUp.setPassword(editPassword.getText().toString());
-            userSingUp.setConfirmPassword(editConfirmPassword.getText().toString());
-            userSingUp.setName(editName.getText().toString());
-            userSingUp.setNickname(editNickname.getText().toString());
+            userSingUp.setEmail(user.getEmail());
+            userSingUp.setPassword(user.getPassword());
+            userSingUp.setConfirmPassword(user.getConfirmPassword());
+            userSingUp.setName(user.getName());
+            userSingUp.setNickname(user.getNickname());
             userSingUp.setSeller(opSeller.isChecked());
-            userSingUp.setCheckedTermsUse(true);
+            userSingUp.setCheckedTermsUse(checkTermsUse.isChecked());
             return true;
         }
     }
 
-
-    // Cadastra o Usuario
+    /**
+     * Listener do Botão "Cadastrar". Verifica as Validações e Cadastra o Usuario
+     */
     public void listenerSingUp() {
         createAcount.setOnClickListener(v -> {
-
             // Valida o Cadatro e Insere o Cadastro na API
             if (validationsSingUp()) {
+                if (!registerInAPI(userSingUp)) {
+                    new AlertDialogPersonalized(this).defaultDialog(
+                            getString(R.string.title_no_register_api),
+                            getString(R.string.error_register_api)).show();
+                }
 
                 managerKeyboard.closeKeyboard(this);
-
                 // Define TRUE para login Realizado
-                HandleSharedPreferences preferences = new HandleSharedPreferences(
-                        getSharedPreferences(PREFERENCE_LOGIN, 0));
+                HandlerSharedPreferences preferences = new HandlerSharedPreferences(this,
+                        HandlerSharedPreferences.NAME_PREFERENCE);
                 preferences.setLogin(true);
 
+                // todo: inserir o registro no banco de dados Local (cada novo registro = limpa o banco)
                 // TODO RETIRAR e implementar POST p/ API
                 Log.e("SING UP", "Nome: " + userSingUp.getName() + "\nEmail: " +
                         userSingUp.getEmail() + "\nNickname:" + userSingUp.getNickname() +
                         "\nSenha: " + userSingUp.getPassword() + "\nConfirmar Senha: " +
                         userSingUp.getConfirmPassword() + "\nOpção Usuario: " +
-                        userSingUp.isSeller() + "\nTermos de Uso: " + userSingUp.getConfirmPassword());
+                        userSingUp.isSeller() + "\nTermos de Uso: " + userSingUp.isCheckedTermsUse());
 
                 // Finaliza essa Activity e Inicia a Activity do Cadastro Completo
                 startActivity(new Intent(this, RegisterForPurchases.class));
@@ -188,6 +206,17 @@ public class SingUpActivity extends AppCompatActivity {
             SnackBarPersonalized snackBar = new SnackBarPersonalized(findViewById(R.id.layout_singup));
             snackBar.makeDefaultSnackBar(R.string.error_singup).show();
         });
+    }
+
+    /**
+     * Insere um Usuario no Banco de Dados via API
+     *
+     * @param userSingUp Usuario inserido no Banco de Dados
+     * @return boolean
+     */
+    private boolean registerInAPI(User userSingUp) {
+        //todo: implementação futura
+        return true;
     }
 
 }

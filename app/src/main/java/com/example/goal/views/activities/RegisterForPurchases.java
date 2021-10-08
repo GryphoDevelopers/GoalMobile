@@ -11,6 +11,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -42,6 +43,7 @@ public class RegisterForPurchases extends AppCompatActivity {
     private String[] array_countries, array_state, array_city, array_uf;
     private Context context;
     private LinearLayout layout_typeData, layout_stateCity;
+    private ScrollView scrollView;
 
     private TextView error_document;
     private MaterialCardView card_dataPersonal, card_dataAddress;
@@ -76,7 +78,6 @@ public class RegisterForPurchases extends AppCompatActivity {
         skip_stage.setOnClickListener(v -> {
             managerKeyboard.closeKeyboard(this);
             startActivity(new Intent(this, IndexActivity.class));
-            // todo: testar se irá fechar as activities da pilha
             finishAffinity();
         });
 
@@ -112,6 +113,7 @@ public class RegisterForPurchases extends AppCompatActivity {
         edit_number = findViewById(R.id.edit_number);
         edit_complement = findViewById(R.id.edit_complement);
 
+        scrollView = findViewById(R.id.scrollView_purchases);
         layoutEdit_cpf = findViewById(R.id.layoutEdit_cpf);
         layoutEdit_cnpj = findViewById(R.id.layoutEdit_cnpj);
         layoutEdit_country = findViewById(R.id.layoutEdit_countries);
@@ -302,6 +304,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             }
         } else {
             // Nenhuma opção foi Selecionada
+            scrollView.fullScroll(ScrollView.FOCUS_UP);
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             error_document.setVisibility(View.VISIBLE);
             return false;
@@ -454,7 +457,7 @@ public class RegisterForPurchases extends AppCompatActivity {
 
                 // Abre a pagina Index (Produtos) e Finaliza a Actvity
                 startActivity(new Intent(this, IndexActivity.class));
-                finish();
+                finishAffinity();
             } else {
                 // Validações Não Validas ou Erro no Cadastro
                 SnackBarPersonalized snackBar = new SnackBarPersonalized(findViewById(R.id.layout_purchases));

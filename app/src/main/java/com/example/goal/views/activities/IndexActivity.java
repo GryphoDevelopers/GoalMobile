@@ -12,7 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.goal.R;
-import com.example.goal.models.HandleSharedPreferences;
+import com.example.goal.models.HandlerSharedPreferences;
 import com.google.android.material.navigation.NavigationView;
 
 public class IndexActivity extends AppCompatActivity {
@@ -29,10 +29,10 @@ public class IndexActivity extends AppCompatActivity {
         confiNavigation();
 
         // TODO RETIRAR
-        Button home = findViewById(R.id.button_home);
-        home.setOnClickListener(v -> {
-            HandleSharedPreferences preferences = new HandleSharedPreferences(
-                    getSharedPreferences("EXISTS_LOGIN",0));
+        Button btn_home = findViewById(R.id.button_home);
+        btn_home.setOnClickListener(v -> {
+            HandlerSharedPreferences preferences = new HandlerSharedPreferences(this,
+                    HandlerSharedPreferences.NAME_PREFERENCE);
             preferences.setLogin(false);
             startActivity(new Intent(this, OpenActivity.class));
             finish();
@@ -41,12 +41,12 @@ public class IndexActivity extends AppCompatActivity {
     }
 
 
-    private void configToolBar(){
+    private void configToolBar() {
         toolbar = findViewById(R.id.toolbar_category);
         setSupportActionBar(toolbar);
     }
 
-    private void configDrawerLayout(){
+    private void configDrawerLayout() {
 
         // Variaveis utilizadas
         DrawerLayout drawerLayout;
@@ -71,18 +71,18 @@ public class IndexActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(actionToggle);
     }
 
-    private void confiNavigation(){
+    private void confiNavigation() {
         NavigationView navigationView;
 
         navigationView = findViewById(R.id.navigationView_categories);
         // Listener dos Cliques no Menu
-        navigationView.setNavigationItemSelectedListener(menuItem -> itemSelect(menuItem));
+        navigationView.setNavigationItemSelectedListener(this::itemSelect);
     }
 
 
     // Trata os cliques no Menu
-    private boolean itemSelect(MenuItem menuItem){
-        switch (menuItem.getItemId()){
+    private boolean itemSelect(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
             case R.id.equipment:
                 System.out.println("Item: Equipamentos");
                 return true;
