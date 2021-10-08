@@ -2,15 +2,25 @@ package com.example.goal.models;
 
 import android.content.Context;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.Random;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-// todo: arrumar context dos testes
+/**
+ * Classe de Testes da Classe Usario.
+ * <p>
+ * Está no AndroidTest por conta da utilização do Context na Instancia da Classe User
+ */
+@RunWith(AndroidJUnit4.class)
 public class UserTest {
 
     // Variaveis Usadas nos Testes
@@ -20,8 +30,12 @@ public class UserTest {
     private String max_length;
     private int randomNumber;
 
+    /**
+     * Instancia as variaveis que serão utilizados nos Testes
+     */
     @Before
     public void instanceItems() {
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         user = new User(context);
         randomNumber = new Random().nextInt(4);
 
@@ -38,7 +52,6 @@ public class UserTest {
 
     @Test
     public void validationName() {
-
         String min_lengthName = "Lor";
         String[] valid_names = new String[5];
         valid_names[0] = "Lorem Ipsulin";
@@ -76,16 +89,15 @@ public class UserTest {
         valid_email[3] = "henry@hotmail.com";
         valid_email[4] = "theo@hotmail.com";
 
-
-        assertNotEquals(true, user.validationEmail(null));
-        assertNotEquals(true, user.validationEmail(""));
-        assertNotEquals(true, user.validationEmail("Lums " + 256));
-        assertNotEquals(true, user.validationEmail("Loem"));
-        assertNotEquals(true, user.validationEmail(max_length + "Knus"));
-        assertNotEquals(true, user.validationEmail(String.valueOf(65232)));
-        assertNotEquals(true, user.validationEmail(String.valueOf(0)));
-        assertNotEquals(true, user.validationEmail(valid_email[randomNumber] + " "));
-        assertNotEquals(true, user.validationEmail(valid_email[randomNumber] + " Aplos"));
+        assertFalse(user.validationEmail(null));
+        assertFalse(user.validationEmail(""));
+        assertFalse(user.validationEmail("Lums " + 256));
+        assertFalse(user.validationEmail("Loem"));
+        assertFalse(user.validationEmail(max_length + "Knus"));
+        assertFalse(user.validationEmail(String.valueOf(65232)));
+        assertFalse(user.validationEmail(String.valueOf(0)));
+        assertFalse(user.validationEmail(valid_email[randomNumber] + " "));
+        assertFalse(user.validationEmail(valid_email[randomNumber] + " Aplos"));
 
         for (String item : valid_email) {
             assertTrue(user.validationEmail(item));
@@ -97,10 +109,8 @@ public class UserTest {
 
     @Test
     public void validationNickname() {
-
         String min_lengthNickname = "Ilaus";
-        String max_lengthNickname = "Lokams.Huiolasn_LuhjeiKandJaqkmuing" +
-                ".Hashdo_Masfbujs_Kbvues.Cuisjte_Leugianunv.Ol";
+        String max_lengthNickname = "sn_LuhjeiKandJaqkmuing..Cui.Lopluns.Lope_sjte_Le.OlPlutyplun";
         String[] valid_nickname = new String[5];
         valid_nickname[0] = "Lor3m_Ipsul1n";
         valid_nickname[1] = "Hum.lof_Opla";
@@ -108,12 +118,12 @@ public class UserTest {
         valid_nickname[3] = "Niju.";
         valid_nickname[4] = "Lore4nv2_Lpoa.";
 
-        assertNotEquals(true, user.validationNickname(null));
-        assertNotEquals(true, user.validationNickname(""));
-        assertNotEquals(true, user.validationNickname("Lufems "));
-        assertNotEquals(true, user.validationNickname("Loem"));
-        assertNotEquals(true, user.validationNickname(max_length + " Knus"));
-        assertNotEquals(true, user.validationNickname(String.valueOf(0)));
+        assertFalse(user.validationNickname(null));
+        assertFalse(user.validationNickname(""));
+        assertFalse(user.validationNickname("Lufems "));
+        assertFalse(user.validationNickname("Loem"));
+        assertFalse(user.validationNickname(max_length + " Knus"));
+        assertFalse( user.validationNickname(String.valueOf(0)));
         /* todo: alterar = Implementar regex de pelo menos 5 Letras no Nickname
         assertNotEquals(true, user.validationNickname(String.valueOf(65232)));
         assertNotEquals(true, user.validationNickname("Lums" + 256));
@@ -138,13 +148,13 @@ public class UserTest {
         valid_cpf[3] = "61656389029";
         valid_cpf[4] = "57411423033";
 
-        assertNotEquals(true, user.validationCpf(null));
-        assertNotEquals(true, user.validationCpf(""));
-        assertNotEquals(true, user.validationCpf("Lums"));
-        assertNotEquals(true, user.validationCpf("Loem "));
-        assertNotEquals(true, user.validationCpf(String.valueOf(65232)));
-        assertNotEquals(true, user.validationCpf(String.valueOf(0)));
-        assertNotEquals(true, user.validationCpf("Lums" + 256));
+        assertFalse(user.validationCpf(null));
+        assertFalse(user.validationCpf(""));
+        assertFalse(user.validationCpf("Lums"));
+        assertFalse(user.validationCpf("Loem "));
+        assertFalse(user.validationCpf(String.valueOf(65232)));
+        assertFalse(user.validationCpf(String.valueOf(0)));
+        assertFalse(user.validationCpf("Lums" + 256));
 
         for (String item : valid_cpf) {
             assertTrue(user.validationCpf(item));
@@ -161,13 +171,13 @@ public class UserTest {
         valid_cnpj[3] = "10267871000120";
         valid_cnpj[4] = "01021298000189";
 
-        assertNotEquals(true, user.validationCnpj(null));
-        assertNotEquals(true, user.validationCnpj(""));
-        assertNotEquals(true, user.validationCnpj("Lums"));
-        assertNotEquals(true, user.validationCnpj("Loem "));
-        assertNotEquals(true, user.validationCnpj(String.valueOf(65232)));
-        assertNotEquals(true, user.validationCnpj(String.valueOf(0)));
-        assertNotEquals(true, user.validationCnpj("Lums" + 256));
+        assertFalse(user.validationCnpj(null));
+        assertFalse(user.validationCnpj(""));
+        assertFalse(user.validationCnpj("Lums"));
+        assertFalse(user.validationCnpj("Loem "));
+        assertFalse(user.validationCnpj(String.valueOf(65232)));
+        assertFalse(user.validationCnpj(String.valueOf(0)));
+        assertFalse(user.validationCnpj("Lums" + 256));
 
         for (String item : valid_cnpj) {
             assertTrue(user.validationCnpj(item));
@@ -180,11 +190,11 @@ public class UserTest {
         String min_lengthPassword = "laos2";
         String max_lengthPassword = "aius8913rhi102r1120391rjasojfl1283thungd";
 
-        assertNotEquals(true, user.validationPassword(null));
-        assertNotEquals(true, user.validationPassword(""));
-        assertNotEquals(true, user.validationPassword("Kjao"));
-        assertNotEquals(true, user.validationPassword(String.valueOf(1234)));
-        assertNotEquals(true, user.validationPassword("Kjao "));
+        assertFalse(user.validationPassword(null));
+        assertFalse(user.validationPassword(""));
+        assertFalse(user.validationPassword("Kjao"));
+        assertFalse(user.validationPassword(String.valueOf(1234)));
+        assertFalse(user.validationPassword("Kjao "));
 
         for (String item : valid_password) {
             assertTrue(user.validationPassword(item));
@@ -225,12 +235,12 @@ public class UserTest {
         no_match.setPassword("Password123");
         no_match.setConfirmPassword("Password12");
 
-        assertNotEquals(true, user.validationConfirmPassword(new User(context)));
-        assertNotEquals(true, user.validationConfirmPassword(empty_password));
-        assertNotEquals(true, user.validationConfirmPassword(error_length));
-        assertNotEquals(true, user.validationConfirmPassword(error_lengthNumber));
-        assertNotEquals(true, user.validationConfirmPassword(error_blankChar));
-        assertNotEquals(true, user.validationConfirmPassword(no_match));
+        assertFalse(user.validationConfirmPassword(new User(context)));
+        assertFalse(user.validationConfirmPassword(empty_password));
+        assertFalse(user.validationConfirmPassword(error_length));
+        assertFalse(user.validationConfirmPassword(error_lengthNumber));
+        assertFalse(user.validationConfirmPassword(error_blankChar));
+        assertFalse(user.validationConfirmPassword(no_match));
 
         for (String item : valid_password) {
             User userItem = new User(context);
@@ -254,13 +264,13 @@ public class UserTest {
         valid_numbers[3] = "61605370906";
         valid_numbers[4] = "43477218084";
 
-        assertNotEquals(true, user.validationPhone(null));
-        assertNotEquals(true, user.validationPhone(""));
-        assertNotEquals(true, user.validationPhone("Kjao"));
-        assertNotEquals(true, user.validationPhone("Kjao12354"));
-        assertNotEquals(true, user.validationPhone("Kjao "));
-        assertNotEquals(true, user.validationPhone(String.valueOf(1234)));
-        assertNotEquals(true, user.validationPhone("123 153"));
+        assertFalse(user.validationPhone(null));
+        assertFalse(user.validationPhone(""));
+        assertFalse(user.validationPhone("Kjao"));
+        assertFalse(user.validationPhone("Kjao12354"));
+        assertFalse(user.validationPhone("Kjao "));
+        assertFalse(user.validationPhone(String.valueOf(1234)));
+        assertFalse(user.validationPhone("123 153"));
 
         for (String item : valid_numbers) {
             assertTrue(user.validationPhone(item));
