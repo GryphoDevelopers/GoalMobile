@@ -82,12 +82,7 @@ public class Address {
     }
 
     public boolean validationCity(Address address) {
-        // todo: alterar p/ array de cidades de acordo com o Estado
-        List<String> city_list =
-                Arrays.asList(context.getResources().getStringArray(R.array.state));
-
         String city = address.getCity();
-
         if (city == null || city.equals("")) {
             error_validation = INPUT_NULL;
             return false;
@@ -100,10 +95,7 @@ public class Address {
                 error_validation = String.format(INPUT_MAX_LENGTH, "Cidade", 100);
                 return false;
             } else return true;
-        } else if (!city_list.contains(city)) {
-            error_validation = String.format(INPUT_INVALID, "Cidade");
-            return false;
-        } else return true;
+        }  else return true;
     }
 
 

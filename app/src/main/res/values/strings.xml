@@ -6,6 +6,7 @@
     <string name="description_goal">Logo GOAL</string>
     <string name="description_app">O seu E-Commerce</string>
 
+    <!-- Mensagem de Erro na Validação do user/Address -->
     <string name="validation_empty">Campo Obrigatorio</string>
     <string name="validation_min_length">%1$s deve ter no Minimo %2$s Caracteres</string>
     <string name="validation_max_length">%1$s deve ter no Maximo %2$s Caracteres</string>
@@ -13,6 +14,18 @@
     <string name="validation_not_disponible">%s Invalido. Tente Novamente</string>
     <string name="validation_password">A senha deve conter %s</string>
     <string name="validation_equal_password">As Senhas não são Iguais</string>
+
+    <!-- Mensagens de Erro da API -->
+    <string name="error_404">Sua solicitação não foi bem Sucedida ! Tente Novamente</string>
+    <string name="error_500">Dados não Encontrados ! Tente Novamente</string>
+    <string name="error_generic">Houve um Erro ao executar a Solicitação ! Tente Novamente</string>
+    <string name="error_serialization">Houve um erro ao Obter os Dados Solicitados !
+        Tente Novamente</string>
+
+    <!-- AlertDialogPersonalized -->
+    <string name="title_error_api">Solicitação Invalida</string>
+    <string name="title_loading">Carregando …</string>
+    <string name="button_close">Fechar</string>
 
     <!-- OptionsActivity - Tela de Opções  -->
     <string name="title_options">Olá, Bem Vindo à GOAL</string>
@@ -115,6 +128,35 @@
         <item>São Paulo</item>
         <item>Sergipe</item>
         <item>Tocantins</item>
+    </string-array>
+    <string-array name="uf">
+        <item>AC</item>
+        <item>AL</item>
+        <item>AP</item>
+        <item>AM</item>
+        <item>BA</item>
+        <item>CE</item>
+        <item>DF</item>
+        <item>ES</item>
+        <item>GO</item>
+        <item>MA</item>
+        <item>MT</item>
+        <item>MS</item>
+        <item>MG</item>
+        <item>PA</item>
+        <item>PB</item>
+        <item>PR</item>
+        <item>PE</item>
+        <item>PI</item>
+        <item>RJ</item>
+        <item>RN</item>
+        <item>RS</item>
+        <item>RO</item>
+        <item>RR</item>
+        <item>SC</item>
+        <item>SP</item>
+        <item>SE</item>
+        <item>TO</item>
     </string-array>
     <string name="btn_finishSingUp">Finalizar Cadastro</string>
 
