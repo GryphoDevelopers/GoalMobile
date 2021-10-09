@@ -19,7 +19,7 @@ public class OpenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open);
 
-        // Instancia o Controlador de Preferences para verificar se existe ou não Login no APP
+        // Instancia o Controlador de Preferences para verificar se existe ou não um Login no APP
         HandlerSharedPreferences preferences = new HandlerSharedPreferences(this,
                 HandlerSharedPreferences.NAME_PREFERENCE);
 
@@ -28,7 +28,7 @@ public class OpenActivity extends AppCompatActivity {
         handler.postDelayed(() -> {
             // Inicia a Activity de Produtos ou Login
             startActivity(new Intent(getApplicationContext(),
-                    preferences.existLogin() ? IndexActivity.class : LoginActivity.class));
+                    preferences.isRememberLogin() ? IndexActivity.class : LoginActivity.class));
             finish();
         }, 2000);
     }

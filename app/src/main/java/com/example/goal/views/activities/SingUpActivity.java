@@ -183,10 +183,10 @@ public class SingUpActivity extends AppCompatActivity {
                 }
 
                 managerKeyboard.closeKeyboard(this);
-                // Define TRUE para login Realizado
+                // Define TRUE para lembrar o Login que acabou de ser Feiro
                 HandlerSharedPreferences preferences = new HandlerSharedPreferences(this,
                         HandlerSharedPreferences.NAME_PREFERENCE);
-                preferences.setLogin(true);
+                preferences.rememberLogin(true);
 
                 // todo: inserir o registro no banco de dados Local (cada novo registro = limpa o banco)
                 // TODO RETIRAR e implementar POST p/ API

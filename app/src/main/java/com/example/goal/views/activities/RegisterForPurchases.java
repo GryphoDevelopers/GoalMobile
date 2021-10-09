@@ -46,7 +46,7 @@ public class RegisterForPurchases extends AppCompatActivity {
     private ScrollView scrollView;
 
     private TextView error_document;
-    private MaterialCardView card_dataPersonal, card_dataAddress;
+    private MaterialCardView card_dataPersonal, card_dataAddress, card_dataTerritory;
 
     private TextInputLayout layoutEdit_cpf, layoutEdit_cnpj, layoutEdit_country, layoutEdit_state,
             layoutEdit_city, layoutEdit_cep, layoutEdit_exState, layoutEdit_exCity;
@@ -103,6 +103,7 @@ public class RegisterForPurchases extends AppCompatActivity {
         layout_stateCity = findViewById(R.id.layout_stateCity);
         card_dataPersonal = findViewById(R.id.card_doccument);
         card_dataAddress = findViewById(R.id.card_address);
+        card_dataTerritory = findViewById(R.id.card_territory);
 
         edit_cpf = findViewById(R.id.edit_cpf);
         edit_cnpj = findViewById(R.id.edit_cnpj);
@@ -173,6 +174,7 @@ public class RegisterForPurchases extends AppCompatActivity {
         autoComplete_country.setOnItemClickListener((parent, view, position, id) -> {
             // Obtem o Valor selecionado
             addressRegister.setCountry(array_countries[position]);
+            layoutEdit_country.setErrorEnabled(false);
             layout_stateCity.setVisibility(View.VISIBLE);
 
             // Configura os Inputs diferentes para Extrangeiros e Brasileiros
@@ -261,7 +263,7 @@ public class RegisterForPurchases extends AppCompatActivity {
         autoComplete_city.setOnItemClickListener((parent, view, position, id) -> {
             // Obtem o Valor selecionado e Configura o EditText CEP
             addressRegister.setCity(array_city[position]);
-            layoutEdit_cep.setEnabled(true);
+            layoutEdit_cep.setVisibility(View.VISIBLE);
         });
     }
 
@@ -329,14 +331,14 @@ public class RegisterForPurchases extends AppCompatActivity {
      *
      * @return boolean
      */
-    private boolean validationLocale() {
+    private boolean validationTerritory() {
         Address address = new Address(this);
         address.setCountry(addressRegister.getCountry());
 
         // Valida as Opções de país (Brasil X Estrangeiro)
         if (!address.validationCountry(address.getCountry())) {
             inputErrors.errorInputLayout(layoutEdit_country, address.getError_validation());
-            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
+            card_dataTerritory.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else layoutEdit_country.setErrorEnabled(false);
 
@@ -357,7 +359,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             if (isForeign)
                 inputErrors.errorInputWithoutIcon(edit_exState, address.getError_validation());
             else inputErrors.errorInputLayout(layoutEdit_state, address.getError_validation());
-            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
+            card_dataTerritory.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else {
             // Remove o Erro do InputLayout dos Estados Brasileiros
@@ -369,31 +371,17 @@ public class RegisterForPurchases extends AppCompatActivity {
                 inputErrors.errorInputWithoutIcon(edit_exCity, address.getError_validation());
             else inputErrors.errorInputLayout(layoutEdit_city, address.getError_validation());
 
-            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
+            card_dataTerritory.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else {
             // Remove o Erro do InputLayout das Cidades Brasileiras
             if (!isForeign) layoutEdit_city.setErrorEnabled(false);
         }
 
-        // Finalização das Validações e Atribuição dos Valores a classe Global addressRegister
-        if (!isForeign) {
-            // Validação do CEP (somente para Brasileiros)
-            address.setCep(Objects.requireNonNull(edit_cep.getText()).toString());
-            if (!address.validationCEP(address)) {
-                inputErrors.errorInputWithoutIcon(edit_cep, address.getError_validation());
-                card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
-                return false;
-            } else addressRegister.setCep(edit_cep.getText().toString());
-
-        } else {
-            // Define o Estado e Cidade do Estrangeiro
-            addressRegister.setState(address.getState());
-            addressRegister.setCity(address.getCity());
-        }
-
         // Passou por todas as dados da Validação
-        card_dataAddress.setStrokeColor(getResources().getColor(R.color.lime_green));
+        addressRegister.setState(address.getState());
+        addressRegister.setCity(address.getCity());
+        card_dataTerritory.setStrokeColor(getResources().getColor(R.color.lime_green));
         return true;
     }
 
@@ -410,8 +398,15 @@ public class RegisterForPurchases extends AppCompatActivity {
         address.setComplement(Objects.requireNonNull(edit_complement.getText()).toString());
 
         // Evita erros ao Convertes EmptyString em Int
-        String number = Objects.requireNonNull(edit_number.getText()).toString();
-        address.setNumber(number.equals("") ? 0 : Integer.parseInt(number));
+        try {
+            String number = Objects.requireNonNull(edit_number.getText()).toString();
+            address.setNumber(number.equals("") ? 0 : Integer.parseInt(number));
+        } catch (NumberFormatException ex) {
+            String EXCEPTION_CONVERT = "EX_CONVERT";
+            String NAME_CLASS = "RegisterForPurchases";
+            Log.e(EXCEPTION_CONVERT, NAME_CLASS + " - Erro ao Converter o Numero do Endereço");
+            ex.printStackTrace();
+        }
 
         if (!address.validationAddress(address.getAddress())) {
             inputErrors.errorInputWithoutIcon(edit_address, address.getError_validation());
@@ -425,16 +420,31 @@ public class RegisterForPurchases extends AppCompatActivity {
             inputErrors.errorInputWithoutIcon(edit_number, address.getError_validation());
             card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
-        } else if (!address.validationComplement(address.getComplement())) {
+        }
+
+        // Caso o CEP Esteja disponivel (País = Brasil)
+        if (layoutEdit_cep.getVisibility() == View.VISIBLE) {
+            // Validação do CEP (somente para Brasileiros)
+            address.setCep(Objects.requireNonNull(edit_cep.getText()).toString());
+            if (!address.validationCEP(address)) {
+                inputErrors.errorInputWithoutIcon(edit_cep, address.getError_validation());
+                card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
+                return false;
+            } else addressRegister.setCep(edit_cep.getText().toString());
+        }
+
+        // Validação do Complemento
+        if (!address.validationComplement(address.getComplement())) {
             inputErrors.errorInputWithoutIcon(edit_complement, address.getError_validation());
             card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else {
+            // Todos os Dados Validados
             card_dataAddress.setStrokeColor(getResources().getColor(R.color.lime_green));
-            addressRegister.setAddress(edit_address.getText().toString());
-            addressRegister.setDistrict(edit_district.getText().toString());
-            addressRegister.setComplement(edit_complement.getText().toString());
-            addressRegister.setNumber(Integer.parseInt(edit_number.getText().toString()));
+            addressRegister.setAddress(address.getAddress());
+            addressRegister.setDistrict(address.getDistrict());
+            addressRegister.setComplement(address.getComplement());
+            addressRegister.setNumber(address.getNumber());
             return true;
         }
     }
@@ -444,7 +454,7 @@ public class RegisterForPurchases extends AppCompatActivity {
      */
     private void completeRegister() {
         registerCompleteUser.setOnClickListener(v -> {
-            if (validationPersonalInfos() && validationLocale() && validationAddress()) {
+            if (validationPersonalInfos() && validationTerritory() && validationAddress()) {
                 managerKeyboard.closeKeyboard(this);
 
                 // TODO RETIRAR e Implementar Cadastro POST API

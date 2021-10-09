@@ -11,7 +11,8 @@ public class HandlerSharedPreferences {
     // Constantes dos nomes das Preferences
     public static final String NAME_PREFERENCE = "app_goal";
     // Constantes das Chaves das Preferences
-    private static final String LOGIN_KEY = "login";
+    private static final String REMEMBER_LOGIN_KEY = "remember_login";
+    private static final String NOT_LOGGED = "not_logged";
     private final SharedPreferences preferences;
 
     /**
@@ -26,20 +27,22 @@ public class HandlerSharedPreferences {
     }
 
     /**
-     * Verifica se Existe um Login no Aplicativo
+     * Verifica se o usuario escolheu ou não o "Lembrar login"
+     *
+     * @return true/false
      */
-    public boolean existLogin() {
-        return preferences.getBoolean(LOGIN_KEY, false);
+    public boolean isRememberLogin() {
+        return preferences.getBoolean(REMEMBER_LOGIN_KEY, false);
     }
 
     /**
-     * Altera a Variavel que diz se existe ou não Login no Aplicativo
+     * Altera a Variavel que armazena o "Lembrar Login"
      *
-     * @param isLogin valor da existencia ou não do login
+     * @param isRememberLogin valor se irá lembrar o Login ou não
      */
-    public void setLogin(boolean isLogin) {
+    public void rememberLogin(boolean isRememberLogin) {
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(LOGIN_KEY, isLogin);
+        editor.putBoolean(REMEMBER_LOGIN_KEY, isRememberLogin);
         editor.apply();
     }
 

@@ -24,16 +24,19 @@ public class IndexActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
 
+        // Configura os elementos da Activity
         configToolBar();
         configDrawerLayout();
         confiNavigation();
 
-        // TODO RETIRAR
+        // TODO RETIRAR: Usado para Testes
         Button btn_home = findViewById(R.id.button_home);
         btn_home.setOnClickListener(v -> {
+            // Retira a opção "Lembrar Login"
             HandlerSharedPreferences preferences = new HandlerSharedPreferences(this,
                     HandlerSharedPreferences.NAME_PREFERENCE);
-            preferences.setLogin(false);
+            preferences.rememberLogin(false);
+            // INicia a primeira Activity
             startActivity(new Intent(this, OpenActivity.class));
             finish();
         });
