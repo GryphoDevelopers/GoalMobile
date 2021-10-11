@@ -1,4 +1,4 @@
-package com.example.goal.controllers;
+package com.example.goal.managers;
 
 import android.content.Context;
 import android.util.Log;

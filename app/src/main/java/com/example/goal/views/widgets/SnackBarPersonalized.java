@@ -1,4 +1,4 @@
-package com.example.goal.views;
+package com.example.goal.views.widgets;
 
 import android.view.View;
 

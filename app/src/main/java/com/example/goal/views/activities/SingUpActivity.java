@@ -15,12 +15,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goal.R;
-import com.example.goal.controllers.InputErrors;
-import com.example.goal.controllers.ManagerKeyboard;
-import com.example.goal.models.HandlerSharedPreferences;
+import com.example.goal.managers.ManagerInputErrors;
+import com.example.goal.managers.ManagerKeyboard;
+import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.User;
-import com.example.goal.views.AlertDialogPersonalized;
-import com.example.goal.views.SnackBarPersonalized;
+import com.example.goal.views.widgets.AlertDialogPersonalized;
+import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -106,7 +106,7 @@ public class SingUpActivity extends AppCompatActivity {
      */
     private boolean validationsSingUp() {
         User user = new User(this);
-        InputErrors inputErrors = new InputErrors(this);
+        ManagerInputErrors managerInputErrors = new ManagerInputErrors(this);
 
         // Obtem os Dados Inseridos nos Inputs
         user.setName(Objects.requireNonNull(editName.getText()).toString());
@@ -117,11 +117,11 @@ public class SingUpActivity extends AppCompatActivity {
 
         // Valida a Primeira Parte (Nome, Nickname e Tipo de Usuario)
         if (!user.validationName(user.getName())) {
-            inputErrors.errorInputWithoutIcon(editName, user.getError_validation());
+            managerInputErrors.errorInputWithoutIcon(editName, user.getError_validation());
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!user.validationNickname(user.getNickname())) {
-            inputErrors.errorInputWithoutIcon(editNickname, user.getError_validation());
+            managerInputErrors.errorInputWithoutIcon(editNickname, user.getError_validation());
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!opClient.isChecked() && !opSeller.isChecked()) {
@@ -134,11 +134,11 @@ public class SingUpActivity extends AppCompatActivity {
 
         // Valida a Segunda Parte (Email e Senhas)
         if (!user.validationEmail(user.getEmail())) {
-            inputErrors.errorInputWithoutIcon(editEmail, user.getError_validation());
+            managerInputErrors.errorInputWithoutIcon(editEmail, user.getError_validation());
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!user.validationEmailAPI(user.getEmail())) {
-            inputErrors.errorInputWithoutIcon(editEmail, user.getError_validation());
+            managerInputErrors.errorInputWithoutIcon(editEmail, user.getError_validation());
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             // Cria um AlertDialog na Tela
             new AlertDialogPersonalized(SingUpActivity.this).defaultDialog(
@@ -146,11 +146,11 @@ public class SingUpActivity extends AppCompatActivity {
                     Html.fromHtml(getString(R.string.error_disposable_email)).toString()).show();
             return false;
         } else if (!user.validationPassword(user.getPassword())) {
-            inputErrors.errorInputWithoutIcon(editPassword, user.getError_validation());
+            managerInputErrors.errorInputWithoutIcon(editPassword, user.getError_validation());
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!user.validationConfirmPassword(user)) {
-            inputErrors.errorInputWithoutIcon(editConfirmPassword, user.getError_validation());
+            managerInputErrors.errorInputWithoutIcon(editConfirmPassword, user.getError_validation());
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else card_dataLogin.setStrokeColor(getResources().getColor(R.color.lime_green));
@@ -193,8 +193,8 @@ public class SingUpActivity extends AppCompatActivity {
 
                 managerKeyboard.closeKeyboard(this);
                 // Define TRUE para lembrar o Login que acabou de ser Feiro
-                HandlerSharedPreferences preferences = new HandlerSharedPreferences(this,
-                        HandlerSharedPreferences.NAME_PREFERENCE);
+                ManagerSharedPreferences preferences = new ManagerSharedPreferences(this,
+                        ManagerSharedPreferences.NAME_PREFERENCE);
                 preferences.rememberLogin(true);
 
                 // todo: inserir o registro no banco de dados Local (cada novo registro = limpa o banco)

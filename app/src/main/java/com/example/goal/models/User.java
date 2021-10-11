@@ -6,7 +6,7 @@ import android.text.Html;
 import android.util.Log;
 
 import com.example.goal.R;
-import com.example.goal.controllers.SearchInternet;
+import com.example.goal.managers.SearchInternet;
 
 import java.util.HashSet;
 import java.util.List;

@@ -7,7 +7,7 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goal.R;
-import com.example.goal.models.HandlerSharedPreferences;
+import com.example.goal.managers.ManagerSharedPreferences;
 
 /**
  * OpenActivity: Activity que sempre controlará a primeira tela app
@@ -20,8 +20,8 @@ public class OpenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_open);
 
         // Instancia o Controlador de Preferences para verificar se existe ou não um Login no APP
-        HandlerSharedPreferences preferences = new HandlerSharedPreferences(this,
-                HandlerSharedPreferences.NAME_PREFERENCE);
+        ManagerSharedPreferences preferences = new ManagerSharedPreferences(this,
+                ManagerSharedPreferences.NAME_PREFERENCE);
 
         // Deixa nessa Activity por 2 Segundos
         Handler handler = new Handler();

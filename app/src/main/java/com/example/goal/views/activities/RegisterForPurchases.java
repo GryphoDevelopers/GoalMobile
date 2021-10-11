@@ -19,14 +19,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goal.R;
-import com.example.goal.controllers.InputErrors;
-import com.example.goal.controllers.ManagerKeyboard;
-import com.example.goal.controllers.SearchInternet;
+import com.example.goal.managers.ManagerInputErrors;
+import com.example.goal.managers.ManagerKeyboard;
+import com.example.goal.managers.SearchInternet;
 import com.example.goal.models.Address;
 import com.example.goal.models.SerializationInfos;
 import com.example.goal.models.User;
-import com.example.goal.views.AlertDialogPersonalized;
-import com.example.goal.views.SnackBarPersonalized;
+import com.example.goal.views.widgets.AlertDialogPersonalized;
+import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -59,7 +59,7 @@ public class RegisterForPurchases extends AppCompatActivity {
     private RadioButton rdBtn_cpf, rdBtn_cnpj;
 
     private ManagerKeyboard managerKeyboard;
-    private InputErrors inputErrors;
+    private ManagerInputErrors managerInputErrors;
     private User userRegister;
     private Address addressRegister;
 
@@ -95,7 +95,7 @@ public class RegisterForPurchases extends AppCompatActivity {
     private void instanceItems() {
         context = RegisterForPurchases.this;
         managerKeyboard = new ManagerKeyboard(context);
-        inputErrors = new InputErrors(this);
+        managerInputErrors = new ManagerInputErrors(this);
         addressRegister = new Address(this);
         userRegister = new User(this);
 
@@ -293,7 +293,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             // Obtem os Dados do CPF para Validação
             user.setCpf(Objects.requireNonNull(edit_cpf.getText()).toString());
             if (!user.validationCpf(user.getCpf())) {
-                inputErrors.errorInputWithoutIcon(edit_cpf, user.getError_validation());
+                managerInputErrors.errorInputWithoutIcon(edit_cpf, user.getError_validation());
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
             }
@@ -302,7 +302,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             user.setCnpj(Objects.requireNonNull(edit_cnpj.getText()).toString());
 
             if (!user.validationCnpj(user.getCnpj())) {
-                inputErrors.errorInputWithoutIcon(edit_cnpj, user.getError_validation());
+                managerInputErrors.errorInputWithoutIcon(edit_cnpj, user.getError_validation());
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
             }
@@ -324,7 +324,7 @@ public class RegisterForPurchases extends AppCompatActivity {
 
             // Confere o Resultado da Validação Assincrona
             if (userRegister.getCnpj() == null || userRegister.getCnpj().equals("")) {
-                inputErrors.errorInputWithoutIcon(edit_cnpj, user.getError_validation());
+                managerInputErrors.errorInputWithoutIcon(edit_cnpj, user.getError_validation());
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
             }
@@ -339,7 +339,7 @@ public class RegisterForPurchases extends AppCompatActivity {
 
         user.setPhone(Objects.requireNonNull(edit_phone.getText()).toString());
         if (!user.validationPhone(user.getPhone())) {
-            inputErrors.errorInputWithoutIcon(edit_phone, user.getError_validation());
+            managerInputErrors.errorInputWithoutIcon(edit_phone, user.getError_validation());
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         }
@@ -362,7 +362,7 @@ public class RegisterForPurchases extends AppCompatActivity {
 
         // Valida as Opções de país (Brasil X Estrangeiro)
         if (!address.validationCountry(address.getCountry())) {
-            inputErrors.errorInputLayout(layoutEdit_country, address.getError_validation());
+            managerInputErrors.errorInputLayout(layoutEdit_country, address.getError_validation());
             card_dataTerritory.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else layoutEdit_country.setErrorEnabled(false);
@@ -382,8 +382,8 @@ public class RegisterForPurchases extends AppCompatActivity {
         // Valida o Estado e Cidade
         if (!address.validationState(address)) {
             if (isForeign)
-                inputErrors.errorInputWithoutIcon(edit_exState, address.getError_validation());
-            else inputErrors.errorInputLayout(layoutEdit_state, address.getError_validation());
+                managerInputErrors.errorInputWithoutIcon(edit_exState, address.getError_validation());
+            else managerInputErrors.errorInputLayout(layoutEdit_state, address.getError_validation());
             card_dataTerritory.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else {
@@ -393,8 +393,8 @@ public class RegisterForPurchases extends AppCompatActivity {
 
         if (!address.validationCity(address)) {
             if (isForeign)
-                inputErrors.errorInputWithoutIcon(edit_exCity, address.getError_validation());
-            else inputErrors.errorInputLayout(layoutEdit_city, address.getError_validation());
+                managerInputErrors.errorInputWithoutIcon(edit_exCity, address.getError_validation());
+            else managerInputErrors.errorInputLayout(layoutEdit_city, address.getError_validation());
 
             card_dataTerritory.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
@@ -434,15 +434,15 @@ public class RegisterForPurchases extends AppCompatActivity {
         }
 
         if (!address.validationAddress(address.getAddress())) {
-            inputErrors.errorInputWithoutIcon(edit_address, address.getError_validation());
+            managerInputErrors.errorInputWithoutIcon(edit_address, address.getError_validation());
             card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!address.validationDistrict(address.getDistrict())) {
-            inputErrors.errorInputWithoutIcon(edit_district, address.getError_validation());
+            managerInputErrors.errorInputWithoutIcon(edit_district, address.getError_validation());
             card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!address.validationNumber(address.getNumber())) {
-            inputErrors.errorInputWithoutIcon(edit_number, address.getError_validation());
+            managerInputErrors.errorInputWithoutIcon(edit_number, address.getError_validation());
             card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         }
@@ -452,7 +452,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             // Validação do CEP (somente para Brasileiros)
             address.setCep(Objects.requireNonNull(edit_cep.getText()).toString());
             if (!address.validationCEP(address)) {
-                inputErrors.errorInputWithoutIcon(edit_cep, address.getError_validation());
+                managerInputErrors.errorInputWithoutIcon(edit_cep, address.getError_validation());
                 card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
             } else addressRegister.setCep(edit_cep.getText().toString());
@@ -460,7 +460,7 @@ public class RegisterForPurchases extends AppCompatActivity {
 
         // Validação do Complemento
         if (!address.validationComplement(address.getComplement())) {
-            inputErrors.errorInputWithoutIcon(edit_complement, address.getError_validation());
+            managerInputErrors.errorInputWithoutIcon(edit_complement, address.getError_validation());
             card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else {

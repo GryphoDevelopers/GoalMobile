@@ -1,15 +1,15 @@
-package com.example.goal.controllers;
+package com.example.goal.managers;
 
 import android.content.Context;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-public class InputErrors {
+public class ManagerInputErrors {
 
     private final ManagerKeyboard managerKeyboard;
 
-    public InputErrors(Context context) {
+    public ManagerInputErrors(Context context) {
         managerKeyboard = new ManagerKeyboard(context);
     }
 

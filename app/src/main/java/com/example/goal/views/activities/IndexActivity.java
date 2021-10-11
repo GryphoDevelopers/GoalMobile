@@ -12,7 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.goal.R;
-import com.example.goal.models.HandlerSharedPreferences;
+import com.example.goal.managers.ManagerSharedPreferences;
 import com.google.android.material.navigation.NavigationView;
 
 public class IndexActivity extends AppCompatActivity {
@@ -33,8 +33,8 @@ public class IndexActivity extends AppCompatActivity {
         Button btn_home = findViewById(R.id.button_home);
         btn_home.setOnClickListener(v -> {
             // Retira a opção "Lembrar Login"
-            HandlerSharedPreferences preferences = new HandlerSharedPreferences(this,
-                    HandlerSharedPreferences.NAME_PREFERENCE);
+            ManagerSharedPreferences preferences = new ManagerSharedPreferences(this,
+                    ManagerSharedPreferences.NAME_PREFERENCE);
             preferences.rememberLogin(false);
             // INicia a primeira Activity
             startActivity(new Intent(this, OpenActivity.class));

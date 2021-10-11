@@ -8,11 +8,11 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goal.R;
-import com.example.goal.controllers.InputErrors;
-import com.example.goal.controllers.ManagerKeyboard;
-import com.example.goal.models.HandlerSharedPreferences;
+import com.example.goal.managers.ManagerInputErrors;
+import com.example.goal.managers.ManagerKeyboard;
+import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.User;
-import com.example.goal.views.SnackBarPersonalized;
+import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText edit_password;
     private MaterialCheckBox checkBox_remember;
     private Button btn_login;
-    private InputErrors inputErrors;
+    private ManagerInputErrors managerInputErrors;
     private ManagerKeyboard managerKeyboard;
     private SnackBarPersonalized snackBarPersonalized;
     private User userLogin;
@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
         btn_nextStage.setOnClickListener(v -> {
             // O Usuario sempre será Redirecionado à tela de Login/Cadastro antes de ir para a Index
-            new HandlerSharedPreferences(this, HandlerSharedPreferences.NAME_PREFERENCE)
+            new ManagerSharedPreferences(this, ManagerSharedPreferences.NAME_PREFERENCE)
                     .rememberLogin(false);
             startActivity(new Intent(this, IndexActivity.class));
             finishAffinity();
@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void instanceItens() {
         managerKeyboard = new ManagerKeyboard(getApplicationContext());
-        inputErrors = new InputErrors(this);
+        managerInputErrors = new ManagerInputErrors(this);
         userLogin = new User(this);
 
         edit_email = findViewById(R.id.editTxt_emailLogin);
@@ -80,8 +80,8 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("LOGIN", "Email: " + userLogin.getEmail() + "\nSenha: " + userLogin.getPassword());
 
                 // Define o Valor do  "Lembrar Usuario" para as seções futuras
-                HandlerSharedPreferences preferences = new HandlerSharedPreferences(this,
-                        HandlerSharedPreferences.NAME_PREFERENCE);
+                ManagerSharedPreferences preferences = new ManagerSharedPreferences(this,
+                        ManagerSharedPreferences.NAME_PREFERENCE);
                 preferences.rememberLogin(checkBox_remember.isChecked());
 
                 // Inicia a Pagina Index (Produtos) e Finaliza essa Activity
@@ -106,10 +106,10 @@ public class LoginActivity extends AppCompatActivity {
         user.setPassword(Objects.requireNonNull(edit_password.getText()).toString());
 
         if (!user.validationEmail(user.getEmail())) {
-            inputErrors.errorInputWithoutIcon(edit_email, user.getError_validation());
+            managerInputErrors.errorInputWithoutIcon(edit_email, user.getError_validation());
             return false;
         } else if (!user.validationPassword(user.getPassword())) {
-            inputErrors.errorInputWithoutIcon(edit_password, user.getError_validation());
+            managerInputErrors.errorInputWithoutIcon(edit_password, user.getError_validation());
             return false;
         } else {
             userLogin.setEmail(user.getEmail());

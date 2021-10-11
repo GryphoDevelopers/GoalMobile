@@ -1,4 +1,4 @@
-package com.example.goal.models;
+package com.example.goal.managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 /**
  * Classe HandlerSharedPreferences: Manipulaas Preferences do Aplicativo
  */
-public class HandlerSharedPreferences {
+public class ManagerSharedPreferences {
 
     // Constantes dos nomes das Preferences
     public static final String NAME_PREFERENCE = "app_goal";
@@ -22,7 +22,7 @@ public class HandlerSharedPreferences {
      * @param name_preferences Nome do Arquivo das Preferences
      * @param context          Context usado para obter as Preferences
      */
-    public HandlerSharedPreferences(Context context, String name_preferences) {
+    public ManagerSharedPreferences(Context context, String name_preferences) {
         this.preferences = context.getSharedPreferences(name_preferences, 0);
     }
 
