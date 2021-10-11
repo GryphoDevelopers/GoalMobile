@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Classe de Testes da Classe Usario.
+ * Classe de Testes da Classe do Usuario.
  * <p>
  * Está no AndroidTest por conta da utilização do Context na Instancia da Classe User
  */
@@ -78,8 +78,7 @@ public class UserTest {
     @Test
     public void validationEmail() {
         String min_lengthEmail = "Lopsen@Loes.com";
-        String max_lengthEmail = "Lokams.Huiolasn_LuhjeiKandJauing." +
-                "Hashdo_Masfbujs_Kbvues@uisjte_Leugianunv.Ol.com";
+        String max_lengthEmail = "LKoupla_plouDs-ldjASDnfpsnen.okamDsHuiolasn_LuhjeiKandJau.comHashdo_Masfbujs_Kbvues@u-jdkJDNSNIKSisjte-LeugianunvLOl.com";
 
         // Emails de Teste disponibilizados por : https://pt.slideshare.net/LivrariaFaceEbook/emails-validos
         String[] valid_email = new String[5];
@@ -164,12 +163,9 @@ public class UserTest {
     @Test
     public void validationCnpj() {
         // Cpf disponibilizados por: https://www.4devs.com.br/gerador_de_cnpj
-        String[] valid_cnpj = new String[5];
-        valid_cnpj[0] = "63590501000195";
-        valid_cnpj[1] = "70932647000137";
-        valid_cnpj[2] = "35108454000165";
-        valid_cnpj[3] = "10267871000120";
-        valid_cnpj[4] = "01021298000189";
+        String[] valid_cnpj = new String[2];
+        valid_cnpj[0] = "27601226000102";
+        valid_cnpj[1] = "35108454000165";
 
         assertFalse(user.validationCnpj(null));
         assertFalse(user.validationCnpj(""));
@@ -181,6 +177,7 @@ public class UserTest {
 
         for (String item : valid_cnpj) {
             assertTrue(user.validationCnpj(item));
+            assertTrue(user.validationNumberCnpj(item));
         }
     }
 

@@ -20,6 +20,8 @@ public class SearchInternet {
 
     // Constantes de URLs das APIs Utilizadas
     public static final String API_BRAZIL_CITY = "https://brasilapi.com.br/api/ibge/municipios/v1";
+    public static final String API_BRAZIL_CNPJ = "https://brasilapi.com.br/api/cnpj/v1/";
+    public static final String API_EMAIL_DISPONABLE = "https://open.kickbox.com/v1/disposable/";
 
     // Constantes de Possiveis Exception usadads nos Logs
     private final String NAME_CLASS = "SearchInternet";
@@ -39,7 +41,9 @@ public class SearchInternet {
     }
 
     /**
-     * Busca dados em uma API
+     * Busca dados em uma API de Forma Assincrona.
+     * <p>
+     * Utiliza ExecutorService para Criar uma nova Thread e Callable para montar a Execução das Ações
      *
      * @param uri    Caminho de Acesso da API
      * @param method Metodo de Pesquisa (GET, POST, PUT, DELETE)
@@ -47,17 +51,17 @@ public class SearchInternet {
      */
     public String SearchInAPI(String uri, String method) {
         // Variaveis Usadas na Pesquisa da API
-        HttpURLConnection urlConnection;
         BufferedReader bufferedReader;
         String response_json;
 
         // Tratamento de Erros
         try {
             URL url_search = new URL(uri);
-            urlConnection = (HttpURLConnection) url_search.openConnection();
+            HttpURLConnection urlConnection = (HttpURLConnection) url_search.openConnection();
             urlConnection.setRequestMethod(method);
             urlConnection.connect();
 
+            // todo: criar uma serialização propria para obter o erro
             switch (urlConnection.getResponseCode()) {
                 case 200:
                     break;

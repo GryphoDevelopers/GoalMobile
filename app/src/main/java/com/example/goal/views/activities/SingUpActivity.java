@@ -3,6 +3,7 @@ package com.example.goal.views.activities;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -135,6 +136,14 @@ public class SingUpActivity extends AppCompatActivity {
         if (!user.validationEmail(user.getEmail())) {
             inputErrors.errorInputWithoutIcon(editEmail, user.getError_validation());
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
+            return false;
+        } else if (!user.validationEmailAPI(user.getEmail())) {
+            inputErrors.errorInputWithoutIcon(editEmail, user.getError_validation());
+            card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
+            // Cria um AlertDialog na Tela
+            new AlertDialogPersonalized(SingUpActivity.this).defaultDialog(
+                    getString(R.string.title_input_invalid, "Email"),
+                    Html.fromHtml(getString(R.string.error_disposable_email)).toString()).show();
             return false;
         } else if (!user.validationPassword(user.getPassword())) {
             inputErrors.errorInputWithoutIcon(editPassword, user.getError_validation());

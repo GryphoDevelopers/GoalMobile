@@ -9,7 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Classe SerializationInfos: Serializa Dados para exibir para o usuario. Seja eles retornos da API
@@ -19,7 +21,7 @@ public class SerializationInfos {
 
     private final Context context;
     // Constantes de Possiveis Exception usadads nos Logs
-    private final String NAME_CLASS = "SearchInternet";
+    private final String NAME_CLASS = "SerializationInfos";
     private final String EXCEPTION_JSON = "Exception JSON";
     private final String EXCEPTION = "Exception";
     // Caso haja algum erro nos metodos
@@ -69,6 +71,39 @@ public class SerializationInfos {
             Log.e(EXCEPTION, NAME_CLASS + " - Ocorreu uma Exceção");
             ex.printStackTrace();
         }
+        error_operation = context.getString(R.string.error_serialization);
+        return null;
+    }
+
+    /**
+     * Serializa o JSON recebido de uma API de acordo com os parametros passados
+     *
+     * @param raw_json   JSON resultante da Pesquisa na API
+     * @param parameters Parametros que serão recuperados da API
+     * @return String[] | null
+     */
+    public String[] jsonToArray(String raw_json, String[] parameters) {
+        try {
+            // Obtem o JSON e Instancia e a String de Resposta
+            JSONObject jsonObject = new JSONObject(raw_json);
+            List<String> response_api = new ArrayList<>();
+
+            // Obtem os Itens que foram passados no parameters, se existirem
+            for (String item_recover : parameters) {
+                if (!jsonObject.isNull(item_recover)) {
+                    response_api.add(jsonObject.getString(item_recover));
+                }
+            }
+
+            return response_api.toArray(new String[0]);
+        } catch (JSONException ex) {
+            Log.e(EXCEPTION_JSON, NAME_CLASS + " - Erro na Formaçao do JSON");
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            Log.e(EXCEPTION, NAME_CLASS + " - Ocorreu uma Exceção");
+            ex.printStackTrace();
+        }
+
         error_operation = context.getString(R.string.error_serialization);
         return null;
     }

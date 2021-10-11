@@ -36,7 +36,7 @@ public class Address {
         INPUT_NULL = context.getString(R.string.validation_empty);
         INPUT_MIN_LENGTH = context.getString(R.string.validation_min_length);
         INPUT_MAX_LENGTH = context.getString(R.string.validation_max_length);
-        INPUT_NOT_FORMAT = context.getString(R.string.validation_format);
+        INPUT_NOT_FORMAT = context.getString(R.string.validation_format_char);
         INPUT_INVALID = context.getString(R.string.validation_not_disponible);
     }
 

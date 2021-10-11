@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -93,7 +94,7 @@ public class RegisterForPurchases extends AppCompatActivity {
      */
     private void instanceItems() {
         context = RegisterForPurchases.this;
-        managerKeyboard = new ManagerKeyboard(getApplicationContext());
+        managerKeyboard = new ManagerKeyboard(context);
         inputErrors = new InputErrors(this);
         addressRegister = new Address(this);
         userRegister = new User(this);
@@ -299,11 +300,35 @@ public class RegisterForPurchases extends AppCompatActivity {
         } else if (rdBtn_cnpj.isChecked()) {
             // Obtem os dados do CNPJ para Validar
             user.setCnpj(Objects.requireNonNull(edit_cnpj.getText()).toString());
+
             if (!user.validationCnpj(user.getCnpj())) {
                 inputErrors.errorInputWithoutIcon(edit_cnpj, user.getError_validation());
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
             }
+
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.execute(() -> {
+                // Executa os Metodos Assincronos de Validações
+                boolean isValid = user.validationNumberCnpj(user.getCnpj());
+
+                runOnUiThread(() -> {
+                    if (!isValid) {
+                        // Mostra os Possiveris erros do CNPJ
+                        new AlertDialogPersonalized(context).defaultDialog(
+                                getString(R.string.title_input_invalid, "CNPJ"),
+                                Html.fromHtml(getString(R.string.error_cnpj)).toString()).show();
+                    } else userRegister.setCnpj(user.getCnpj());
+                });
+            });
+
+            // Confere o Resultado da Validação Assincrona
+            if (userRegister.getCnpj() == null || userRegister.getCnpj().equals("")) {
+                inputErrors.errorInputWithoutIcon(edit_cnpj, user.getError_validation());
+                card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
+                return false;
+            }
+
         } else {
             // Nenhuma opção foi Selecionada
             scrollView.fullScroll(ScrollView.FOCUS_UP);
