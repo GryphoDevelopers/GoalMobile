@@ -15,9 +15,13 @@ import com.example.goal.R;
 import com.example.goal.managers.ManagerSharedPreferences;
 import com.google.android.material.navigation.NavigationView;
 
+/**
+ * Activity IndexActivity: Activity Inicial, onde será mostrado os Produtos e toda a parte da
+ * Navegação no Aplicativo
+ */
 public class IndexActivity extends AppCompatActivity {
 
-    Toolbar toolbar;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +30,7 @@ public class IndexActivity extends AppCompatActivity {
 
         // Configura os elementos da Activity
         configToolBar();
-        configDrawerLayout();
-        confiNavigation();
+        setUpLateralMenu();
 
         // TODO RETIRAR: Usado para Testes
         Button btn_home = findViewById(R.id.button_home);
@@ -44,19 +47,26 @@ public class IndexActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Configura e Instancia a ToolBar (Parte Superior da Activity)
+     */
     private void configToolBar() {
         toolbar = findViewById(R.id.toolbar_category);
         setSupportActionBar(toolbar);
     }
 
-    private void configDrawerLayout() {
-
+    /**
+     * Configura o Drawer e o NavigationView (Toda a parte do Menu lateral)
+     */
+    private void setUpLateralMenu() {
         // Variaveis utilizadas
         DrawerLayout drawerLayout;
         ActionBarDrawerToggle actionToggle;
         DrawerArrowDrawable arrowDrawable;
+        NavigationView navigationView;
 
         drawerLayout = findViewById(R.id.drawerLayout_categories);
+        navigationView = findViewById(R.id.navigationView_categories);
 
         // Cria o Botão do Menu Lateral
         actionToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
@@ -70,20 +80,18 @@ public class IndexActivity extends AppCompatActivity {
         actionToggle.setDrawerIndicatorEnabled(true);
         actionToggle.syncState();
 
-        // Listener do Botão do Drawer
+        // Listener do Botão do Drawer e dos Cliques no Menu
         drawerLayout.addDrawerListener(actionToggle);
-    }
-
-    private void confiNavigation() {
-        NavigationView navigationView;
-
-        navigationView = findViewById(R.id.navigationView_categories);
-        // Listener dos Cliques no Menu
         navigationView.setNavigationItemSelectedListener(this::itemSelect);
+
     }
 
-
-    // Trata os cliques no Menu
+    /**
+     * Faz o Tratametno dos Cliques no Menu Lateral. É um metodo Sobrescrito.
+     *
+     * @param menuItem Item selecionado no Menu
+     * @return true/false
+     */
     private boolean itemSelect(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.equipment:

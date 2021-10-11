@@ -18,15 +18,16 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
 
+/**
+ * Activity LoginActivity: Activity que realiza o Login ou Redireciona para o Cadastro ou Pula
+ * direto para entrar no sistema sem Login
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText edit_email;
     private TextInputEditText edit_password;
     private MaterialCheckBox checkBox_remember;
     private Button btn_login;
-    private ManagerInputErrors managerInputErrors;
-    private ManagerKeyboard managerKeyboard;
-    private SnackBarPersonalized snackBarPersonalized;
     private User userLogin;
 
     @Override
@@ -56,14 +57,15 @@ public class LoginActivity extends AppCompatActivity {
         loginUser();
     }
 
+    /**
+     * Instancia os Itens que serão Usados na Activity
+     */
     private void instanceItens() {
-        managerKeyboard = new ManagerKeyboard(getApplicationContext());
-        managerInputErrors = new ManagerInputErrors(this);
+        // Classe do Usuario que será realizada o Login
         userLogin = new User(this);
 
         edit_email = findViewById(R.id.editTxt_emailLogin);
         edit_password = findViewById(R.id.editTxt_passwordLogin);
-
         checkBox_remember = findViewById(R.id.checkbox_remember);
         btn_login = findViewById(R.id.btn_login);
     }
@@ -74,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
     public void loginUser() {
         btn_login.setOnClickListener(v -> {
             if (validationInputs()) {
-                managerKeyboard.closeKeyboard(this);
+                new ManagerKeyboard(LoginActivity.this).closeKeyboard(this);
 
                 // TODO RETIRAR e implementar POST p/ API ---> Recebimento do Web Json Token
                 Log.e("LOGIN", "Email: " + userLogin.getEmail() + "\nSenha: " + userLogin.getPassword());
@@ -88,8 +90,8 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(this, IndexActivity.class));
                 finishAffinity();
             } else {
-                snackBarPersonalized = new SnackBarPersonalized(findViewById(R.id.layout_initial));
-                snackBarPersonalized.makeDefaultSnackBar(R.string.error_login);
+                new SnackBarPersonalized(findViewById(R.id.layout_initial))
+                        .defaultSnackBar(getString(R.string.error_login)).show();
             }
         });
     }
@@ -100,16 +102,19 @@ public class LoginActivity extends AppCompatActivity {
      * @return true/false
      */
     private boolean validationInputs() {
+        // Instancia as Classes que serão usadas
+        ManagerInputErrors managerInputErrors = new ManagerInputErrors(LoginActivity.this);
+        User user = new User(LoginActivity.this);
+
         // Obtem os Dados do Input
-        User user = new User(this);
         user.setEmail(Objects.requireNonNull(edit_email.getText()).toString());
         user.setPassword(Objects.requireNonNull(edit_password.getText()).toString());
 
         if (!user.validationEmail(user.getEmail())) {
-            managerInputErrors.errorInputWithoutIcon(edit_email, user.getError_validation());
+            managerInputErrors.errorInputEditText(edit_email, user.getError_validation(), false);
             return false;
         } else if (!user.validationPassword(user.getPassword())) {
-            managerInputErrors.errorInputWithoutIcon(edit_password, user.getError_validation());
+            managerInputErrors.errorInputEditText(edit_password, user.getError_validation(), false);
             return false;
         } else {
             userLogin.setEmail(user.getEmail());

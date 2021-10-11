@@ -7,6 +7,9 @@ import com.example.goal.R;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Classe Address: Responsavel por obter e manipular os dados de localização do Usuario
+ */
 public class Address {
 
     // Constantes Usadas nos Erros
@@ -29,6 +32,11 @@ public class Address {
 
     private String error_validation;
 
+    /**
+     * Contrutor da Classe Addres
+     *
+     * @param context Context é usado para obter as Strings de Erro
+     */
     public Address(Context context) {
         this.context = context;
 
@@ -40,6 +48,12 @@ public class Address {
         INPUT_INVALID = context.getString(R.string.validation_not_disponible);
     }
 
+    /**
+     * Valida o País Informado
+     *
+     * @param country País informado pelo Usuario
+     * @return true/false
+     */
     public boolean validationCountry(String country) {
         String[] countries = context.getResources().getStringArray(R.array.pays);
 
@@ -57,6 +71,12 @@ public class Address {
         return false;
     }
 
+    /**
+     * Valida o Estado passado pelo Usuario
+     *
+     * @param address Instancia da Classe Addres, onde será usado o Country e State
+     * @return true/false
+     */
     public boolean validationState(Address address) {
         List<String> states_list =
                 Arrays.asList(context.getResources().getStringArray(R.array.state));
@@ -81,6 +101,12 @@ public class Address {
         } else return true;
     }
 
+    /**
+     * Valida a cidade informada
+     *
+     * @param address Instancia da Classe Address, onde será usado o Country e City
+     * @return true/false
+     */
     public boolean validationCity(Address address) {
         String city = address.getCity();
         if (city == null || city.equals("")) {
@@ -95,10 +121,15 @@ public class Address {
                 error_validation = String.format(INPUT_MAX_LENGTH, "Cidade", 100);
                 return false;
             } else return true;
-        }  else return true;
+        } else return true;
     }
 
-
+    /**
+     * Valida o Endereço Informado
+     *
+     * @param address String do Endereço informada
+     * @return true/false
+     */
     public boolean validationAddress(String address) {
         if (address == null || address.equals("")) {
             error_validation = INPUT_NULL;
@@ -115,7 +146,12 @@ public class Address {
         } else return true;
     }
 
-    // validação do Bairro
+    /**
+     * Valida o Bairro Informado
+     *
+     * @param district Bairro que foi Informado
+     * @return true/false
+     */
     public boolean validationDistrict(String district) {
         if (district == null || district.equals("")) {
             error_validation = INPUT_NULL;
@@ -132,6 +168,12 @@ public class Address {
         } else return true;
     }
 
+    /**
+     * Valida o Numero do Endereço Informado
+     *
+     * @param number Numero Informado
+     * @return true/false
+     */
     public boolean validationNumber(int number) {
         if (number == 0) {
             error_validation = INPUT_NULL;
@@ -145,19 +187,24 @@ public class Address {
         } else return true;
     }
 
-    // Validação do Complemento ---> Dado Opicional
-    public boolean validationComplement(String district) {
-        if (district == null || district.equals("")) {
+    /**
+     * Validação do Complemento Informado. Esse é um dado Opcional
+     *
+     * @param complement Complemento (Apartamento, Bloco, Fundo, A, B, etc) do Endereço
+     * @return true/false
+     */
+    public boolean validationComplement(String complement) {
+        if (complement == null || complement.equals("")) {
             return true;
         } else {
             // Caso Preenchido, tem que ser validado
-            if (district.length() < 5) {
+            if (complement.length() < 5) {
                 error_validation = String.format(INPUT_MIN_LENGTH, "Complemento", 5);
                 return false;
-            } else if (district.length() > 120) {
+            } else if (complement.length() > 120) {
                 error_validation = String.format(INPUT_MAX_LENGTH, "Complemento", 80);
                 return false;
-            } else if (!district.matches("^[A-ZÀ-úà-úa-zçÇ,\\-\\s]*")) {
+            } else if (!complement.matches("^[A-ZÀ-úà-úa-zçÇ,\\-\\s]*")) {
                 error_validation = String.format(INPUT_NOT_FORMAT, "Complemento",
                         "Letras, Virgulas ou Hifen ");
                 return false;
@@ -165,8 +212,13 @@ public class Address {
         }
     }
 
-    public boolean validationCEP(Address address) {
-        String cep = address.getCep();
+    /**
+     * Valida o CEP Informado
+     *
+     * @param cep CEP Informado pelo Usuario
+     * @return true/false
+     */
+    public boolean validationCEP(String cep) {
         if (cep == null || cep.equals("")) {
             error_validation = INPUT_NULL;
             return false;
@@ -176,18 +228,23 @@ public class Address {
         } else if (cep.length() != 8 || Integer.parseInt(cep) > 100000000) {
             error_validation = String.format(INPUT_NOT_FORMAT, "CEP", "Numeros no Formato 'XXXXXXXX'");
             return false;
-        } else if (!checkCEP(address)) {
-            error_validation = String.format(INPUT_INVALID, "CEP");
-            return false;
         } else return true;
     }
 
-    // Todo: implementar validação do CEP (API EXTERNA) com o Endereço Informado
-    private boolean checkCEP(Address address) {
+    /**
+     * Verifica o CEP com o Endereço Informado. Esse é um metodo Independente da Validação do CEP
+     *
+     * @param address Instancia da Classe Address, que será usado para Comparar os Dados do CEP com
+     *                o endereço Informado
+     * @return true/false
+     */
+    public boolean checkCEP(Address address) {
+        // Todo: implementar validação do CEP (API EXTERNA) com o Endereço Informado
         return true;
     }
 
 
+    // Getters e Setters da Calsse
     public String getCountry() {
         return country;
     }

@@ -12,7 +12,6 @@ public class ManagerSharedPreferences {
     public static final String NAME_PREFERENCE = "app_goal";
     // Constantes das Chaves das Preferences
     private static final String REMEMBER_LOGIN_KEY = "remember_login";
-    private static final String NOT_LOGGED = "not_logged";
     private final SharedPreferences preferences;
 
     /**

@@ -42,6 +42,7 @@ public class AlertDialogPersonalized {
         alertDialogBuilder.setTitle(title);
         alertDialogBuilder.setMessage(message);
         alertDialogBuilder.setNeutralButton(R.string.button_close, (dialog, which) -> dialog.dismiss());
+        alertDialogBuilder.setCancelable(false);
 
         return alertDialogBuilder.create();
     }
@@ -50,8 +51,9 @@ public class AlertDialogPersonalized {
      * Cria um AlertDialog do Material UI com um Titulo, Mensagem e um botão "Cancelar" que fecha a
      * Activity atual
      *
-     * @param title   Titulo do AlertDialog
-     * @param message Mensagem do AlertDialog
+     * @param activity Activity que será Fechada
+     * @param title    Titulo do AlertDialog
+     * @param message  Mensagem do AlertDialog
      * @return AlertDialog
      */
     public AlertDialog messageWithCloseWindow(Activity activity, String title, String message) {
@@ -63,6 +65,7 @@ public class AlertDialogPersonalized {
             dialog.dismiss();
             activity.finish();
         });
+        alertDialogBuilder.setCancelable(false);
 
         return alertDialogBuilder.create();
     }

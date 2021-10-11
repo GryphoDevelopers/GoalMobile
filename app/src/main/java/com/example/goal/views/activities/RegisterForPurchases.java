@@ -293,7 +293,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             // Obtem os Dados do CPF para Validação
             user.setCpf(Objects.requireNonNull(edit_cpf.getText()).toString());
             if (!user.validationCpf(user.getCpf())) {
-                managerInputErrors.errorInputWithoutIcon(edit_cpf, user.getError_validation());
+                managerInputErrors.errorInputEditText(edit_cpf, user.getError_validation(), false);
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
             }
@@ -302,7 +302,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             user.setCnpj(Objects.requireNonNull(edit_cnpj.getText()).toString());
 
             if (!user.validationCnpj(user.getCnpj())) {
-                managerInputErrors.errorInputWithoutIcon(edit_cnpj, user.getError_validation());
+                managerInputErrors.errorInputEditText(edit_cnpj, user.getError_validation(), false);
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
             }
@@ -324,7 +324,7 @@ public class RegisterForPurchases extends AppCompatActivity {
 
             // Confere o Resultado da Validação Assincrona
             if (userRegister.getCnpj() == null || userRegister.getCnpj().equals("")) {
-                managerInputErrors.errorInputWithoutIcon(edit_cnpj, user.getError_validation());
+                managerInputErrors.errorInputEditText(edit_cnpj, user.getError_validation(), false);
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
             }
@@ -339,7 +339,7 @@ public class RegisterForPurchases extends AppCompatActivity {
 
         user.setPhone(Objects.requireNonNull(edit_phone.getText()).toString());
         if (!user.validationPhone(user.getPhone())) {
-            managerInputErrors.errorInputWithoutIcon(edit_phone, user.getError_validation());
+            managerInputErrors.errorInputEditText(edit_phone, user.getError_validation(), false);
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         }
@@ -382,8 +382,9 @@ public class RegisterForPurchases extends AppCompatActivity {
         // Valida o Estado e Cidade
         if (!address.validationState(address)) {
             if (isForeign)
-                managerInputErrors.errorInputWithoutIcon(edit_exState, address.getError_validation());
-            else managerInputErrors.errorInputLayout(layoutEdit_state, address.getError_validation());
+                managerInputErrors.errorInputEditText(edit_exState, address.getError_validation(), false);
+            else
+                managerInputErrors.errorInputLayout(layoutEdit_state, address.getError_validation());
             card_dataTerritory.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else {
@@ -393,8 +394,9 @@ public class RegisterForPurchases extends AppCompatActivity {
 
         if (!address.validationCity(address)) {
             if (isForeign)
-                managerInputErrors.errorInputWithoutIcon(edit_exCity, address.getError_validation());
-            else managerInputErrors.errorInputLayout(layoutEdit_city, address.getError_validation());
+                managerInputErrors.errorInputEditText(edit_exCity, address.getError_validation(), false);
+            else
+                managerInputErrors.errorInputLayout(layoutEdit_city, address.getError_validation());
 
             card_dataTerritory.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
@@ -420,6 +422,7 @@ public class RegisterForPurchases extends AppCompatActivity {
         Address address = new Address(this);
         address.setAddress(Objects.requireNonNull(edit_address.getText()).toString());
         address.setDistrict(Objects.requireNonNull(edit_district.getText()).toString());
+        address.setCep(Objects.requireNonNull(edit_cep.getText()).toString());
         address.setComplement(Objects.requireNonNull(edit_complement.getText()).toString());
 
         // Evita erros ao Convertes EmptyString em Int
@@ -434,15 +437,15 @@ public class RegisterForPurchases extends AppCompatActivity {
         }
 
         if (!address.validationAddress(address.getAddress())) {
-            managerInputErrors.errorInputWithoutIcon(edit_address, address.getError_validation());
+            managerInputErrors.errorInputEditText(edit_address, address.getError_validation(), false);
             card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!address.validationDistrict(address.getDistrict())) {
-            managerInputErrors.errorInputWithoutIcon(edit_district, address.getError_validation());
+            managerInputErrors.errorInputEditText(edit_district, address.getError_validation(), false);
             card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!address.validationNumber(address.getNumber())) {
-            managerInputErrors.errorInputWithoutIcon(edit_number, address.getError_validation());
+            managerInputErrors.errorInputEditText(edit_number, address.getError_validation(), false);
             card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         }
@@ -451,8 +454,8 @@ public class RegisterForPurchases extends AppCompatActivity {
         if (layoutEdit_cep.getVisibility() == View.VISIBLE) {
             // Validação do CEP (somente para Brasileiros)
             address.setCep(Objects.requireNonNull(edit_cep.getText()).toString());
-            if (!address.validationCEP(address)) {
-                managerInputErrors.errorInputWithoutIcon(edit_cep, address.getError_validation());
+            if (!address.validationCEP(address.getCep())) {
+                managerInputErrors.errorInputEditText(edit_cep, address.getError_validation(), false);
                 card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
             } else addressRegister.setCep(edit_cep.getText().toString());
@@ -460,7 +463,7 @@ public class RegisterForPurchases extends AppCompatActivity {
 
         // Validação do Complemento
         if (!address.validationComplement(address.getComplement())) {
-            managerInputErrors.errorInputWithoutIcon(edit_complement, address.getError_validation());
+            managerInputErrors.errorInputEditText(edit_complement, address.getError_validation(), false);
             card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else {
@@ -496,7 +499,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             } else {
                 // Validações Não Validas ou Erro no Cadastro
                 SnackBarPersonalized snackBar = new SnackBarPersonalized(findViewById(R.id.layout_purchases));
-                snackBar.makeDefaultSnackBar(R.string.error_singup).show();
+                snackBar.defaultSnackBar(getString(R.string.error_singup)).show();
             }
         });
     }

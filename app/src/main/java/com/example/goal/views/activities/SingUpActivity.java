@@ -26,6 +26,9 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
 
+/**
+ * Activity SingUpActivity: Activity Responsavel por Controlar e Realizar o Cadastro do Usuario
+ */
 public class SingUpActivity extends AppCompatActivity {
 
     private TextView errorOptionUser;
@@ -117,11 +120,11 @@ public class SingUpActivity extends AppCompatActivity {
 
         // Valida a Primeira Parte (Nome, Nickname e Tipo de Usuario)
         if (!user.validationName(user.getName())) {
-            managerInputErrors.errorInputWithoutIcon(editName, user.getError_validation());
+            managerInputErrors.errorInputEditText(editName, user.getError_validation(), false);
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!user.validationNickname(user.getNickname())) {
-            managerInputErrors.errorInputWithoutIcon(editNickname, user.getError_validation());
+            managerInputErrors.errorInputEditText(editNickname, user.getError_validation(), false);
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!opClient.isChecked() && !opSeller.isChecked()) {
@@ -134,11 +137,11 @@ public class SingUpActivity extends AppCompatActivity {
 
         // Valida a Segunda Parte (Email e Senhas)
         if (!user.validationEmail(user.getEmail())) {
-            managerInputErrors.errorInputWithoutIcon(editEmail, user.getError_validation());
+            managerInputErrors.errorInputEditText(editEmail, user.getError_validation(), false);
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!user.validationEmailAPI(user.getEmail())) {
-            managerInputErrors.errorInputWithoutIcon(editEmail, user.getError_validation());
+            managerInputErrors.errorInputEditText(editEmail, user.getError_validation(), false);
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             // Cria um AlertDialog na Tela
             new AlertDialogPersonalized(SingUpActivity.this).defaultDialog(
@@ -146,11 +149,11 @@ public class SingUpActivity extends AppCompatActivity {
                     Html.fromHtml(getString(R.string.error_disposable_email)).toString()).show();
             return false;
         } else if (!user.validationPassword(user.getPassword())) {
-            managerInputErrors.errorInputWithoutIcon(editPassword, user.getError_validation());
+            managerInputErrors.errorInputEditText(editPassword, user.getError_validation(), false);
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!user.validationConfirmPassword(user)) {
-            managerInputErrors.errorInputWithoutIcon(editConfirmPassword, user.getError_validation());
+            managerInputErrors.errorInputEditText(editConfirmPassword, user.getError_validation(), false);
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else card_dataLogin.setStrokeColor(getResources().getColor(R.color.lime_green));
@@ -212,8 +215,8 @@ public class SingUpActivity extends AppCompatActivity {
             }
 
             // Erro no Cadastro
-            SnackBarPersonalized snackBar = new SnackBarPersonalized(findViewById(R.id.layout_singup));
-            snackBar.makeDefaultSnackBar(R.string.error_singup).show();
+            new SnackBarPersonalized(findViewById(R.id.layout_singup))
+                    .defaultSnackBar(getString(R.string.error_singup)).show();
         });
     }
 

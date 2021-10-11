@@ -79,6 +79,7 @@ public class User {
      * <p>
      * Tamanho de 3 a 80 Letras, com acentuação e espaços em branco
      *
+     * @param name Nome Informado
      * @return true/false
      */
     public boolean validationName(String name) {
@@ -102,6 +103,7 @@ public class User {
      * <p>
      * Tamanho de 15 à 120 Letras, numeros, pontos, underlines e @, mas sem espaços em branco
      *
+     * @param email Email Informado
      * @return true/false
      */
     public boolean validationEmail(String email) {
@@ -121,7 +123,7 @@ public class User {
     }
 
     /**
-     * Valida o email a partir de uma API
+     * Valida o email a partir de uma API. Esse é um metodo Independente da Validação do Email
      *
      * @param email Email utilizado na Validação
      * @return true/false
@@ -178,6 +180,7 @@ public class User {
      * <p>
      * Tamanho de 5 à 60 Letras, podendo ter numeros, pontos, underlines, mas sem espaço em branco
      *
+     * @param nickname Nickname (Nome de Usuario) Informaado
      * @return true/false
      */
     public boolean validationNickname(String nickname) {
@@ -200,6 +203,7 @@ public class User {
     /**
      * Valida o CPF informado. Somente é permitido numeros e esse CPF é validado pela API BRASIL
      *
+     * @param cpf CPF informado
      * @return true/false
      */
     public boolean validationCpf(String cpf) {
@@ -214,15 +218,13 @@ public class User {
             error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "CPF",
                     "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");
             return false;
-        } else if (!validationNumberCpf(cpf)) {
-            error_validation = String.format(INPUT_INVALID, "CPF");
-            return false;
         } else return true;
     }
 
     /**
-     * Valida o CPF na API BRASIL
+     * Valida o CPF em alguma API Externa. Este é um metodo Independente da Validação do CPF
      *
+     * @param cpf CPF Informado
      * @return true/false
      */
     private boolean validationNumberCpf(String cpf) {
@@ -231,8 +233,9 @@ public class User {
     }
 
     /**
-     * Valida o CNPJ. Somente é permitido Numeros e tambem é validado na API Externa> API BRASIL
+     * Valida apenas os Numeros e Tamanho do CNPJ
      *
+     * @param cnpj CNPJ informado pelo Usuario
      * @return true/false
      */
     public boolean validationCnpj(String cnpj) {
@@ -247,8 +250,10 @@ public class User {
     }
 
     /**
-     * Valida o CNPJ na API BRASIL
+     * Valida o CNPJ na API BRASIL, Verificando se possui um cadastro na Receita Federal e tambem se
+     * está ativo o CNPJ. Este é um metodo Independente da Validação do CNPJ
      *
+     * @param cnpj CNPJ informado pelo Usuario
      * @return true/false
      */
     public boolean validationNumberCnpj(String cnpj) {
@@ -307,6 +312,7 @@ public class User {
      * Tamanho de 5 à 40 Caracteres, porem sem espaços em branco. Tambem há uma validação na Força
      * da Senha inserida
      *
+     * @param password Senha informada pelo Usuario
      * @return true/false
      */
     public boolean validationPassword(String password) {
@@ -334,6 +340,7 @@ public class User {
     /**
      * Retorna o da Força Valor da Senha Inserida
      *
+     * @param password Senha informada
      * @return int (1 para fraca e 2 para forte)
      */
     private int strengthPassword(String password) {
@@ -345,6 +352,8 @@ public class User {
      * Valida a confirmação da senha informada. Passa pela mesma validação da senha anterior e
      * confere se as senhas são compativeis
      *
+     * @param user Instancia da Classe Usuario que compara se as 2 senhas estão dentro dos
+     *             parametros e são iguais
      * @return true/false
      */
     public boolean validationConfirmPassword(User user) {
@@ -367,6 +376,7 @@ public class User {
     /**
      * Valida o Numero de Telefone do Usario. Podendo ter apenas Numeros
      *
+     * @param phone Telefone Informado
      * @return true/false
      */
     public boolean validationPhone(String phone) {
@@ -383,6 +393,7 @@ public class User {
         } else return true;
     }
 
+    // Getters e Setters da Classe User
     public String getName() {
         return name;
     }

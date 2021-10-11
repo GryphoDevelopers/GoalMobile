@@ -5,33 +5,46 @@ import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-
+/**
+ * Classe ManagerKeyboard: Controla as ações do Teclado (Fechar/Abrir)
+ */
 public class ManagerKeyboard {
 
-    private final Context context;
     private final InputMethodManager keyboardManager;
 
-    public ManagerKeyboard(Context context){
-        this.context = context;
+    /**
+     * Contrutor da Classe ManagerKeyboard
+     *
+     * @param context Context é usado para conseguir obter o serviço de manipulação do teclado
+     */
+    public ManagerKeyboard(Context context) {
         // Obtem o estado do Keyboard
-        this.keyboardManager = (InputMethodManager) context.
-                getSystemService(Context.INPUT_METHOD_SERVICE);
+        this.keyboardManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
-    // Abre o Teclado
-    public void openKeyboard(View viewOpen){
+    /**
+     * Abra o Teclado na View Informada
+     *
+     * @param viewOpen View (ex: Activity, EditText) que deseja abrir o teclado
+     */
+    public void openKeyboard(View viewOpen) {
         // Se ontem o controlador do Teclado = Abre
-        if(keyboardManager != null){
+        if (keyboardManager != null) {
             keyboardManager.showSoftInput(viewOpen, InputMethodManager.SHOW_IMPLICIT);
         }
     }
 
-    // Fecha o Teclado
-    public void closeKeyboard(Activity activity){
+    /**
+     * Responsavel por fechar o Teclado
+     *
+     * @param activity Activity em que o Teclado será fechado
+     */
+    public void closeKeyboard(Activity activity) {
         // Se obtem o controlador do Teclado = Fecha
-        if(keyboardManager != null){
+        if (keyboardManager != null) {
             keyboardManager.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
+
 }
