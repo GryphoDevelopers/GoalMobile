@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.goal.R;
 import com.example.goal.managers.ManagerInputErrors;
 import com.example.goal.managers.ManagerKeyboard;
+import com.example.goal.managers.ManagerServices;
 import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.User;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
@@ -135,10 +136,13 @@ public class SingUpActivity extends AppCompatActivity {
         } else card_dataPersonal.setStrokeColor(getResources().getColor(R.color.lime_green));
         errorOptionUser.setVisibility(View.GONE);
 
-        // Valida a Segunda Parte (Email e Senhas)
+        // Valida a Segunda Parte (Email, Internet e Consulta na API) e Senhas)
         if (!user.validationEmail(user.getEmail())) {
             managerInputErrors.errorInputEditText(editEmail, user.getError_validation(), false);
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
+            return false;
+        } else if (internetNotAvailable()) {
+            // Se a Conexão de Internet não está Disponviel
             return false;
         } else if (!user.validationEmailAPI(user.getEmail())) {
             managerInputErrors.errorInputEditText(editEmail, user.getError_validation(), false);
@@ -157,6 +161,7 @@ public class SingUpActivity extends AppCompatActivity {
             card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else card_dataLogin.setStrokeColor(getResources().getColor(R.color.lime_green));
+
 
         // Valida os Temos de Uso
         if (!checkTermsUse.isChecked()) {
@@ -187,14 +192,16 @@ public class SingUpActivity extends AppCompatActivity {
     public void listenerSingUp() {
         createAcount.setOnClickListener(v -> {
             // Valida o Cadatro e Insere o Cadastro na API
-            if (validationsSingUp()) {
+            if (internetNotAvailable()) return;
+            else if (validationsSingUp()) {
+                managerKeyboard.closeKeyboard(this);
+
                 if (!registerInAPI(userSingUp)) {
                     new AlertDialogPersonalized(this).defaultDialog(
                             getString(R.string.title_no_register_api),
                             getString(R.string.error_register_api)).show();
                 }
 
-                managerKeyboard.closeKeyboard(this);
                 // Define TRUE para lembrar o Login que acabou de ser Feiro
                 ManagerSharedPreferences preferences = new ManagerSharedPreferences(this,
                         ManagerSharedPreferences.NAME_PREFERENCE);
@@ -228,6 +235,20 @@ public class SingUpActivity extends AppCompatActivity {
      */
     private boolean registerInAPI(User userSingUp) {
         //todo: implementação futura
+        return true;
+    }
+
+    /**
+     * Verifica se não possui conexão de internet. Se não existir mostra o Erro na Tela.
+     *
+     * @return true/false
+     */
+    private boolean internetNotAvailable() {
+        if (new ManagerServices(SingUpActivity.this).validationInternet()) return false;
+
+        new AlertDialogPersonalized(SingUpActivity.this).defaultDialog(
+                getString(R.string.title_no_internet),
+                Html.fromHtml(getString(R.string.error_network)).toString()).show();
         return true;
     }
 

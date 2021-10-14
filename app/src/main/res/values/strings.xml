@@ -27,9 +27,12 @@
     <string name="title_error_api">Solicitação Invalida</string>
     <string name="title_input_invalid">%s Invalido</string>
     <string name="title_no_register_api">Falha no Cadastro</string>
+    <string name="title_no_internet">Internet Indisponivel</string>
     <string name="title_loading">Carregando …</string>
     <string name="button_close">Fechar</string>
 
+    <string name="error_network">Desculpe, mas não é possivel realizar essa operação
+        sem a Internet&lt;br/> &lt;br /> Tente Novamente</string>
     <string name="error_exception">Ocorreu uma Falha ao Executar a Solicitação</string>
     <string name="error_register_api">Não conseguimos Cadastrar o Usuario no Sistema. Por favor,
         Tente Novamente !</string>

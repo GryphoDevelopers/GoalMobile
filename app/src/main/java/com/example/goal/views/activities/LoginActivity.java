@@ -2,6 +2,7 @@ package com.example.goal.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.widget.Button;
 
@@ -10,8 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.goal.R;
 import com.example.goal.managers.ManagerInputErrors;
 import com.example.goal.managers.ManagerKeyboard;
+import com.example.goal.managers.ManagerServices;
 import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.User;
+import com.example.goal.views.widgets.AlertDialogPersonalized;
 import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
@@ -75,7 +78,11 @@ public class LoginActivity extends AppCompatActivity {
      */
     public void loginUser() {
         btn_login.setOnClickListener(v -> {
-            if (validationInputs()) {
+            if (!new ManagerServices(LoginActivity.this).validationInternet()) {
+                new AlertDialogPersonalized(LoginActivity.this).defaultDialog(
+                        getString(R.string.title_no_internet),
+                        Html.fromHtml(getString(R.string.error_network)).toString()).show();
+            } else if (validationInputs()) {
                 new ManagerKeyboard(LoginActivity.this).closeKeyboard(this);
 
                 // TODO RETIRAR e implementar POST p/ API ---> Recebimento do Web Json Token

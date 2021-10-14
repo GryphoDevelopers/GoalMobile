@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.goal.R;
 import com.example.goal.managers.ManagerInputErrors;
 import com.example.goal.managers.ManagerKeyboard;
+import com.example.goal.managers.ManagerServices;
 import com.example.goal.managers.SearchInternet;
 import com.example.goal.models.Address;
 import com.example.goal.models.SerializationInfos;
@@ -182,9 +183,12 @@ public class RegisterForPurchases extends AppCompatActivity {
             if (addressRegister.getCountry().equals("Estrangeiro")) {
                 visibilityInputs(true);
             } else {
-                setUpDropdownState();
-                layoutEdit_state.setEnabled(true);
-                visibilityInputs(false);
+                // Verifica se a Internet está disponivel
+                if (!internetNotAvailable()) {
+                    setUpDropdownState();
+                    layoutEdit_state.setEnabled(true);
+                    visibilityInputs(false);
+                }
             }
         });
     }
@@ -305,30 +309,15 @@ public class RegisterForPurchases extends AppCompatActivity {
                 managerInputErrors.errorInputEditText(edit_cnpj, user.getError_validation(), false);
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
-            }
-
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-            executorService.execute(() -> {
-                // Executa os Metodos Assincronos de Validações
-                boolean isValid = user.validationNumberCnpj(user.getCnpj());
-
-                runOnUiThread(() -> {
-                    if (!isValid) {
-                        // Mostra os Possiveris erros do CNPJ
-                        new AlertDialogPersonalized(context).defaultDialog(
-                                getString(R.string.title_input_invalid, "CNPJ"),
-                                Html.fromHtml(getString(R.string.error_cnpj)).toString()).show();
-                    } else userRegister.setCnpj(user.getCnpj());
-                });
-            });
-
-            // Confere o Resultado da Validação Assincrona
-            if (userRegister.getCnpj() == null || userRegister.getCnpj().equals("")) {
+            } else if (!user.validationNumberCnpj(user.getCnpj())) {
+                // Mostra os Possiveris erros do CNPJ
+                new AlertDialogPersonalized(context).defaultDialog(
+                        getString(R.string.title_input_invalid, "CNPJ"),
+                        Html.fromHtml(getString(R.string.error_cnpj)).toString()).show();
                 managerInputErrors.errorInputEditText(edit_cnpj, user.getError_validation(), false);
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
             }
-
         } else {
             // Nenhuma opção foi Selecionada
             scrollView.fullScroll(ScrollView.FOCUS_UP);
@@ -344,6 +333,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             return false;
         }
 
+        // Passou por todas as Vlidações
         if (rdBtn_cnpj.isChecked()) userRegister.setCnpj(user.getCnpj());
         else userRegister.setCpf(user.getCpf());
         userRegister.setPhone(user.getPhone());
@@ -482,7 +472,8 @@ public class RegisterForPurchases extends AppCompatActivity {
      */
     private void completeRegister() {
         registerCompleteUser.setOnClickListener(v -> {
-            if (validationPersonalInfos() && validationTerritory() && validationAddress()) {
+            if (internetNotAvailable()) return;
+            else if (validationPersonalInfos() && validationTerritory() && validationAddress()) {
                 managerKeyboard.closeKeyboard(this);
 
                 // TODO RETIRAR e Implementar Cadastro POST API
@@ -498,10 +489,25 @@ public class RegisterForPurchases extends AppCompatActivity {
                 finishAffinity();
             } else {
                 // Validações Não Validas ou Erro no Cadastro
-                SnackBarPersonalized snackBar = new SnackBarPersonalized(findViewById(R.id.layout_purchases));
-                snackBar.defaultSnackBar(getString(R.string.error_singup)).show();
+                new SnackBarPersonalized(findViewById(R.id.layout_purchases))
+                        .defaultSnackBar(getString(R.string.error_singup))
+                        .show();
             }
         });
+    }
+
+    /**
+     * Verifica se não possui conexão de internet. Se não existir mostra o Erro na Tela.
+     *
+     * @return true/false
+     */
+    private boolean internetNotAvailable() {
+        if (new ManagerServices(RegisterForPurchases.this).validationInternet()) return false;
+
+        new AlertDialogPersonalized(RegisterForPurchases.this).defaultDialog(
+                getString(R.string.title_no_internet),
+                Html.fromHtml(getString(R.string.error_network)).toString()).show();
+        return true;
     }
 
 }

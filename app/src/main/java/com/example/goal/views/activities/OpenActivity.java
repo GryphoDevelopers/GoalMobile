@@ -14,6 +14,7 @@ import com.example.goal.managers.ManagerSharedPreferences;
  */
 public class OpenActivity extends AppCompatActivity {
 
+    // todo: implementar um metodo para validar o Login do Usuario (SQLite + JWT) + validação de Internet
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
