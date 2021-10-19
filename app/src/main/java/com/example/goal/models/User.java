@@ -35,10 +35,10 @@ public class User {
     private final String INPUT_MAX_LENGTH;
     private final String INPUT_NOT_CHARS_ACCEPT;
     private final String INPUT_NOT_FORMAT;
-    private final String INPUT_INVALID;
     private final String EMAIL_DISPOSABLE;
     private final String CNPJ_INVALID;
     private final String MESSAGE_EXCEPTION;
+    private final String INVALID_DDD;
 
     private final Context context;
     private String name;
@@ -68,10 +68,10 @@ public class User {
         INPUT_MAX_LENGTH = context.getString(R.string.validation_max_length);
         INPUT_NOT_CHARS_ACCEPT = context.getString(R.string.validation_format_char);
         INPUT_NOT_FORMAT = context.getString(R.string.validation_format);
-        INPUT_INVALID = context.getString(R.string.validation_not_disponible);
-        EMAIL_DISPOSABLE = Html.fromHtml(context.getString(R.string.error_disposable_email)).toString();
-        CNPJ_INVALID = Html.fromHtml(context.getString(R.string.error_cnpj)).toString();
+        EMAIL_DISPOSABLE = Html.fromHtml(context.getString(R.string.validation_disposable_email)).toString();
+        CNPJ_INVALID = Html.fromHtml(context.getString(R.string.validation_invalid_cnpj)).toString();
         MESSAGE_EXCEPTION = context.getString(R.string.error_exception);
+        INVALID_DDD = Html.fromHtml(context.getString(R.string.validation_invalid_ddd)).toString();
     }
 
     /**
@@ -143,7 +143,7 @@ public class User {
             callable.add(() -> {
                 String json_email = searchInternet.SearchInAPI(build_uri.toString(), "GET");
 
-                if (json_email == null) return searchInternet.getError_search();
+                if (json_email == null) error_validation = searchInternet.getError_search();
                 return json_email;
             });
 
@@ -160,7 +160,7 @@ public class User {
                     error_validation = EMAIL_DISPOSABLE;
                 } else error_validation = serializationInfos.getError_operation();
 
-            } else error_validation = searchInternet.getError_search();
+            }
 
         } catch (InterruptedException ex) {
             error_validation = MESSAGE_EXCEPTION;
@@ -212,7 +212,7 @@ public class User {
             return false;
         } else if (cpf.length() != 11) {
             error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "CPF",
-                    "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");
+                    "11 Numeros");
             return false;
         } else if (!cpf.matches("^[0-9]*")) {
             error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "CPF",
@@ -244,6 +244,10 @@ public class User {
             return false;
         } else if (cnpj.length() != 14) {
             error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "CNPJ",
+                    "11 Numeros");
+            return false;
+        } else if (!cpf.matches("^[0-9]*")) {
+            error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "CNPJ",
                     "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");
             return false;
         } else return true;
@@ -271,7 +275,7 @@ public class User {
             callable.add(() -> {
                 String json_cnpj = searchInternet.SearchInAPI(build_uri.toString(), "GET");
 
-                if (json_cnpj == null) return searchInternet.getError_search();
+                if (json_cnpj == null) error_validation = searchInternet.getError_search();
                 return json_cnpj;
             });
 
@@ -374,23 +378,66 @@ public class User {
     }
 
     /**
-     * Valida o Numero de Telefone do Usario. Podendo ter apenas Numeros
+     * Valida apenas a Formação e os Numero de Telefone do Usuario Brasileiro.
      *
-     * @param phone Telefone Informado
+     * @param phone Telefone Brasileiro Informado
      * @return true/false
      */
-    public boolean validationPhone(String phone) {
+    public boolean validationBrazilianPhone(String phone) {
         if (phone == null || phone.equals("")) {
             error_validation = INPUT_NULL;
             return false;
-        } else if (phone.length() != 11) {
-            error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "Telefone", "11 Digitos (DDD + Numero)");
+        } else if (phone.length() != 12) {
+            error_validation = String.format(INPUT_NOT_CHARS_ACCEPT,
+                    "Telefone", "12 Digitos (DDD + Numero)");
             return false;
         } else if (!phone.matches("^[0-9]*")) {
+            error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "Telefone",
+                    "Numeros (Sem Hifen, Ponto, Virgula, Sinais ou Espaços em Branco)");
+            return false;
+        }
+
+        String ddd_phone = phone.substring(0, 3);
+        String[] ddd_valid = ddd_valid();
+
+        // Verifica se o DDD está na lista dos DDDs Validos
+        for (String item : ddd_valid) {
+            if (item.equals(ddd_phone)) return true;
+        }
+
+        error_validation = INVALID_DDD;
+        return false;
+    }
+
+    /**
+     * Valida apenas a Formação e os Numero de Telefone do Usuario Estrangeiro.
+     *
+     * @param internation_phone Telefone do Usuario Estrangeiro
+     * @return true/false
+     */
+    public boolean validationInternationPhone(String internation_phone) {
+        if (internation_phone == null || internation_phone.equals("")) {
+            error_validation = INPUT_NULL;
+            return false;
+        } else if (!internation_phone.matches("^[0-9+]*")) {
             error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "Telefone",
                     "Numeros (Sem Hifen, Ponto, Virgula ou Espaços em Branco)");
             return false;
         } else return true;
+    }
+
+    /**
+     * String Array com os DDDs Brasileiros Validos
+     */
+    public String[] ddd_valid() {
+        return new String[]{
+                "011", "012", "013", "014", "015", "016", "017", "018", "019", "021", "022",
+                "024", "027", "028", "031", "032", "033", "034", "035", "037", "038", "041",
+                "042", "043", "044", "045", "046", "047", "048", "049", "051", "053", "054",
+                "055", "061", "062", "063", "064", "065", "066", "067", "068", "069", "071",
+                "073", "074", "075", "077", "079", "081", "082", "083", "084", "085", "086",
+                "087", "088", "089", "091", "092", "093", "094", "095", "096", "097", "098", "099"
+        };
     }
 
     // Getters e Setters da Classe User

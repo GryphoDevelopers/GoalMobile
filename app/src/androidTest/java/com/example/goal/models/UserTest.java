@@ -261,16 +261,16 @@ public class UserTest {
         valid_numbers[3] = "61605370906";
         valid_numbers[4] = "43477218084";
 
-        assertFalse(user.validationPhone(null));
-        assertFalse(user.validationPhone(""));
-        assertFalse(user.validationPhone("Kjao"));
-        assertFalse(user.validationPhone("Kjao12354"));
-        assertFalse(user.validationPhone("Kjao "));
-        assertFalse(user.validationPhone(String.valueOf(1234)));
-        assertFalse(user.validationPhone("123 153"));
+        assertFalse(user.validationBrazilianPhone(null));
+        assertFalse(user.validationBrazilianPhone(""));
+        assertFalse(user.validationBrazilianPhone("Kjao"));
+        assertFalse(user.validationBrazilianPhone("Kjao12354"));
+        assertFalse(user.validationBrazilianPhone("Kjao "));
+        assertFalse(user.validationBrazilianPhone(String.valueOf(1234)));
+        assertFalse(user.validationBrazilianPhone("123 153"));
 
         for (String item : valid_numbers) {
-            assertTrue(user.validationPhone(item));
+            assertTrue(user.validationBrazilianPhone(item));
         }
     }
 }

@@ -73,8 +73,9 @@
                 <TextView
                     android:id="@+id/txt_typeData"
                     style="@style/label_fields"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="@string/label_typeDocument" />
 
                 <TextView
@@ -100,8 +101,8 @@
                         android:id="@+id/rbtn_cpf"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginRight="20dp" />
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginRight="15dp" />
 
                     <RadioButton
                         android:id="@+id/rbtn_cnpj"
@@ -158,27 +159,6 @@
                             android:inputType="number" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layoutEdit_phone"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:hint="@string/label_telephone"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="11"
-                    app:endIconMode="clear_text"
-                    app:helperText="@string/hint_telephone"
-                    app:helperTextEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_phone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="phone" />
-                </com.google.android.material.textfield.TextInputLayout>
-
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -229,15 +209,37 @@
                     android:id="@+id/layout_stateCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="25dp"
                     android:orientation="vertical"
                     android:visibility="gone">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layoutEdit_phone"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:hint="@string/label_telephone"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="11"
+                        app:endIconMode="clear_text"
+                        app:helperText="@string/hint_phone_br"
+                        app:helperTextEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="phone" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layoutEdit_states"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
                         android:enabled="false"
                         android:hint="@string/label_state"
                         android:visibility="visible">
@@ -256,7 +258,6 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
                         android:enabled="false"
                         android:hint="@string/label_city"
                         android:visibility="visible">
@@ -269,6 +270,16 @@
                             tools:targetApi="JELLY_BEAN_MR1" />
 
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageButton
+                        android:id="@+id/btn_help"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="8dp"
+                        android:background="@null"
+                        android:contentDescription="@string/text_help"
+                        app:srcCompat="@drawable/ic_help" />
 
                     <!-- Campos p/ Estrangeiros. Layout_margin: 20dp + 10dp-->
                     <com.google.android.material.textfield.TextInputLayout
@@ -387,8 +398,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:visibility="gone"
                     android:hint="@string/label_cep"
+                    android:visibility="gone"
                     app:counterEnabled="true"
                     app:counterMaxLength="8"
                     app:endIconMode="clear_text"

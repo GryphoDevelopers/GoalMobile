@@ -1,16 +1,33 @@
 package com.example.goal.models;
 
 import android.content.Context;
+import android.net.Uri;
+import android.text.Html;
+import android.util.Log;
 
 import com.example.goal.R;
+import com.example.goal.managers.SearchInternet;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Classe Address: Responsavel por obter e manipular os dados de localização do Usuario
  */
 public class Address {
+
+    // Constantes de Possiveis Exception usadads nos Logs
+    private final String NAME_CLASS = "Address";
+    private final String EXECUTION_EXCEPTION = "Exception Execution";
+    private final String INTERRUPTED_EXCEPTION = "Exception Interrupted";
+    private final String EXCEPTION = "Exception";
 
     // Constantes Usadas nos Erros
     private final String INPUT_NULL;
@@ -18,6 +35,8 @@ public class Address {
     private final String INPUT_MAX_LENGTH;
     private final String INPUT_NOT_FORMAT;
     private final String INPUT_INVALID;
+    private final String CEP_INVALID;
+    private final String MESSAGE_EXCEPTION;
 
     // Atributos da Classe
     private final Context context;
@@ -45,7 +64,9 @@ public class Address {
         INPUT_MIN_LENGTH = context.getString(R.string.validation_min_length);
         INPUT_MAX_LENGTH = context.getString(R.string.validation_max_length);
         INPUT_NOT_FORMAT = context.getString(R.string.validation_format_char);
-        INPUT_INVALID = context.getString(R.string.validation_not_disponible);
+        INPUT_INVALID = context.getString(R.string.validation_unavailable);
+        CEP_INVALID = Html.fromHtml(context.getString(R.string.validation_invalid_cep)).toString();
+        MESSAGE_EXCEPTION = context.getString(R.string.error_exception);
     }
 
     /**
@@ -213,7 +234,7 @@ public class Address {
     }
 
     /**
-     * Valida o CEP Informado
+     * Valida o CEP Informado (Tamanho e Formato)
      *
      * @param cep CEP Informado pelo Usuario
      * @return true/false
@@ -239,10 +260,77 @@ public class Address {
      * @return true/false
      */
     public boolean checkCEP(Address address) {
-        // Todo: implementar validação do CEP (API EXTERNA) com o Endereço Informado
-        return true;
+        try {
+            // URI de Pesquisa
+            Uri build_uri = Uri.parse(SearchInternet.API_BRAZIL_CEP)
+                    .buildUpon().appendPath(address.getCep()).build();
+
+            // Criação da Tarefa Assincrona e do Metodo que busca na Internet
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            SearchInternet searchInternet = new SearchInternet(context);
+
+            // Configura a Tarefa Assincrona que Retorna uma String
+            Set<Callable<String>> callable = new HashSet<>();
+            callable.add(() -> {
+                String json_cep = searchInternet.SearchInAPI(build_uri.toString(), "GET");
+                if (json_cep == null) error_validation = searchInternet.getError_search();
+                return json_cep;
+            });
+
+            // Executa as Tarefas Assincornas
+            List<Future<String>> futureTasksList = executorService.invokeAll(callable);
+            String json_cep = futureTasksList.get(0).get();
+
+            if (json_cep != null) {
+                // Obtem o JSON da API
+                SerializationInfos serializationInfos = new SerializationInfos(context);
+                String[] infos_cep = serializationInfos.jsonToArray(json_cep,
+                        new String[]{"street", "neighborhood", "state"});
+
+                // Obtem uma String[] serializada
+                if (infos_cep != null) {
+                    // Deixa em Letras minusculas a Serialização
+                    for (int i = 0; i < infos_cep.length; i++) {
+                        infos_cep[i] = infos_cep[i].toLowerCase();
+                    }
+                    // Valida os Dados
+                    if (infos_cep[0].equals(address.getAddress().toLowerCase()) &&
+                            infos_cep[1].equals(address.getDistrict().toLowerCase()) &&
+                            infos_cep[2].equals(address.getState().toLowerCase())) {
+                        return true;
+                    } else error_validation = String.format(CEP_INVALID, infos_cep);
+                } else error_validation = serializationInfos.getError_operation();
+            }
+
+        } catch (InterruptedException ex) {
+            error_validation = MESSAGE_EXCEPTION;
+            Log.e(INTERRUPTED_EXCEPTION, NAME_CLASS + " - Tarefa Assincrona Interrompida");
+            ex.printStackTrace();
+        } catch (ExecutionException ex) {
+            error_validation = MESSAGE_EXCEPTION;
+            Log.e(EXECUTION_EXCEPTION, NAME_CLASS + " - Falha na Execução da Tarefa Assincrona");
+            ex.printStackTrace();
+        }
+        return false;
     }
 
+    /**
+     * Retorna a UF do Estado a partir de uma Lista (array) onde os estados e UF estão na mesma posição
+     *
+     * @param state UF do Estado esfecificada
+     * @return String/null
+     */
+    public String getUF(String state) {
+        try {
+            List<String> array_state = Arrays.asList(context.getResources().getStringArray(R.array.state));
+            int positionOfArray = array_state.indexOf(state);
+            return context.getResources().getStringArray(R.array.uf)[positionOfArray];
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro ao Obter a UF");
+            return null;
+        }
+    }
 
     // Getters e Setters da Calsse
     public String getCountry() {

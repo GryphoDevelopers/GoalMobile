@@ -20,6 +20,7 @@ public class SearchInternet {
 
     // Constantes de URLs das APIs Utilizadas
     public static final String API_BRAZIL_CITY = "https://brasilapi.com.br/api/ibge/municipios/v1";
+    public static final String API_BRAZIL_CEP = "https://brasilapi.com.br/api/cep/v2/";
     public static final String API_BRAZIL_CNPJ = "https://brasilapi.com.br/api/cnpj/v1/";
     public static final String API_EMAIL_DISPONABLE = "https://open.kickbox.com/v1/disposable/";
 

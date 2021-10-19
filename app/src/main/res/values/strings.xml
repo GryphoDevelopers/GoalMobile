@@ -12,18 +12,35 @@
     <string name="validation_max_length">%1$s deve ter no Maximo %2$s Caracteres</string>
     <string name="validation_format_char">%1$s deve ter conter apenas %2$s</string>
     <string name="validation_format">%1$s deve ter estar no Seguinte Formato: "%2$s"</string>
-    <string name="validation_not_disponible">%s Invalido. Tente Novamente</string>
+    <string name="validation_unavailable">%s Invalido. Tente Novamente</string>
     <string name="validation_password">A senha deve conter %s</string>
     <string name="validation_equal_password">As Senhas não são Iguais</string>
+    <!--Todo: Implementar Mascara no Telefone e alterar aqui-->
+    <string name="validation_invalid_ddd">DDD Invalido. Tente novamente
+        &lt;br/> &lt;br />  Insira o Telefone conforme o Exemplo: 011997074866 (0 + DDD + Telefone)
+    </string>
+    <string name="validation_invalid_cep">O CEP não é compativel com o Endereço Inserido.
+        &lt;br/> &lt;br /> Dados do CEP&lt;br /> Endereço: %1$s &lt;br /> Bairro: %2$s &lt;br /> UF: %3$s &lt;br />
+        &lt;br /> Verifique os Dados e Tente Novamente !
+    </string>
+    <string name="validation_disposable_email">Alguns dominios de Emails estão bloqueados por serem
+        emails descartaveis. &lt;br/> &lt;br /> Tente Novamente com outro Email!
+    </string>
+    <string name="validation_invalid_cnpj">Abaixo estão alguns dos Possivies erros do CNPJ &lt;br /> &lt;br />
+            &#8226;Verifique o CNPJ (Inscrição, Matriz/Filial, Digitos Verificadores) &lt;br />
+            &#8226;Somente são aceitos CNPJs Cadastrados na Receita Federal &lt;br />
+            &#8226;Somente são aceitos CNPJs com a Descrição da Situação <b>Ativa</b>
+    </string>
 
     <!-- Mensagens de Erro da API -->
-    <string name="error_404">Sua solicitação não foi bem Sucedida ! Tente Novamente</string>
+    <string name="error_404">Os dados Inseridos não Existe ! Tente Novamente</string>
     <string name="error_500">Dados não Encontrados ! Tente Novamente</string>
     <string name="error_generic">Houve um Erro ao executar a Solicitação ! Tente Novamente</string>
     <string name="error_serialization">Houve um erro ao Obter os Dados Solicitados !
         Tente Novamente</string>
 
     <!-- AlertDialogPersonalized -->
+    <string name="title_city">Sobre os Municipios/Cidades</string>
     <string name="title_error_api">Solicitação Invalida</string>
     <string name="title_input_invalid">%s Invalido</string>
     <string name="title_no_register_api">Falha no Cadastro</string>
@@ -31,6 +48,10 @@
     <string name="title_loading">Carregando …</string>
     <string name="button_close">Fechar</string>
 
+    <string name="notice_city">Algumas cidades podem não estar aparecendo por conta da divisão
+        do municipio. &lt;br />&lt;br /> Por exemplo, a Cidade de <b>São Paulo</b> não está listada, mas suas
+        &lt;b>subprefeituras (Butantã, Moema, e outras)&lt;b/> estarão disponiveis. &lt;br />&lt;br /> Busque sua
+        Cidade, Municipio ou Subprefeitura na Lista ! </string>
     <string name="error_network">Desculpe, mas não é possivel realizar essa operação
         sem a Internet&lt;br/> &lt;br /> Tente Novamente</string>
     <string name="error_exception">Ocorreu uma Falha ao Executar a Solicitação</string>
@@ -38,14 +59,6 @@
         Tente Novamente !</string>
     <string name="error_singup">Dados Incorretos. Por favor, confirme os dados das
         Etapas Anteriores</string>
-    <string name="error_disposable_email">Alguns dominios de Emails estão bloqueados por serem
-        emails descartaveis. &lt;br/> &lt;br /> Tente Novamente com outro Email!
-    </string>
-    <string name="error_cnpj">Abaixo estão alguns dos Possivies erros do CNPJ &lt;br /> &lt;br />
-            &#8226;Verifique o CNPJ (Inscrição, Matriz/Filial, Digitos Verificadores) &lt;br />
-            &#8226;Somente são aceitos CNPJs Cadastrados na Receita Federal &lt;br />
-            &#8226;Somente são aceitos CNPJs com a Descrição da Situação <b>Ativa</b>
-    </string>
 
     <!-- LoginActivity - Tela de Login  -->
     <string name="title_options">Olá, Bem Vindo à GOAL</string>
@@ -95,16 +108,19 @@
     <string name="label_telephone">Telefone</string>
     <string name="label_country">Qual seu <b>País</b> ?</string>
     <string name="label_state">Qual seu <b>Estado</b> ?</string>
-    <string name="label_city">Qual sua <b>Cidade</b> ?</string>
+    <string name="label_city">Qual seu <b>Municipio</b> ?</string>
     <string name="label_cep">CEP</string>
     <string name="label_address">Endereço</string>
     <string name="label_district">Bairro</string>
     <string name="label_number">Numero</string>
     <string name="label_complement">Complemento</string>
+    <string name="text_help">Ajuda</string>
 
     <string name="hint_cnpj">00000000000XYY</string>
     <string name="hint_cpf">000000000XX</string>
-    <string name="hint_telephone">XX900000000</string>
+    <string name="hint_phone_br">Ex: 011999990000</string>
+    <string name="hint_phone_international">Ex: 55011999990000 (Codigo País + Codigo de Área
+        + Numero de Telefone)</string>
     <string name="hint_cep">00000000</string>
     <string name="hint_address">Ex: "Avenida Paulista"</string>
     <string name="hint_district">Ex: "Bela Vista"</string>
