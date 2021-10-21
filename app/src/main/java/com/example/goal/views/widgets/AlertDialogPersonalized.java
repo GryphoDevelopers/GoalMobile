@@ -90,7 +90,7 @@ public class AlertDialogPersonalized {
         // Insere a Margem no Layout
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0, 30, 0, 30);
+        layoutParams.setMargins(0, 50, 0, 50);
 
         // Adiciona o ProgressIndicator com os Parametros
         linearLayout.addView(progressIndicator, layoutParams);

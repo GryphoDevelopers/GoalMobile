@@ -58,7 +58,7 @@ public class SerializationInfos {
             }
 
             // Verifica se o Item foi Obtido com Sucesso
-            if (result_cities[1] != null && result_cities[length_array - 1] != null) {
+            if (result_cities[0] != null && result_cities[length_array - 1] != null) {
                 // Retorna a Lista em Ordem Alfabetica
                 Arrays.sort(result_cities);
                 return result_cities;

@@ -328,8 +328,66 @@ public class Address {
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro ao Obter a UF");
+            error_validation = String.format(INPUT_INVALID, "Estado");
             return null;
         }
+    }
+
+    /**
+     * Obtem uma Lista (em Ordem Alfabetica) de Municipios a partir do Estado esppecificado
+     *
+     * @param uf Unidade Federativa do Estado das Cidades que serão obtidas
+     * @return String[]|null
+     */
+    public String[] getCities(String uf) {
+        try {
+            if (uf == null || uf.equals("") || uf.length() != 2) {
+                error_validation = String.format(INPUT_INVALID, "Estado/UF");
+                return null;
+            }
+
+            // URI de Pesquisa
+            Uri build_uri_cities = Uri.parse(SearchInternet.API_BRAZIL_CITY)
+                    .buildUpon().appendPath(uf).build();
+
+            // Criação da Tarefa Assincrona e do Metodo que busca na Internet
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+            // Configura a Tarefa Assincrona que Retorna uma String (JSON)
+            Set<Callable<String>> callable = new HashSet<>();
+            callable.add(() -> {
+                SearchInternet searchInternet = new SearchInternet(context);
+                String json_cities = searchInternet.SearchInAPI(build_uri_cities.toString(), "GET");
+                if (json_cities == null) error_validation = searchInternet.getError_search();
+                return json_cities;
+            });
+
+            // Executa as Tarefas Assincornas
+            List<Future<String>> futureTasksList = executorService.invokeAll(callable);
+            String json_cities = futureTasksList.get(0).get();
+
+            // Valida o JSON da API
+            if (json_cities != null) {
+                SerializationInfos serializationInfos = new SerializationInfos(context);
+                String[] array_cities = serializationInfos.serializationCities(json_cities);
+
+                // Obtem o array serializado e Ordena por ordem alfabetica
+                if (array_cities != null) {
+                    Arrays.sort(array_cities);
+                    return array_cities;
+                } else error_validation = serializationInfos.getError_operation();
+            }
+
+        } catch (InterruptedException ex) {
+            error_validation = MESSAGE_EXCEPTION;
+            Log.e(INTERRUPTED_EXCEPTION, NAME_CLASS + " - Tarefa Assincrona Interrompida");
+            ex.printStackTrace();
+        } catch (ExecutionException ex) {
+            error_validation = MESSAGE_EXCEPTION;
+            Log.e(EXECUTION_EXCEPTION, NAME_CLASS + " - Falha na Execução da Tarefa Assincrona");
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     // Getters e Setters da Calsse

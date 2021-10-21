@@ -2,7 +2,6 @@ package com.example.goal.views.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -23,9 +22,7 @@ import com.example.goal.R;
 import com.example.goal.managers.ManagerInputErrors;
 import com.example.goal.managers.ManagerKeyboard;
 import com.example.goal.managers.ManagerServices;
-import com.example.goal.managers.SearchInternet;
 import com.example.goal.models.Address;
-import com.example.goal.models.SerializationInfos;
 import com.example.goal.models.User;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
 import com.example.goal.views.widgets.SnackBarPersonalized;
@@ -34,7 +31,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -43,7 +39,7 @@ import java.util.concurrent.Executors;
  */
 public class RegisterForPurchases extends AppCompatActivity {
 
-    private String[] array_countries, array_state, array_city, array_uf;
+    private String[] array_countries, array_state, array_cities;
     private Context context;
     private LinearLayout layout_typeData, layout_stateCity;
     private ScrollView scrollView;
@@ -206,7 +202,6 @@ public class RegisterForPurchases extends AppCompatActivity {
      * Configura o Dropdown dos Estados
      */
     private void setUpDropdownState() {
-        array_uf = getResources().getStringArray(R.array.uf);
         array_state = getResources().getStringArray(R.array.state);
 
         ArrayAdapter<String> adapterState = new ArrayAdapter<>(this,
@@ -216,68 +211,50 @@ public class RegisterForPurchases extends AppCompatActivity {
         // Listener do AutoCompleteText dos Estados
         autoComplete_state.setOnItemClickListener((parent, view, position, id) -> {
             // Obtem o Valor do Estado e UF respectivamente para configurar o AutoCompleCity
-            addressRegister.setState(array_state[position]);
-            setUpDropdownCity(array_uf[position]);
+            String state = array_state[position];
+            addressRegister.setState(state);
+            setUpDropdownCities(addressRegister.getUF(state));
             layoutEdit_city.setEnabled(true);
         });
     }
 
     /**
      * Configura o Dropdown das Cidades
+     *
+     * @param uf Unidade Federeativa do Estado para obter a lista de Cidades
      */
-    private void setUpDropdownCity(String country_uf) {
+    private void setUpDropdownCities(String uf) {
         // Instancia a Classe de AlertDialog que seão usados
         AlertDialogPersonalized dialog_personalized = new AlertDialogPersonalized(context);
 
-        // Inicia um AlertDialog
+        // Cria um AlertDialog
         AlertDialog progressDialog = dialog_personalized.loadingDialog();
-        progressDialog.show();
 
-        // Atividade Background: Busca na API WEB
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        executorService.execute(() -> {
-            // Formação da URI
-            Uri build_uriAPI = Uri.parse(SearchInternet.API_BRAZIL_CITY).buildUpon().
-                    appendPath(country_uf).build();
+        // Executa uma tarefa assincrona
+        Executors.newSingleThreadExecutor().execute(() -> {
+            runOnUiThread(progressDialog::show);
+            String[] array_cities_async = addressRegister.getCities(uf);
+            runOnUiThread(() -> {
+                array_cities = array_cities_async;
+                progressDialog.dismiss();
 
-            // Obtenção do JSON
-            SearchInternet searchInternet = new SearchInternet(this);
-            String json_cities = searchInternet.SearchInAPI(build_uriAPI.toString(), "GET");
-            if (json_cities == null) {
-                // Exibe o Erro da API na Tela
-                runOnUiThread(() -> dialog_personalized.defaultDialog(
-                        getString(R.string.title_error_api), searchInternet.getError_search())
-                        .show());
-            } else {
-                runOnUiThread(() -> {
-                    // Serialização do JSON
-                    SerializationInfos serializationInfos = new SerializationInfos(this);
-                    array_city = serializationInfos.serializationCities(json_cities);
+                if (array_cities != null) {
+                    // Configura o AutoCompleteCity
+                    ArrayAdapter<String> adapterCity = new ArrayAdapter<>(this,
+                            android.R.layout.simple_dropdown_item_1line, array_cities);
+                    autoComplete_city.setAdapter(adapterCity);
 
-                    if (array_city == null) {
-                        // Exibe o Erro da Serialização na Tela
-                        runOnUiThread(() -> dialog_personalized.
-                                defaultDialog(getString(R.string.title_error_api),
-                                        serializationInfos.getError_operation()).show());
-                    } else {
-                        runOnUiThread(() -> {
-                            // Configura o AutoCompleteCity
-                            ArrayAdapter<String> adapterCity = new ArrayAdapter<>(this,
-                                    android.R.layout.simple_dropdown_item_1line, array_city);
-                            autoComplete_city.setAdapter(adapterCity);
-                        });
-                    }
-                });
-            }
-            // Encerra o Circular Progress Indicator
-            runOnUiThread(progressDialog::dismiss);
-        });
-
-        // Listener do AutoComplete das Cidades
-        autoComplete_city.setOnItemClickListener((parent, view, position, id) -> {
-            // Obtem o Valor selecionado e Configura o EditText CEP
-            addressRegister.setCity(array_city[position]);
-            layoutEdit_cep.setVisibility(View.VISIBLE);
+                    // Listener do AutoComplete das Cidades
+                    autoComplete_city.setOnItemClickListener((parent, view, position, id) -> {
+                        // Obtem o Valor selecionado e Configura o EditText CEP
+                        addressRegister.setCity(array_cities[position]);
+                        layoutEdit_cep.setVisibility(View.VISIBLE);
+                    });
+                } else {
+                    dialog_personalized.defaultDialog(getString(R.string.title_input_invalid, "Estado"),
+                            addressRegister.getError_validation()).show();
+                }
+            });
         });
     }
 
