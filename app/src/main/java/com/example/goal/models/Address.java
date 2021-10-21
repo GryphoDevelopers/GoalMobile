@@ -161,7 +161,7 @@ public class Address {
         } else if (address.length() > 120) {
             error_validation = String.format(INPUT_MAX_LENGTH, "Endereço", 200);
             return false;
-        } else if (!address.matches("^[A-ZÀ-úà-úa-zçÇ\\s]*")) {
+        } else if (!address.matches("^[0-9A-ZÀ-úà-úa-zçÇ\\s]*")) {
             error_validation = String.format(INPUT_NOT_FORMAT, "Endereço", "Letras");
             return false;
         } else return true;
@@ -225,7 +225,7 @@ public class Address {
             } else if (complement.length() > 120) {
                 error_validation = String.format(INPUT_MAX_LENGTH, "Complemento", 80);
                 return false;
-            } else if (!complement.matches("^[A-ZÀ-úà-úa-zçÇ,\\-\\s]*")) {
+            } else if (!complement.matches("^[0-9A-ZÀ-úà-úa-zçÇ,\\-\\s]*")) {
                 error_validation = String.format(INPUT_NOT_FORMAT, "Complemento",
                         "Letras, Virgulas ou Hifen ");
                 return false;
@@ -240,20 +240,32 @@ public class Address {
      * @return true/false
      */
     public boolean validationCEP(String cep) {
-        if (cep == null || cep.equals("")) {
-            error_validation = INPUT_NULL;
+        try {
+            int cep_convert = Integer.parseInt(cep);
+
+            if (cep.equals("") || cep_convert == 0) {
+                error_validation = INPUT_NULL;
+                return false;
+            } else if (Integer.parseInt(cep) < 0) {
+                error_validation = String.format(INPUT_NOT_FORMAT, "CEP", "Numeros Positivos");
+                return false;
+            } else if (cep.length() != 8) {
+                error_validation = String.format(INPUT_INVALID, "CEP");
+                return false;
+            } else if (cep_convert >= 100000000) {
+                error_validation = String.format(INPUT_NOT_FORMAT, "CEP", "8 Numeros");
+                return false;
+            } else return true;
+        } catch (Exception ex) {
+            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro na Conversão do CEP");
+            ex.printStackTrace();
             return false;
-        } else if (Integer.parseInt(cep) < 0) {
-            error_validation = String.format(INPUT_NOT_FORMAT, "CEP", "Numeros Positivos");
-            return false;
-        } else if (cep.length() != 8 || Integer.parseInt(cep) > 100000000) {
-            error_validation = String.format(INPUT_NOT_FORMAT, "CEP", "Numeros no Formato 'XXXXXXXX'");
-            return false;
-        } else return true;
+        }
     }
 
     /**
-     * Verifica o CEP com o Endereço Informado. Esse é um metodo Independente da Validação do CEP
+     * Verifica o CEP com o Endereço Informado. Esse é um metodo Independente da Validação do CEP.
+     * Ele precisa do Endereço (Avenida/Rua), Bairro e Estado
      *
      * @param address Instancia da Classe Address, que será usado para Comparar os Dados do CEP com
      *                o endereço Informado
