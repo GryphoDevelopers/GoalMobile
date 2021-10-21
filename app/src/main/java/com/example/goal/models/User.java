@@ -246,7 +246,7 @@ public class User {
             error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "CNPJ",
                     "11 Numeros");
             return false;
-        } else if (!cpf.matches("^[0-9]*")) {
+        } else if (!cnpj.matches("^[0-9]*")) {
             error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "CNPJ",
                     "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");
             return false;
@@ -268,11 +268,11 @@ public class User {
 
             // Criação da Tarefa Assincrona e do Metodo que busca na Internet
             ExecutorService executorService = Executors.newSingleThreadExecutor();
-            SearchInternet searchInternet = new SearchInternet(context);
 
             // Configura a Tarefa Assincrona que Retorna uma String
             Set<Callable<String>> callable = new HashSet<>();
             callable.add(() -> {
+                SearchInternet searchInternet = new SearchInternet(context);
                 String json_cnpj = searchInternet.SearchInAPI(build_uri.toString(), "GET");
 
                 if (json_cnpj == null) error_validation = searchInternet.getError_search();
@@ -289,13 +289,14 @@ public class User {
                         new String[]{"cnpj", "descricao_situacao_cadastral"});
 
                 if (cnpj_reciver != null) {
-                    if (cnpj_reciver[0].equals(cnpj) && cnpj_reciver[1].equals("Ativa"))
+                    if (cnpj_reciver[0].equals(cnpj) && cnpj_reciver[1].equals("Ativa")){
                         return true;
-
-                    error_validation = CNPJ_INVALID;
+                    } else error_validation = CNPJ_INVALID;
                 } else error_validation = serializationInfos.getError_operation();
 
-            } else error_validation = searchInternet.getError_search();
+            } else if(error_validation.equals(context.getString(R.string.error_generic))){
+                error_validation = CNPJ_INVALID;
+            }
 
         } catch (InterruptedException ex) {
             error_validation = MESSAGE_EXCEPTION;

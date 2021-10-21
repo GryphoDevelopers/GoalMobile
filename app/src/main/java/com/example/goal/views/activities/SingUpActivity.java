@@ -150,7 +150,7 @@ public class SingUpActivity extends AppCompatActivity {
             // Cria um AlertDialog na Tela
             new AlertDialogPersonalized(SingUpActivity.this).defaultDialog(
                     getString(R.string.title_input_invalid, "Email"),
-                    Html.fromHtml(getString(R.string.validation_disposable_email)).toString()).show();
+                    Html.fromHtml(user.getError_validation()).toString()).show();
             return false;
         } else if (!user.validationPassword(user.getPassword())) {
             managerInputErrors.errorInputEditText(editPassword, user.getError_validation(), false);

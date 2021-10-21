@@ -315,8 +315,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             } else if (!user.validationNumberCnpj(user.getCnpj())) {
                 // Mostra os Possiveris erros de Validação CNPJ (API Externa)
                 new AlertDialogPersonalized(context).defaultDialog(
-                        getString(R.string.title_input_invalid, "CNPJ"),
-                        Html.fromHtml(getString(R.string.validation_invalid_cnpj)).toString()).show();
+                        getString(R.string.title_input_invalid, "CNPJ"), user.getError_validation()).show();
                 managerInputErrors.errorInputEditText(edit_cnpj, user.getError_validation(), false);
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
