@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goal.R;
 import com.example.goal.managers.ManagerInputErrors;
-import com.example.goal.managers.ManagerKeyboard;
 import com.example.goal.managers.ManagerServices;
 import com.example.goal.models.Address;
 import com.example.goal.models.User;
@@ -39,7 +38,6 @@ import java.util.concurrent.Executors;
  */
 public class RegisterForPurchases extends AppCompatActivity {
 
-    private String[] array_countries, array_state, array_cities;
     private Context context;
     private LinearLayout layout_typeData, layout_stateCity;
     private ScrollView scrollView;
@@ -47,17 +45,28 @@ public class RegisterForPurchases extends AppCompatActivity {
     private TextView error_document;
     private MaterialCardView card_dataPersonal, card_dataAddress, card_dataTerritory;
 
-    private TextInputLayout layoutEdit_cpf, layoutEdit_cnpj, layoutEdit_country, layoutEdit_state,
-            layoutEdit_city, layoutEdit_cep, layoutEdit_exState, layoutEdit_exCity, layoutEdit_phone;
-    private TextInputEditText edit_cpf, edit_cnpj, edit_phone, edit_cep, edit_address, edit_district,
-            edit_number, edit_complement, edit_exState, edit_exCity;
-    private AutoCompleteTextView autoComplete_country, autoComplete_state, autoComplete_city;
+    private TextInputLayout layoutEdit_country;
+    private TextInputLayout layoutEdit_state;
+    private TextInputLayout layoutEdit_city;
+    private TextInputLayout layoutEdit_cep;
+    private TextInputLayout layoutEdit_exState;
+    private TextInputLayout layoutEdit_exCity;
+    private TextInputLayout layoutEdit_phone;
 
-    private Button registerCompleteUser;
+    private TextInputEditText edit_phone;
+    private TextInputEditText edit_cep;
+    private TextInputEditText edit_address;
+    private TextInputEditText edit_district;
+    private TextInputEditText edit_number;
+    private TextInputEditText edit_complement;
+    private TextInputEditText edit_exState;
+    private TextInputEditText edit_exCity;
+
     private ImageButton btn_help;
     private RadioButton rdBtn_cpf, rdBtn_cnpj;
 
-    private ManagerKeyboard managerKeyboard;
+    private String[] array_countries, array_state, array_cities;
+    private ManagerServices managerServices;
     private ManagerInputErrors managerInputErrors;
     private User userRegister;
     private Address addressRegister;
@@ -76,8 +85,8 @@ public class RegisterForPurchases extends AppCompatActivity {
         // Botão que Pula essa Etapa do Cadastro e Abre a Tela Incial
         Button skip_stage = findViewById(R.id.btn_skipStage);
         skip_stage.setOnClickListener(v -> {
-            managerKeyboard.closeKeyboard(this);
-            startActivity(new Intent(this, IndexActivity.class));
+            managerServices.closeKeyboard(this);
+            startActivity(new Intent(context, IndexActivity.class));
             finishAffinity();
         });
 
@@ -85,7 +94,7 @@ public class RegisterForPurchases extends AppCompatActivity {
         setUpDropdownCountry();
 
         // Clique no Botão "?" das Cidades
-        btn_help.setOnClickListener(v -> new AlertDialogPersonalized(RegisterForPurchases.this)
+        btn_help.setOnClickListener(v -> new AlertDialogPersonalized(context)
                 .defaultDialog(getString(R.string.title_city),
                         Html.fromHtml(getString(R.string.notice_city)).toString()).show());
 
@@ -94,14 +103,14 @@ public class RegisterForPurchases extends AppCompatActivity {
     }
 
     /**
-     * Instancia os Itens (ID, Classes...)
+     * Instancia os Itens (ID, Classes...) que serão usados em diferentes metodos
      */
     private void instanceItems() {
         context = RegisterForPurchases.this;
-        managerKeyboard = new ManagerKeyboard(context);
-        managerInputErrors = new ManagerInputErrors(this);
-        addressRegister = new Address(this);
-        userRegister = new User(this);
+        managerServices = new ManagerServices(context);
+        managerInputErrors = new ManagerInputErrors(context);
+        addressRegister = new Address(context);
+        userRegister = new User(context);
 
         error_document = findViewById(R.id.error_document);
         layout_typeData = findViewById(R.id.layout_typeData);
@@ -110,34 +119,26 @@ public class RegisterForPurchases extends AppCompatActivity {
         card_dataAddress = findViewById(R.id.card_address);
         card_dataTerritory = findViewById(R.id.card_territory);
 
-        edit_cpf = findViewById(R.id.edit_cpf);
-        edit_cnpj = findViewById(R.id.edit_cnpj);
+        edit_exState = findViewById(R.id.edit_exState);
+        edit_exCity = findViewById(R.id.edit_exCity);
         edit_phone = findViewById(R.id.edit_phone);
+
         edit_cep = findViewById(R.id.edit_cep);
         edit_address = findViewById(R.id.edit_address);
         edit_district = findViewById(R.id.edit_district);
         edit_number = findViewById(R.id.edit_number);
         edit_complement = findViewById(R.id.edit_complement);
 
-        scrollView = findViewById(R.id.scrollView_purchases);
-        layoutEdit_cpf = findViewById(R.id.layoutEdit_cpf);
-        layoutEdit_cnpj = findViewById(R.id.layoutEdit_cnpj);
+        layoutEdit_phone = findViewById(R.id.layoutEdit_phone);
         layoutEdit_country = findViewById(R.id.layoutEdit_countries);
         layoutEdit_state = findViewById(R.id.layoutEdit_states);
         layoutEdit_city = findViewById(R.id.layoutEdit_city);
         layoutEdit_cep = findViewById(R.id.layoutEdit_cep);
-        layoutEdit_phone = findViewById(R.id.layoutEdit_phone);
-
-        edit_exState = findViewById(R.id.edit_exState);
-        edit_exCity = findViewById(R.id.edit_exCity);
         layoutEdit_exState = findViewById(R.id.layoutEdit_exState);
         layoutEdit_exCity = findViewById(R.id.layoutEdit_exCity);
-        autoComplete_state = findViewById(R.id.autoCompleteState);
-        autoComplete_country = findViewById(R.id.autoCompleteCountry);
-        autoComplete_city = findViewById(R.id.autoCompleteCity);
+        scrollView = findViewById(R.id.scrollView_purchases);
 
         btn_help = findViewById(R.id.btn_help);
-        registerCompleteUser = findViewById(R.id.btn_registerCompleteUser);
         rdBtn_cpf = findViewById(R.id.rbtn_cpf);
         rdBtn_cnpj = findViewById(R.id.rbtn_cnpj);
     }
@@ -147,6 +148,8 @@ public class RegisterForPurchases extends AppCompatActivity {
      */
     private void setUpDocument() {
         String[] optionsDocs = getResources().getStringArray(R.array.cpf_cnpj);
+        TextInputLayout layoutEdit_cpf = findViewById(R.id.layoutEdit_cpf);
+        TextInputLayout layoutEdit_cnpj = findViewById(R.id.layoutEdit_cnpj);
         rdBtn_cpf.setText(optionsDocs[0]);
         rdBtn_cnpj.setText(optionsDocs[1]);
 
@@ -171,8 +174,10 @@ public class RegisterForPurchases extends AppCompatActivity {
      * Configura o Dropdown dos Países
      */
     private void setUpDropdownCountry() {
+        AutoCompleteTextView autoComplete_country = findViewById(R.id.autoCompleteCountry);
         array_countries = getResources().getStringArray(R.array.pays);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
                 android.R.layout.simple_dropdown_item_1line, array_countries);
 
         autoComplete_country.setAdapter(adapter);
@@ -189,7 +194,11 @@ public class RegisterForPurchases extends AppCompatActivity {
                 visibilityInputs(true);
             } else {
                 // Verifica se a Internet está disponivel
-                if (!internetNotAvailable()) {
+                if (!new ManagerServices(context).availableInternet()) {
+                    new AlertDialogPersonalized(context).defaultDialog(
+                            getString(R.string.title_no_internet),
+                            Html.fromHtml(getString(R.string.error_network)).toString()).show();
+                } else {
                     setUpDropdownState();
                     layoutEdit_state.setEnabled(true);
                     visibilityInputs(false);
@@ -202,9 +211,10 @@ public class RegisterForPurchases extends AppCompatActivity {
      * Configura o Dropdown dos Estados
      */
     private void setUpDropdownState() {
+        AutoCompleteTextView autoComplete_state = findViewById(R.id.autoCompleteState);
         array_state = getResources().getStringArray(R.array.state);
 
-        ArrayAdapter<String> adapterState = new ArrayAdapter<>(this,
+        ArrayAdapter<String> adapterState = new ArrayAdapter<>(context,
                 android.R.layout.simple_dropdown_item_1line, array_state);
         autoComplete_state.setAdapter(adapterState);
 
@@ -224,10 +234,10 @@ public class RegisterForPurchases extends AppCompatActivity {
      * @param uf Unidade Federeativa do Estado para obter a lista de Cidades
      */
     private void setUpDropdownCities(String uf) {
-        // Instancia a Classe de AlertDialog que seão usados
-        AlertDialogPersonalized dialog_personalized = new AlertDialogPersonalized(context);
+        AutoCompleteTextView autoComplete_city = findViewById(R.id.autoCompleteCity);
 
-        // Cria um AlertDialog
+        // Instancia a Classe de AlertDialog que será usado
+        AlertDialogPersonalized dialog_personalized = new AlertDialogPersonalized(context);
         AlertDialog progressDialog = dialog_personalized.loadingDialog();
 
         // Executa uma tarefa assincrona
@@ -240,7 +250,7 @@ public class RegisterForPurchases extends AppCompatActivity {
 
                 if (array_cities != null) {
                     // Configura o AutoCompleteCity
-                    ArrayAdapter<String> adapterCity = new ArrayAdapter<>(this,
+                    ArrayAdapter<String> adapterCity = new ArrayAdapter<>(context,
                             android.R.layout.simple_dropdown_item_1line, array_cities);
                     autoComplete_city.setAdapter(adapterCity);
 
@@ -290,10 +300,11 @@ public class RegisterForPurchases extends AppCompatActivity {
      * Validação dos Dados Pessoais do Usuario CPF ou CNPJ)
      */
     private boolean validationPersonalInfos() {
-        User user = new User(this);
+        User user = new User(context);
 
         if (rdBtn_cpf.isChecked()) {
             // Obtem os Dados do CPF para Validação
+            TextInputEditText edit_cpf = findViewById(R.id.edit_cpf);
             user.setCpf(Objects.requireNonNull(edit_cpf.getText()).toString());
             if (!user.validationCpf(user.getCpf())) {
                 managerInputErrors.errorInputEditText(edit_cpf, user.getError_validation(), false);
@@ -307,6 +318,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             }
         } else if (rdBtn_cnpj.isChecked()) {
             // Obtem os dados do CNPJ para Validar
+            TextInputEditText edit_cnpj = findViewById(R.id.edit_cnpj);
             user.setCnpj(Objects.requireNonNull(edit_cnpj.getText()).toString());
             if (!user.validationCnpj(user.getCnpj())) {
                 managerInputErrors.errorInputEditText(edit_cnpj, user.getError_validation(), false);
@@ -339,7 +351,7 @@ public class RegisterForPurchases extends AppCompatActivity {
      * @return boolean
      */
     private boolean validationTerritory() {
-        Address address = new Address(this);
+        Address address = new Address(context);
 
         // Valida as Opções de país (Brasil X Estrangeiro)
         address.setCountry(addressRegister.getCountry());
@@ -390,7 +402,7 @@ public class RegisterForPurchases extends AppCompatActivity {
         addressRegister.setCity(address.getCity());
 
         // Verifica o Telefone Brasileiro
-        User user = new User(this);
+        User user = new User(context);
         user.setPhone(Objects.requireNonNull(edit_phone.getText()).toString());
         if (!isForeign && !user.validationBrazilianPhone(user.getPhone())) {
             managerInputErrors.errorInputEditText(edit_phone, user.getError_validation(), false);
@@ -414,7 +426,7 @@ public class RegisterForPurchases extends AppCompatActivity {
      */
     private boolean validationAddress() {
         // Obtem os Valores
-        Address address = new Address(this);
+        Address address = new Address(context);
         address.setAddress(Objects.requireNonNull(edit_address.getText()).toString());
         address.setDistrict(Objects.requireNonNull(edit_district.getText()).toString());
 
@@ -442,7 +454,7 @@ public class RegisterForPurchases extends AppCompatActivity {
                 card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
             } else if (!address.checkCEP(address)) {
-                new AlertDialogPersonalized(RegisterForPurchases.this).defaultDialog(
+                new AlertDialogPersonalized(context).defaultDialog(
                         getString(R.string.title_input_invalid, "CEP"),
                         address.getError_validation()).show();
                 managerInputErrors.errorInputEditText(edit_cep, address.getError_validation(), false);
@@ -486,10 +498,15 @@ public class RegisterForPurchases extends AppCompatActivity {
      * Botão "Finalizar Cadastro". Caso passe por todas as Validações, Realiza o Cadastro
      */
     private void completeRegister() {
+        // Instancia e Obtem o Listener do Botão
+        Button registerCompleteUser = findViewById(R.id.btn_registerCompleteUser);
         registerCompleteUser.setOnClickListener(v -> {
-            if (internetNotAvailable()) return;
-            else if (validationPersonalInfos() && validationTerritory() && validationAddress()) {
-                managerKeyboard.closeKeyboard(this);
+            if (!new ManagerServices(context).availableInternet()) {
+                new AlertDialogPersonalized(context).defaultDialog(
+                        getString(R.string.title_no_internet),
+                        Html.fromHtml(getString(R.string.error_network)).toString()).show();
+            } else if (validationPersonalInfos() && validationTerritory() && validationAddress()) {
+                managerServices.closeKeyboard(this);
 
                 // TODO RETIRAR e Implementar Cadastro POST API
                 Log.e("PURCHASES", addressRegister.getCountry() + "\n" +
@@ -500,7 +517,7 @@ public class RegisterForPurchases extends AppCompatActivity {
                         userRegister.getCnpj() + "\n" + userRegister.getPhone());
 
                 // Abre a pagina Index (Produtos) e Finaliza a Actvity
-                startActivity(new Intent(this, IndexActivity.class));
+                startActivity(new Intent(context, IndexActivity.class));
                 finishAffinity();
             } else {
                 // Validações Não Validas ou Erro no Cadastro
@@ -509,20 +526,6 @@ public class RegisterForPurchases extends AppCompatActivity {
                         .show();
             }
         });
-    }
-
-    /**
-     * Verifica se não possui conexão de internet. Se não existir mostra o Erro na Tela.
-     *
-     * @return true/false
-     */
-    private boolean internetNotAvailable() {
-        if (new ManagerServices(RegisterForPurchases.this).validationInternet()) return false;
-
-        new AlertDialogPersonalized(RegisterForPurchases.this).defaultDialog(
-                getString(R.string.title_no_internet),
-                Html.fromHtml(getString(R.string.error_network)).toString()).show();
-        return true;
     }
 
 }

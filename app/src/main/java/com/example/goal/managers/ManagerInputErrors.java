@@ -10,14 +10,15 @@ import com.google.android.material.textfield.TextInputLayout;
  */
 public class ManagerInputErrors {
 
-    private final ManagerKeyboard managerKeyboard;
+    private final Context context;
+
     /**
      * Contrutor da Classe
      *
-     * @param context Utiliza o Context para instancia a classe que manipula o Teclado
+     * @param context Utiliza o Context para usa-lo nas Operações
      */
     public ManagerInputErrors(Context context) {
-        managerKeyboard = new ManagerKeyboard(context);
+        this.context = context;
     }
 
     /**
@@ -31,7 +32,7 @@ public class ManagerInputErrors {
         if (show_icon) inputEditText.setError(text_error);
         else inputEditText.setError(text_error, null);
         inputEditText.requestFocus();
-        managerKeyboard.openKeyboard(inputEditText);
+        new ManagerServices(context).openKeyboard(inputEditText);
     }
 
     /**
@@ -43,7 +44,7 @@ public class ManagerInputErrors {
     public void errorInputLayout(TextInputLayout textInputLayout, String textError) {
         textInputLayout.setError(textError);
         textInputLayout.requestFocus();
-        managerKeyboard.openKeyboard(textInputLayout);
+        new ManagerServices(context).openKeyboard(textInputLayout);
     }
 
 }

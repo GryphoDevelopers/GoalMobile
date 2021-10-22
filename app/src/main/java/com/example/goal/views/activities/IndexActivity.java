@@ -36,11 +36,11 @@ public class IndexActivity extends AppCompatActivity {
         Button btn_home = findViewById(R.id.button_home);
         btn_home.setOnClickListener(v -> {
             // Retira a opção "Lembrar Login"
-            ManagerSharedPreferences preferences = new ManagerSharedPreferences(this,
+            ManagerSharedPreferences preferences = new ManagerSharedPreferences(IndexActivity.this,
                     ManagerSharedPreferences.NAME_PREFERENCE);
             preferences.rememberLogin(false);
             // INicia a primeira Activity
-            startActivity(new Intent(this, OpenActivity.class));
+            startActivity(new Intent(IndexActivity.this, OpenActivity.class));
             finish();
         });
 

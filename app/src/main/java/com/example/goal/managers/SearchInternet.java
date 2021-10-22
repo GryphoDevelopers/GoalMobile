@@ -1,6 +1,7 @@
 package com.example.goal.managers;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.Log;
 
 import com.example.goal.R;
@@ -51,6 +52,12 @@ public class SearchInternet {
      * @return String|null
      */
     public String SearchInAPI(String uri, String method) {
+
+        if (!new ManagerServices(context).availableInternet()) {
+            error_search = Html.fromHtml(context.getString(R.string.error_network)).toString();
+            return null;
+        }
+
         // Variaveis Usadas na Pesquisa da API
         BufferedReader bufferedReader;
         String response_json;

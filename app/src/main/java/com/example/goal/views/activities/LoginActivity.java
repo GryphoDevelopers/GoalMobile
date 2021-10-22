@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goal.R;
 import com.example.goal.managers.ManagerInputErrors;
-import com.example.goal.managers.ManagerKeyboard;
 import com.example.goal.managers.ManagerServices;
 import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.User;
@@ -27,10 +26,6 @@ import java.util.Objects;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    private TextInputEditText edit_email;
-    private TextInputEditText edit_password;
-    private MaterialCheckBox checkBox_remember;
-    private Button btn_login;
     private User userLogin;
 
     @Override
@@ -38,21 +33,20 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Insntacia os Itens que serão usados
-        instanceItens();
-
+        // Instancia dos Itens que serão Usados
         Button btn_register = findViewById(R.id.btn_singup);
         Button btn_nextStage = findViewById(R.id.bnt_ignore);
+        userLogin = new User(LoginActivity.this);
 
         // Caso o Usuario opte por se Cadastrar
         btn_register.setOnClickListener(v -> startActivity(new
-                Intent(this, SingUpActivity.class)));
+                Intent(LoginActivity.this, SingUpActivity.class)));
 
         btn_nextStage.setOnClickListener(v -> {
             // O Usuario sempre será Redirecionado à tela de Login/Cadastro antes de ir para a Index
-            new ManagerSharedPreferences(this, ManagerSharedPreferences.NAME_PREFERENCE)
+            new ManagerSharedPreferences(LoginActivity.this, ManagerSharedPreferences.NAME_PREFERENCE)
                     .rememberLogin(false);
-            startActivity(new Intent(this, IndexActivity.class));
+            startActivity(new Intent(LoginActivity.this, IndexActivity.class));
             finishAffinity();
         });
 
@@ -61,40 +55,30 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Instancia os Itens que serão Usados na Activity
-     */
-    private void instanceItens() {
-        // Classe do Usuario que será realizada o Login
-        userLogin = new User(this);
-
-        edit_email = findViewById(R.id.editTxt_emailLogin);
-        edit_password = findViewById(R.id.editTxt_passwordLogin);
-        checkBox_remember = findViewById(R.id.checkbox_remember);
-        btn_login = findViewById(R.id.btn_login);
-    }
-
-    /**
      * Clique no Botão "Entrar". Caso os Dados sejam Validados, realiza o Login
      */
     public void loginUser() {
+        // Instancia e Obtem o Listener do Botão
+        Button btn_login = findViewById(R.id.btn_login);
         btn_login.setOnClickListener(v -> {
-            if (!new ManagerServices(LoginActivity.this).validationInternet()) {
+            if (!new ManagerServices(LoginActivity.this).availableInternet()) {
                 new AlertDialogPersonalized(LoginActivity.this).defaultDialog(
                         getString(R.string.title_no_internet),
                         Html.fromHtml(getString(R.string.error_network)).toString()).show();
             } else if (validationInputs()) {
-                new ManagerKeyboard(LoginActivity.this).closeKeyboard(this);
+                new ManagerServices(LoginActivity.this).closeKeyboard(this);
 
                 // TODO RETIRAR e implementar POST p/ API ---> Recebimento do Web Json Token
                 Log.e("LOGIN", "Email: " + userLogin.getEmail() + "\nSenha: " + userLogin.getPassword());
 
                 // Define o Valor do  "Lembrar Usuario" para as seções futuras
-                ManagerSharedPreferences preferences = new ManagerSharedPreferences(this,
+                MaterialCheckBox checkBox_remember = findViewById(R.id.checkbox_remember);
+                ManagerSharedPreferences preferences = new ManagerSharedPreferences(LoginActivity.this,
                         ManagerSharedPreferences.NAME_PREFERENCE);
                 preferences.rememberLogin(checkBox_remember.isChecked());
 
                 // Inicia a Pagina Index (Produtos) e Finaliza essa Activity
-                startActivity(new Intent(this, IndexActivity.class));
+                startActivity(new Intent(LoginActivity.this, IndexActivity.class));
                 finishAffinity();
             } else {
                 new SnackBarPersonalized(findViewById(R.id.layout_initial))
@@ -114,6 +98,8 @@ public class LoginActivity extends AppCompatActivity {
         User user = new User(LoginActivity.this);
 
         // Obtem os Dados do Input
+        TextInputEditText edit_email = findViewById(R.id.editTxt_emailLogin);
+        TextInputEditText edit_password = findViewById(R.id.editTxt_passwordLogin);
         user.setEmail(Objects.requireNonNull(edit_email.getText()).toString());
         user.setPassword(Objects.requireNonNull(edit_password.getText()).toString());
 

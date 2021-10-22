@@ -1,12 +1,15 @@
 package com.example.goal.managers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 /**
- * Classe ManagerServices: Controla os Serviços (GPS, Internet) Usados no Aplicativo
+ * Classe ManagerServices: Controla os Serviços (GPS, Internet, Teclado) Usados no Aplicativo
  */
 public class ManagerServices {
 
@@ -16,6 +19,7 @@ public class ManagerServices {
     private final String NO_NETWORK_INFO = "Invalid Network";
     private final String RUNTIME_EXCEPTION = "Runtime Exception";
     private final Context context;
+    private InputMethodManager keyboardManager;
 
     /**
      * Construtor da Classe que obtem o Context da Activity ou Fragment para acessar os Services
@@ -29,7 +33,7 @@ public class ManagerServices {
      *
      * @return true/false
      */
-    public boolean validationInternet() {
+    public boolean availableInternet() {
         try {
             ConnectivityManager connectivityManager = (ConnectivityManager)
                     context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -49,6 +53,35 @@ public class ManagerServices {
 
         Log.e(NO_NETWORK_INFO, NAME_CLASS + " Erro ao Obter as Informações de Internet");
         return false;
+    }
+
+    /**
+     * Abre o Teclado na View Informada
+     *
+     * @param viewOpen View (ex: Activity, EditText) que deseja abrir o teclado
+     */
+    public void openKeyboard(View viewOpen) {
+        keyboardManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // Se ontem o controlador do Teclado = Abre
+        if (keyboardManager != null) {
+            keyboardManager.showSoftInput(viewOpen, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
+    /**
+     * Responsavel por fechar o Teclado
+     *
+     * @param activity Activity em que o Teclado será fechado
+     */
+    public void closeKeyboard(Activity activity) {
+        keyboardManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // Se obtem o controlador do Teclado = Fecha
+        if (keyboardManager != null) {
+            keyboardManager.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
 }
