@@ -3,6 +3,7 @@ package com.example.goal.views.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,7 +26,7 @@ public class OpenActivity extends AppCompatActivity {
                 ManagerSharedPreferences.NAME_PREFERENCE);
 
         // Deixa nessa Activity por 2 Segundos
-        Handler handler = new Handler();
+        Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> {
             // Inicia a Activity de Produtos ou Login
             startActivity(new Intent(OpenActivity.this,
