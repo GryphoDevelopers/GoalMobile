@@ -8,9 +8,20 @@ import android.util.Log;
 import com.example.goal.R;
 import com.example.goal.managers.SearchInternet;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -22,6 +33,9 @@ import java.util.concurrent.Future;
  */
 public class User {
 
+    // Constantes Usadas na manipulação da Data
+    public static final String TIME_ZONE = "America/Sao_Paulo";
+    public static final Locale LOCALE_BR = new Locale("pt", "BR");
     // Constantes da Força da Senha
     private static final int LOW_STRENGTH = 1;
     private static final int OK_STRENGTH = 2;
@@ -29,6 +43,7 @@ public class User {
     private final String NAME_CLASS = "User";
     private final String EXECUTION_EXCEPTION = "Exception Execution";
     private final String INTERRUPTED_EXCEPTION = "Exception Interrupted";
+    private final String EXCEPTION_GLOBAL = "Exception General";
     // Constantes Usadas nos Erros
     private final String INPUT_NULL;
     private final String INPUT_MIN_LENGTH;
@@ -39,8 +54,10 @@ public class User {
     private final String CNPJ_INVALID;
     private final String MESSAGE_EXCEPTION;
     private final String INVALID_DDD;
-
+    private final String INPUT_INVALID_AGE;
+    private final String INPUT_INVALID;
     private final Context context;
+    private Date date_birth;
     private String name;
     private String email;
     private String nickname;
@@ -51,8 +68,7 @@ public class User {
     private String cnpj;
     private boolean isSeller;
     private boolean checkedTermsUse;
-
-    private String error_validation;
+    private String error_validation = "";
 
     /**
      * Construtor da Classe User
@@ -72,6 +88,8 @@ public class User {
         CNPJ_INVALID = Html.fromHtml(context.getString(R.string.validation_invalid_cnpj)).toString();
         MESSAGE_EXCEPTION = context.getString(R.string.error_exception);
         INVALID_DDD = Html.fromHtml(context.getString(R.string.validation_invalid_ddd)).toString();
+        INPUT_INVALID_AGE = context.getString(R.string.validation_age);
+        INPUT_INVALID = context.getString(R.string.validation_unavailable);
     }
 
     /**
@@ -289,12 +307,12 @@ public class User {
                         new String[]{"cnpj", "descricao_situacao_cadastral"});
 
                 if (cnpj_reciver != null) {
-                    if (cnpj_reciver[0].equals(cnpj) && cnpj_reciver[1].equals("Ativa")){
+                    if (cnpj_reciver[0].equals(cnpj) && cnpj_reciver[1].equals("Ativa")) {
                         return true;
                     } else error_validation = CNPJ_INVALID;
                 } else error_validation = serializationInfos.getError_operation();
 
-            } else if(error_validation.equals(context.getString(R.string.error_generic))){
+            } else if (error_validation.equals(context.getString(R.string.error_generic))) {
                 error_validation = CNPJ_INVALID;
             }
 
@@ -428,7 +446,115 @@ public class User {
     }
 
     /**
+     * Valida a Idade do Usuario.
+     * <p>
+     * Formato: DD/MM/AAAA. Idade Minima = 13 e Idade Maxima = 100. Valida Ano Bissexto,
+     * Meses/Dias Incorretos
+     *
+     * @param date_birth Data de Nascimento do Usuario
+     * @return true/false
+     */
+    public boolean validationDateBirth(String date_birth) {
+        try {
+            if (date_birth == null || date_birth.equals("")) {
+                error_validation = INPUT_NULL;
+                return false;
+            } else if (!date_birth.matches("[0-9]{2}/[0-9]{2}/[0-9]{4}")) {
+                error_validation = String.format(INPUT_NOT_FORMAT, "Data", "DD/MM/AAAA");
+                return false;
+            }
+
+
+            // Validação na Regra da Data (Numero de Dias/Meses)
+            String date_normalized = date_birth.replace("/", "");
+            int day = Integer.parseInt(date_normalized.substring(0, 2));
+            int month = Integer.parseInt(date_normalized.substring(2, 4));
+            if (day <= 0 || day > 31 || month <= 0 || month > 12) {
+                error_validation = String.format(INPUT_INVALID, "Data");
+                return false;
+            } else if (day == 31) {
+                // Validação se o Mês permite dia 31
+                List<Integer> month_more_day = new ArrayList<>(Arrays.asList(1, 3, 5, 7, 8, 10, 12));
+                if (!month_more_day.contains(month)) {
+                    error_validation = String.format(INPUT_INVALID, "Data");
+                    return false;
+                }
+            }
+
+            if (month == 2) {
+                int year = Integer.parseInt(date_normalized.substring(4, 8));
+                if (day > 29) {
+                    error_validation = String.format(INPUT_INVALID, "Data");
+                    return false;
+                } else if (day == 29 && year % 4 != 0) {
+                    error_validation = String.format(INPUT_INVALID, "Data");
+                    return false;
+                }
+            }
+
+            // Alternativas para Diferentes Versões
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                LocalDate localDate = LocalDate.parse(date_birth, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                LocalDate localDate_now = LocalDate.now(ZoneId.of(TIME_ZONE));
+
+                if (localDate != null && localDate_now != null) {
+                    Period period = Period.between(localDate, localDate_now);
+                    if (period.getYears() >= 100) {
+                        error_validation = String.format(INPUT_INVALID_AGE, "Maxima", "100");
+                        return false;
+                    }
+                    if (period.getYears() < 13) {
+                        // Usuario com Idade menor que 13 Anos
+                        error_validation = String.format(INPUT_INVALID_AGE, "Minima", "13");
+                        return false;
+                    } else return true;
+                }
+            } else {
+                // Formata a Data Recebida e a Data Atual do Brasil
+                setDate_birth(date_birth);
+                Date date_birth_formatted = getDate_birth();
+                Date date_now_formatted = getDate_now();
+
+                if (date_birth_formatted != null && date_now_formatted != null) {
+                    // Instancia e Coloca o Valor da Data
+                    Calendar calendar_dateBirth = Calendar.getInstance(LOCALE_BR);
+                    Calendar calendar_dateNow = Calendar.getInstance(LOCALE_BR);
+                    calendar_dateBirth.setTime(date_birth_formatted);
+                    calendar_dateNow.setTime(date_now_formatted);
+
+                    // Subtração da Data de Nascimento com o Ano Atual
+                    int years = calendar_dateNow.get(Calendar.YEAR) - calendar_dateBirth.get(Calendar.YEAR);
+
+                    if (years > 13 && years < 100) return true;
+                    else if (years >= 100) {
+                        error_validation = String.format(INPUT_INVALID_AGE, "Maxima", "100");
+                        return false;
+                    } else if (years == 13) {
+                        int day_of_year = calendar_dateNow.get(Calendar.DAY_OF_YEAR) - calendar_dateBirth
+                                .get(Calendar.DAY_OF_YEAR);
+                        if (day_of_year >= 0) return true;
+                    }
+
+                    // Usuario com Idade menor que 13 Anos
+                    error_validation = String.format(INPUT_INVALID_AGE, "Minima", "13");
+                    return false;
+                }
+            }
+
+            error_validation = String.format(INPUT_INVALID, "Data");
+            return false;
+        } catch (Exception ex) {
+            error_validation = MESSAGE_EXCEPTION;
+            Log.e(EXCEPTION_GLOBAL, NAME_CLASS + " - Falha na Manipulação da Data");
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * String Array com os DDDs Brasileiros Validos
+     *
+     * @return String[]
      */
     public String[] ddd_valid() {
         return new String[]{
@@ -525,4 +651,53 @@ public class User {
     public String getError_validation() {
         return error_validation;
     }
+
+    public Date getDate_birth() {
+        return date_birth;
+    }
+
+    /**
+     * Define a Data de Nascimento do Usuario a partir de uma Data Passada no Formato DIA/MES/ANO.
+     * <p>
+     * A Data pode será Definida com a Formatação (Fuso Horario BR) ou Nula (Erro na Formatação da Data)
+     *
+     * @param date_birth Data que será convertida de String para Date
+     */
+    public void setDate_birth(String date_birth) {
+        try {
+            // Configura o Formato e Fuso Horario da Data
+            SimpleDateFormat dateFormatDefault = new SimpleDateFormat("dd/MM/yyyy", LOCALE_BR);
+            dateFormatDefault.setTimeZone(TimeZone.getTimeZone(TIME_ZONE));
+
+            // Formata a Data Recebida
+            this.date_birth = dateFormatDefault.parse(date_birth);
+        } catch (Exception ex) {
+            this.date_birth = null;
+            error_validation = MESSAGE_EXCEPTION;
+            Log.e(EXCEPTION_GLOBAL, NAME_CLASS + " - Falha na Conversão da Data");
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Obtem a Data Atual, configurada no Fuso Horario Brasileiro-SP.
+     * <p>
+     * * Esse metodo foi desenvolvido para aparelhos coma versão menor que o Android "O".
+     *
+     * @return Date/null
+     */
+    public Date getDate_now() {
+        try {
+            // Formata a Data Atual com a Localização e Fuso Horario Brasileiro
+            SimpleDateFormat dateFormatDefault = new SimpleDateFormat("dd/MM/yyyy", LOCALE_BR);
+            dateFormatDefault.setTimeZone(TimeZone.getTimeZone(TIME_ZONE));
+            return dateFormatDefault.parse(dateFormatDefault.format(new Date()));
+        } catch (Exception ex) {
+            error_validation = MESSAGE_EXCEPTION;
+            Log.e(EXCEPTION_GLOBAL, NAME_CLASS + " - Falha na Conversão da Data");
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
 }

@@ -13,6 +13,7 @@ import java.util.Random;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -122,7 +123,7 @@ public class UserTest {
         assertFalse(user.validationNickname("Lufems "));
         assertFalse(user.validationNickname("Loem"));
         assertFalse(user.validationNickname(max_length + " Knus"));
-        assertFalse( user.validationNickname(String.valueOf(0)));
+        assertFalse(user.validationNickname(String.valueOf(0)));
         /* todo: alterar = Implementar regex de pelo menos 5 Letras no Nickname
         assertNotEquals(true, user.validationNickname(String.valueOf(65232)));
         assertNotEquals(true, user.validationNickname("Lums" + 256));
@@ -273,4 +274,27 @@ public class UserTest {
             assertTrue(user.validationBrazilianPhone(item));
         }
     }
+
+    @Test
+    public void validationDateBirth() {
+        String[] date_valid = new String[]{"24/10/2008", "01/09/2008", "01/04/2004", "25/02/2003",
+                "06/12/2006", "06/07/2004", "29/02/2008", "29/02/2004"};
+
+        for (String item : date_valid) {
+            assertTrue(user.validationDateBirth(item));
+        }
+
+        String[] date_invalid = new String[]{"20/05/2018", "16/05/2021", "08/02/2019", "", " ",
+                "///", "00/00/0000", "00/00/", "00/", "32/11/2021", "15/13/2021", "25/10/1821",
+                "25/10/1919", "25/10/1921", "as", "aa/aa/aaaa", "32/11/2000", "18/13/2000",
+                "30/02/2000", "29/02/2001", "30/02/2002", "84/11/2000", "02/15/2000"
+        };
+
+        for (String item : date_invalid) {
+            assertFalse(user.validationDateBirth(item));
+            assertNotNull(user.getError_validation());
+            assertNotEquals("", user.getError_validation());
+        }
+    }
+
 }

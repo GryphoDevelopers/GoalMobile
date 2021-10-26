@@ -97,12 +97,18 @@ public class SingUpActivity extends AppCompatActivity {
         // Obtem os Dados Inseridos nos Inputs
         TextInputEditText editName = findViewById(R.id.edittext_name);
         TextInputEditText editNickname = findViewById(R.id.edittext_nickname);
+        TextInputEditText editDateBirth = findViewById(R.id.edittext_dateBirth);
         user.setName(Objects.requireNonNull(editName.getText()).toString());
         user.setNickname(Objects.requireNonNull(editNickname.getText()).toString());
+        String date_birth = Objects.requireNonNull(editDateBirth.getText()).toString();
 
         // Valida a Primeira Parte (Nome, Nickname e Tipo de Usuario)
         if (!user.validationName(user.getName())) {
             managerInputErrors.errorInputEditText(editName, user.getError_validation(), false);
+            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
+            return false;
+        } else if (!user.validationDateBirth(date_birth)) {
+            managerInputErrors.errorInputEditText(editDateBirth, user.getError_validation(), false);
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
         } else if (!user.validationNickname(user.getNickname())) {
@@ -167,6 +173,7 @@ public class SingUpActivity extends AppCompatActivity {
             userSingUp.setPassword(user.getPassword());
             userSingUp.setConfirmPassword(user.getConfirmPassword());
             userSingUp.setName(user.getName());
+            userSingUp.setDate_birth(date_birth);
             userSingUp.setNickname(user.getNickname());
             userSingUp.setSeller(opSeller.isChecked());
             userSingUp.setCheckedTermsUse(cbx_termsUse.isChecked());
@@ -198,10 +205,11 @@ public class SingUpActivity extends AppCompatActivity {
                     // todo: inserir o registro no banco de dados Local (cada novo registro = limpa o banco)
                     // TODO RETIRAR e implementar POST p/ API
                     Log.e("SING UP", "Nome: " + userSingUp.getName() + "\nEmail: " +
-                            userSingUp.getEmail() + "\nNickname:" + userSingUp.getNickname() +
-                            "\nSenha: " + userSingUp.getPassword() + "\nConfirmar Senha: " +
-                            userSingUp.getConfirmPassword() + "\nOpção Usuario: " +
-                            userSingUp.isSeller() + "\nTermos de Uso: " + userSingUp.isCheckedTermsUse());
+                            userSingUp.getEmail() + "\nData de Nascimento: " + userSingUp.getDate_birth().toString()
+                            + "\nNickname:" + userSingUp.getNickname() + "\nSenha: " +
+                            userSingUp.getPassword() + "\nConfirmar Senha: " +
+                            userSingUp.getConfirmPassword() + "\nOpção Usuario: " + userSingUp.isSeller()
+                            + "\nTermos de Uso: " + userSingUp.isCheckedTermsUse());
 
                     // Finaliza essa Activity e Inicia a Activity do Cadastro Completo
                     startActivity(new Intent(context, RegisterForPurchases.class));

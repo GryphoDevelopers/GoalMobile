@@ -14,6 +14,7 @@
     <string name="validation_format">%1$s deve ter estar no Seguinte Formato: "%2$s"</string>
     <string name="validation_unavailable">%s Invalido. Tente Novamente</string>
     <string name="validation_password">A senha deve conter %s</string>
+    <string name="validation_age">Idade %1$s de <b>%2$s Anos</b></string>
     <string name="validation_equal_password">As Senhas não são Iguais</string>
     <!--Todo: Implementar Mascara no Telefone e alterar aqui-->
     <string name="validation_invalid_ddd">DDD Invalido. Tente novamente
@@ -79,12 +80,14 @@
         <item>Cliente</item>
     </string-array>
     <string name="label_name">Nome e Sobrenome</string>
+    <string name="label_date_birth">Data de Nascimento</string>
     <string name="label_nickname">Nome de Usuario</string>
     <string name="label_peopleType">Você é um <b>Vendedor</b> ou <b>Cliente</b> ?</string>
     <string name="label_email">E-mail</string>
     <string name="label_password">Senha</string>
     <string name="label_confirmPassword">Confirmar Senha</string>
     <string name="hint_name">Qual é o seu <b>Nome</b> ?</string>
+    <string name="hint_date_birth">Ex: 20/12/2005</string>
     <string name="hint_nickname">Ex: "gabriel_souza"</string>
     <string name="hint_email">Digite seu endereço de <b>E-mail</b></string>
     <string name="hint_password">Digite sua <b>Senha</b></string>
