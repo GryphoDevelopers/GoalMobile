@@ -126,8 +126,6 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/label_cpf"
                         android:visibility="gone"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="11"
                         app:endIconMode="clear_text"
                         app:helperText="@string/hint_cpf"
                         app:helperTextEnabled="true">
@@ -146,8 +144,6 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/label_cnpj"
                         android:visibility="gone"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="14"
                         app:endIconMode="clear_text"
                         app:helperText="@string/hint_cnpj"
                         app:helperTextEnabled="true">
@@ -220,8 +216,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:hint="@string/label_telephone"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="11"
                         app:endIconMode="clear_text"
                         app:helperText="@string/hint_phone_br"
                         app:helperTextEnabled="true">
@@ -230,7 +224,7 @@
                             android:id="@+id/edit_phone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="phone" />
+                            android:inputType="number" />
                     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -401,8 +395,6 @@
                     android:layout_marginTop="20dp"
                     android:hint="@string/label_cep"
                     android:visibility="gone"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="8"
                     app:endIconMode="clear_text"
                     app:helperText="@string/hint_cep"
                     app:helperTextEnabled="true">
@@ -431,7 +423,7 @@
                         android:id="@+id/edit_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="phone" />
+                        android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout

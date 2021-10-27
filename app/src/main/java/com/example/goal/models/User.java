@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.goal.R;
 import com.example.goal.managers.SearchInternet;
+import com.example.goal.views.widgets.MaskInputPersonalized;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -135,7 +136,7 @@ public class User {
             error_validation = String.format(INPUT_MAX_LENGTH, "Email", 120);
             return false;
         } else if (!email.matches("[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?")) {
-            error_validation = String.format(INPUT_NOT_FORMAT, "Email", "email@*****.XX");
+            error_validation = String.format(INPUT_NOT_FORMAT, "Email", "email@*****.XXX");
             return false;
         } else return true;
     }
@@ -225,18 +226,28 @@ public class User {
      * @return true/false
      */
     public boolean validationCpf(String cpf) {
-        if (cpf == null || cpf.equals("")) {
-            error_validation = INPUT_NULL;
-            return false;
-        } else if (cpf.length() != 11) {
-            error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "CPF",
-                    "11 Numeros");
-            return false;
-        } else if (!cpf.matches("^[0-9]*")) {
-            error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "CPF",
-                    "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");
-            return false;
-        } else return true;
+        if (cpf != null && !cpf.equals("")) {
+            if (cpf.length() != 14) {
+                error_validation = String.format(INPUT_NOT_FORMAT, "CPF", "000.000.000-00");
+                return false;
+            }
+
+            String cfp_unmask = MaskInputPersonalized.remove_mask(cpf, MaskInputPersonalized.DEFAULT_REGEX);
+            if (cfp_unmask != null && !cfp_unmask.equals("")) {
+                if (cfp_unmask.length() != 11) {
+                    error_validation = String.format(INPUT_MIN_LENGTH, "CPF", "11 Numeros");
+                    return false;
+                } else if (!cfp_unmask.matches("^[0-9]*")) {
+                    error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "CPF",
+                            "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");
+                    return false;
+                } else return true;
+            }
+        }
+
+        // CPF com ou Sem Formatção são Invalidos
+        error_validation = INPUT_NULL;
+        return false;
     }
 
     /**
@@ -257,18 +268,28 @@ public class User {
      * @return true/false
      */
     public boolean validationCnpj(String cnpj) {
-        if (cnpj == null || cnpj.equals("")) {
-            error_validation = INPUT_NULL;
-            return false;
-        } else if (cnpj.length() != 14) {
-            error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "CNPJ",
-                    "11 Numeros");
-            return false;
-        } else if (!cnpj.matches("^[0-9]*")) {
-            error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "CNPJ",
-                    "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");
-            return false;
-        } else return true;
+        if (cnpj != null && !cnpj.equals("")) {
+            if (cnpj.length() != 18) {
+                error_validation = String.format(INPUT_NOT_FORMAT, "CNPJ", "00.000.000/000X-YY");
+                return false;
+            }
+
+            String cnpj_unmask = MaskInputPersonalized.remove_mask(cnpj, MaskInputPersonalized.DEFAULT_REGEX);
+            if (cnpj_unmask != null && !cnpj_unmask.equals("")) {
+                if (cnpj_unmask.length() != 14) {
+                    error_validation = String.format(INPUT_MIN_LENGTH, "CNPJ", "14 Numeros");
+                    return false;
+                } else if (!cnpj_unmask.matches("^[0-9]*")) {
+                    error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "CNPJ",
+                            "Numeros (Sem Hifen/Ponto/Virgula/Espaços em Branco)");
+                    return false;
+                } else return true;
+            }
+        }
+
+        // CNPJ com ou sem Mascara é invalido
+        error_validation = INPUT_NULL;
+        return false;
     }
 
     /**
@@ -280,9 +301,20 @@ public class User {
      */
     public boolean validationNumberCnpj(String cnpj) {
         try {
+            String unmask_cnpj = "";
+            if (cnpj != null && !cnpj.equals("")) {
+                unmask_cnpj = MaskInputPersonalized.remove_mask(cnpj, MaskInputPersonalized.DEFAULT_REGEX);
+            }
+
+            if (unmask_cnpj == null || unmask_cnpj.equals("")) {
+                // CNPJ com ou sem Mascara é invalido
+                error_validation = INPUT_NULL;
+                return false;
+            }
+
             // URI de Pesquisa
             Uri build_uri = Uri.parse(SearchInternet.API_BRAZIL_CNPJ)
-                    .buildUpon().appendPath(cnpj).build();
+                    .buildUpon().appendPath(unmask_cnpj).build();
 
             // Criação da Tarefa Assincrona e do Metodo que busca na Internet
             ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -307,7 +339,7 @@ public class User {
                         new String[]{"cnpj", "descricao_situacao_cadastral"});
 
                 if (cnpj_reciver != null) {
-                    if (cnpj_reciver[0].equals(cnpj) && cnpj_reciver[1].equals("Ativa")) {
+                    if (cnpj_reciver[0].equals(unmask_cnpj) && cnpj_reciver[1].equals("Ativa")) {
                         return true;
                     } else error_validation = CNPJ_INVALID;
                 } else error_validation = serializationInfos.getError_operation();
@@ -403,28 +435,38 @@ public class User {
      * @return true/false
      */
     public boolean validationBrazilianPhone(String phone) {
-        if (phone == null || phone.equals("")) {
-            error_validation = INPUT_NULL;
-            return false;
-        } else if (phone.length() != 12) {
-            error_validation = String.format(INPUT_NOT_CHARS_ACCEPT,
-                    "Telefone", "12 Digitos (DDD + Numero)");
-            return false;
-        } else if (!phone.matches("^[0-9]*")) {
-            error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "Telefone",
-                    "Numeros (Sem Hifen, Ponto, Virgula, Sinais ou Espaços em Branco)");
-            return false;
+        if (phone != null && !phone.equals("")) {
+            if (phone.length() != 15) {
+                error_validation = String.format(INPUT_NOT_FORMAT, "Telefone", "(0XX) 90000-0000");
+                return false;
+            }
+
+            String unmask_phone = MaskInputPersonalized.remove_mask(phone, MaskInputPersonalized.DEFAULT_REGEX);
+            if (unmask_phone != null && !unmask_phone.equals("")) {
+                if (unmask_phone.length() != 12) {
+                    error_validation = String.format(INPUT_MIN_LENGTH,
+                            "Telefone", "12 Digitos (DDD + Numero)");
+                    return false;
+                } else if (!unmask_phone.matches("^[0-9]*")) {
+                    error_validation = String.format(INPUT_NOT_CHARS_ACCEPT, "Telefone",
+                            "Numeros (Sem Hifen, Ponto, Virgula, Sinais ou Espaços em Branco)");
+                    return false;
+                }
+
+                // Verifica se o DDD está na lista dos DDDs Validos
+                String ddd_phone = unmask_phone.substring(0, 3);
+                String[] ddd_valid = ddd_valid();
+                for (String item : ddd_valid) {
+                    if (item.equals(ddd_phone)) return true;
+                }
+
+                error_validation = INVALID_DDD;
+                return false;
+            }
         }
 
-        String ddd_phone = phone.substring(0, 3);
-        String[] ddd_valid = ddd_valid();
-
-        // Verifica se o DDD está na lista dos DDDs Validos
-        for (String item : ddd_valid) {
-            if (item.equals(ddd_phone)) return true;
-        }
-
-        error_validation = INVALID_DDD;
+        // Telefone Com ou Sem Formatação é invalido
+        error_validation = INPUT_NULL;
         return false;
     }
 

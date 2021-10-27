@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -24,6 +25,7 @@ import com.example.goal.managers.ManagerServices;
 import com.example.goal.models.Address;
 import com.example.goal.models.User;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
+import com.example.goal.views.widgets.MaskInputPersonalized;
 import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -61,6 +63,8 @@ public class RegisterForPurchases extends AppCompatActivity {
     private TextInputEditText edit_complement;
     private TextInputEditText edit_exState;
     private TextInputEditText edit_exCity;
+    private TextInputEditText edit_cpf;
+    private TextInputEditText edit_cnpj;
 
     private ImageButton btn_help;
     private RadioButton rdBtn_cpf, rdBtn_cnpj;
@@ -123,7 +127,14 @@ public class RegisterForPurchases extends AppCompatActivity {
         edit_exCity = findViewById(R.id.edit_exCity);
         edit_phone = findViewById(R.id.edit_phone);
 
+        // Insere a Mascara nos Inputs
+        edit_cpf = findViewById(R.id.edit_cpf);
+        edit_cnpj = findViewById(R.id.edit_cnpj);
         edit_cep = findViewById(R.id.edit_cep);
+        edit_cpf.addTextChangedListener(MaskInputPersonalized.managerMask(edit_cpf, MaskInputPersonalized.MASK_CPF));
+        edit_cnpj.addTextChangedListener(MaskInputPersonalized.managerMask(edit_cnpj, MaskInputPersonalized.MASK_CNPJ));
+        edit_cep.addTextChangedListener(MaskInputPersonalized.managerMask(edit_cpf, MaskInputPersonalized.MASK_CEP));
+
         edit_address = findViewById(R.id.edit_address);
         edit_district = findViewById(R.id.edit_district);
         edit_number = findViewById(R.id.edit_number);
@@ -279,14 +290,16 @@ public class RegisterForPurchases extends AppCompatActivity {
         int visibilityBrazilian = showForeign ? View.GONE : View.VISIBLE;
         int visibilityForeign = showForeign ? View.VISIBLE : View.GONE;
 
+        TextWatcher textWatcherPhone = MaskInputPersonalized.managerMask(edit_phone, MaskInputPersonalized.MASK_PHONE_BR);
         if (!showForeign) {
             helper_phone = getString(R.string.hint_phone_br);
-            layoutEdit_phone.setCounterMaxLength(12);
-        } else helper_phone = getString(R.string.hint_phone_international);
+            edit_phone.addTextChangedListener(textWatcherPhone);
+        } else {
+            helper_phone = getString(R.string.hint_phone_international);
+            edit_phone.removeTextChangedListener(textWatcherPhone);
+        }
 
-        layoutEdit_phone.setCounterEnabled(!showForeign);
         layoutEdit_phone.setHelperText(helper_phone);
-
         btn_help.setVisibility(visibilityBrazilian);
         layoutEdit_city.setVisibility(visibilityBrazilian);
         layoutEdit_state.setVisibility(visibilityBrazilian);
@@ -304,7 +317,6 @@ public class RegisterForPurchases extends AppCompatActivity {
 
         if (rdBtn_cpf.isChecked()) {
             // Obtem os Dados do CPF para Validação
-            TextInputEditText edit_cpf = findViewById(R.id.edit_cpf);
             user.setCpf(Objects.requireNonNull(edit_cpf.getText()).toString());
             if (!user.validationCpf(user.getCpf())) {
                 managerInputErrors.errorInputEditText(edit_cpf, user.getError_validation(), false);
@@ -318,7 +330,6 @@ public class RegisterForPurchases extends AppCompatActivity {
             }
         } else if (rdBtn_cnpj.isChecked()) {
             // Obtem os dados do CNPJ para Validar
-            TextInputEditText edit_cnpj = findViewById(R.id.edit_cnpj);
             user.setCnpj(Objects.requireNonNull(edit_cnpj.getText()).toString());
             if (!user.validationCnpj(user.getCnpj())) {
                 managerInputErrors.errorInputEditText(edit_cnpj, user.getError_validation(), false);
@@ -364,8 +375,21 @@ public class RegisterForPurchases extends AppCompatActivity {
             addressRegister.setCountry(address.getCountry());
         }
 
-
         boolean isForeign = address.getCountry().equals("Estrangeiro");
+
+        // Verifica o Telefone Brasileiro
+        User user = new User(context);
+        user.setPhone(Objects.requireNonNull(edit_phone.getText()).toString());
+        if (!isForeign && !user.validationBrazilianPhone(user.getPhone())) {
+            managerInputErrors.errorInputEditText(edit_phone, user.getError_validation(), false);
+            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
+            return false;
+        } else if (isForeign && !user.validationInternationPhone(user.getPhone())) {
+            managerInputErrors.errorInputEditText(edit_phone, user.getError_validation(), false);
+            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
+            return false;
+        } else userRegister.setPhone(user.getPhone());
+
         if (isForeign) {
             // Obtem os Valores dos InputText dos Estrangeiros
             address.setState(Objects.requireNonNull(edit_exState.getText()).toString());
@@ -397,24 +421,10 @@ public class RegisterForPurchases extends AppCompatActivity {
                 return false;
             }
         }
-        // Estado e Cidades Validados
-        addressRegister.setState(address.getState());
-        addressRegister.setCity(address.getCity());
-
-        // Verifica o Telefone Brasileiro
-        User user = new User(context);
-        user.setPhone(Objects.requireNonNull(edit_phone.getText()).toString());
-        if (!isForeign && !user.validationBrazilianPhone(user.getPhone())) {
-            managerInputErrors.errorInputEditText(edit_phone, user.getError_validation(), false);
-            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else if (isForeign && !user.validationInternationPhone(user.getPhone())) {
-            managerInputErrors.errorInputEditText(edit_phone, user.getError_validation(), false);
-            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else userRegister.setPhone(user.getPhone());
 
         // Passou por todas as dados da Validação
+        addressRegister.setState(address.getState());
+        addressRegister.setCity(address.getCity());
         card_dataTerritory.setStrokeColor(getResources().getColor(R.color.lime_green));
         return true;
     }

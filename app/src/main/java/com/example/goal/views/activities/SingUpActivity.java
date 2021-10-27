@@ -20,6 +20,7 @@ import com.example.goal.managers.ManagerServices;
 import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.User;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
+import com.example.goal.views.widgets.MaskInputPersonalized;
 import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -31,6 +32,7 @@ import java.util.Objects;
  */
 public class SingUpActivity extends AppCompatActivity {
 
+    private TextInputEditText editDateBirth;
     private TextView errorOptionUser;
     private TextView errorTermsUse;
 
@@ -69,6 +71,11 @@ public class SingUpActivity extends AppCompatActivity {
         managerServices = new ManagerServices(context);
         scrollView = findViewById(R.id.scrollView_singUp);
 
+        // Insere a Mascara no EditText
+        editDateBirth = findViewById(R.id.edittext_dateBirth);
+        editDateBirth.addTextChangedListener(
+                MaskInputPersonalized.managerMask(editDateBirth, MaskInputPersonalized.MASK_DATE));
+
         errorOptionUser = findViewById(R.id.error_optionUser);
         errorTermsUse = findViewById(R.id.error_termsUse);
 
@@ -97,7 +104,6 @@ public class SingUpActivity extends AppCompatActivity {
         // Obtem os Dados Inseridos nos Inputs
         TextInputEditText editName = findViewById(R.id.edittext_name);
         TextInputEditText editNickname = findViewById(R.id.edittext_nickname);
-        TextInputEditText editDateBirth = findViewById(R.id.edittext_dateBirth);
         user.setName(Objects.requireNonNull(editName.getText()).toString());
         user.setNickname(Objects.requireNonNull(editNickname.getText()).toString());
         String date_birth = Objects.requireNonNull(editDateBirth.getText()).toString();

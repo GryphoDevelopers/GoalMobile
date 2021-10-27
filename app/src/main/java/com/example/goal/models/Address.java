@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.goal.R;
 import com.example.goal.managers.SearchInternet;
+import com.example.goal.views.widgets.MaskInputPersonalized;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -33,6 +34,7 @@ public class Address {
     private final String INPUT_NULL;
     private final String INPUT_MIN_LENGTH;
     private final String INPUT_MAX_LENGTH;
+    private final String INPUT_NOT_CHAR;
     private final String INPUT_NOT_FORMAT;
     private final String INPUT_INVALID;
     private final String CEP_INVALID;
@@ -63,7 +65,8 @@ public class Address {
         INPUT_NULL = context.getString(R.string.validation_empty);
         INPUT_MIN_LENGTH = context.getString(R.string.validation_min_length);
         INPUT_MAX_LENGTH = context.getString(R.string.validation_max_length);
-        INPUT_NOT_FORMAT = context.getString(R.string.validation_format_char);
+        INPUT_NOT_CHAR = context.getString(R.string.validation_format_char);
+        INPUT_NOT_FORMAT = context.getString(R.string.validation_format);
         INPUT_INVALID = context.getString(R.string.validation_unavailable);
         CEP_INVALID = Html.fromHtml(context.getString(R.string.validation_invalid_cep)).toString();
         MESSAGE_EXCEPTION = context.getString(R.string.error_exception);
@@ -162,7 +165,7 @@ public class Address {
             error_validation = String.format(INPUT_MAX_LENGTH, "Endereço", 200);
             return false;
         } else if (!address.matches("^[0-9A-ZÀ-úà-úa-zçÇ\\s]*")) {
-            error_validation = String.format(INPUT_NOT_FORMAT, "Endereço", "Letras");
+            error_validation = String.format(INPUT_NOT_CHAR, "Endereço", "Letras");
             return false;
         } else return true;
     }
@@ -184,7 +187,7 @@ public class Address {
             error_validation = String.format(INPUT_MAX_LENGTH, "Bairro", 80);
             return false;
         } else if (!district.matches("^[A-ZÀ-úà-úa-zçÇ\\s]*")) {
-            error_validation = String.format(INPUT_NOT_FORMAT, "Bairro", "Letras");
+            error_validation = String.format(INPUT_NOT_CHAR, "Bairro", "Letras");
             return false;
         } else return true;
     }
@@ -200,10 +203,10 @@ public class Address {
             error_validation = INPUT_NULL;
             return false;
         } else if (number < 0) {
-            error_validation = String.format(INPUT_NOT_FORMAT, "Numero", "Numeros Positivos");
+            error_validation = String.format(INPUT_NOT_CHAR, "Numero", "Numeros Positivos");
             return false;
         } else if (number > 1000000) {
-            error_validation = String.format(INPUT_NOT_FORMAT, "Numero", "Numeros até 1000000");
+            error_validation = String.format(INPUT_NOT_CHAR, "Numero", "Numeros até 1000000");
             return false;
         } else return true;
     }
@@ -226,7 +229,7 @@ public class Address {
                 error_validation = String.format(INPUT_MAX_LENGTH, "Complemento", 80);
                 return false;
             } else if (!complement.matches("^[0-9A-ZÀ-úà-úa-zçÇ,\\-\\s]*")) {
-                error_validation = String.format(INPUT_NOT_FORMAT, "Complemento",
+                error_validation = String.format(INPUT_NOT_CHAR, "Complemento",
                         "Letras, Virgulas ou Hifen ");
                 return false;
             } else return true;
@@ -241,22 +244,40 @@ public class Address {
      */
     public boolean validationCEP(String cep) {
         try {
-            int cep_convert = Integer.parseInt(cep);
+            if (cep != null && !cep.equals("")) {
+                if (cep.length() != 9) {
+                    error_validation = String.format(INPUT_NOT_FORMAT, "CEP", "00000-000");
+                    return false;
+                }
 
-            if (cep.equals("") || cep_convert == 0) {
-                error_validation = INPUT_NULL;
-                return false;
-            } else if (Integer.parseInt(cep) < 0) {
-                error_validation = String.format(INPUT_NOT_FORMAT, "CEP", "Numeros Positivos");
-                return false;
-            } else if (cep.length() != 8) {
-                error_validation = String.format(INPUT_INVALID, "CEP");
-                return false;
-            } else if (cep_convert >= 100000000) {
-                error_validation = String.format(INPUT_NOT_FORMAT, "CEP", "8 Numeros");
-                return false;
-            } else return true;
+                String cep_unmask = MaskInputPersonalized.remove_mask(cep, MaskInputPersonalized.DEFAULT_REGEX);
+                if (cep_unmask != null && !cep_unmask.equals("")) {
+                    if (cep_unmask.matches("[0-9]*")) {
+                        int cep_convert = Integer.parseInt(cep_unmask);
+
+                        if (cep_convert == 0) {
+                            error_validation = INPUT_NULL;
+                            return false;
+                        } else if (cep_convert < 0) {
+                            error_validation = String.format(INPUT_NOT_CHAR, "CEP", "Numeros Positivos");
+                            return false;
+                        } else if (cep_convert >= 100000000) {
+                            error_validation = String.format(INPUT_NOT_CHAR, "CEP", "8 Numeros");
+                            return false;
+                        } else return true;
+                    } else {
+                        // Formato Invalido do CEP
+                        error_validation = String.format(INPUT_NOT_CHAR, "CEP", "Numeros Positivos");
+                        return false;
+                    }
+                }
+            }
+
+            // CEP Com ou Sem mascara é invalido
+            error_validation = INPUT_NULL;
+            return false;
         } catch (Exception ex) {
+            error_validation = String.format(INPUT_INVALID, "CEP");
             Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro na Conversão do CEP");
             ex.printStackTrace();
             return false;
@@ -338,9 +359,9 @@ public class Address {
             int positionOfArray = array_state.indexOf(state);
             return context.getResources().getStringArray(R.array.uf)[positionOfArray];
         } catch (Exception ex) {
+            error_validation = String.format(INPUT_INVALID, "Estado");
             ex.printStackTrace();
             Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro ao Obter a UF");
-            error_validation = String.format(INPUT_INVALID, "Estado");
             return null;
         }
     }

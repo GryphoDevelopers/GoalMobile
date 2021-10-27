@@ -16,9 +16,8 @@
     <string name="validation_password">A senha deve conter %s</string>
     <string name="validation_age">Idade %1$s de <b>%2$s Anos</b></string>
     <string name="validation_equal_password">As Senhas não são Iguais</string>
-    <!--Todo: Implementar Mascara no Telefone e alterar aqui-->
     <string name="validation_invalid_ddd">DDD Invalido. Tente novamente
-        &lt;br/> &lt;br />  Insira o Telefone conforme o Exemplo: 011997074866 (0 + DDD + Telefone)
+        &lt;br/> &lt;br />  Insira o Telefone conforme o Exemplo: (011) 99000-1111 (0 + DDD) + Telefone)
     </string>
     <string name="validation_invalid_cep">O CEP não é compativel com o Endereço Inserido.
         &lt;br/> &lt;br /> Dados do CEP&lt;br /> Endereço: %1$s &lt;br /> Bairro: %2$s &lt;br /> UF: %3$s &lt;br />
@@ -119,12 +118,12 @@
     <string name="label_complement">Complemento</string>
     <string name="text_help">Ajuda</string>
 
-    <string name="hint_cnpj">00000000000XYY</string>
-    <string name="hint_cpf">000000000XX</string>
-    <string name="hint_phone_br">Ex: 011999990000</string>
+    <string name="hint_cnpj">Ex: 00.000.000/000Y-XX</string>
+    <string name="hint_cpf">Ex: 000.000.000-XX</string>
+    <string name="hint_phone_br">Ex: (011) 90000–0000</string>
     <string name="hint_phone_international">Ex: 55011999990000 (Codigo País + Codigo de Área
         + Numero de Telefone)</string>
-    <string name="hint_cep">00000000</string>
+    <string name="hint_cep">Ex: 00000–000</string>
     <string name="hint_address">Ex: "Avenida Paulista"</string>
     <string name="hint_district">Ex: "Bela Vista"</string>
     <string name="hint_number">Ex: "130"</string>
