@@ -133,7 +133,7 @@ public class RegisterForPurchases extends AppCompatActivity {
         edit_cep = findViewById(R.id.edit_cep);
         edit_cpf.addTextChangedListener(MaskInputPersonalized.managerMask(edit_cpf, MaskInputPersonalized.MASK_CPF));
         edit_cnpj.addTextChangedListener(MaskInputPersonalized.managerMask(edit_cnpj, MaskInputPersonalized.MASK_CNPJ));
-        edit_cep.addTextChangedListener(MaskInputPersonalized.managerMask(edit_cpf, MaskInputPersonalized.MASK_CEP));
+        edit_cep.addTextChangedListener(MaskInputPersonalized.managerMask(edit_cep, MaskInputPersonalized.MASK_CEP));
 
         edit_address = findViewById(R.id.edit_address);
         edit_district = findViewById(R.id.edit_district);
