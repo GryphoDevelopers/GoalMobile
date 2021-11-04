@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item
+        android:id="@+id/option_home"
+        android:title="@string/option_home" />
+    <item
+        android:id="@+id/option_profile"
+        android:title="@string/option_profile" />
+    <item
+        android:id="@+id/option_wishes"
+        android:title="@string/option_wishes" />
+    <item
+        android:id="@+id/option_search"
+        android:title="@string/option_search" />
+
+    <item android:title="@string/titleMenu_categories">
+        <menu>
+            <item
+                android:id="@+id/option_equipment"
+                android:title="@string/option_equipment" />
+            <item
+                android:id="@+id/option_accessories"
+                android:title="@string/option_accessories" />
+            <item
+                android:id="@+id/option_vitamins"
+                android:title="@string/option_vitamins" />
+            <item
+                android:id="@+id/option_clothes"
+                android:title="@string/option_clothes" />
+            <item
+                android:id="@+id/option_shoes"
+                android:title="@string/option_shoes" />
+            <item
+                android:id="@+id/option_bags"
+                android:title="@string/option_bags" />
+            <item
+                android:id="@+id/option_others"
+                android:title="@string/option_others" />
+        </menu>
+    </item>
+
+    <item android:title="@string/title_otherOptions">
+        <menu>
+            <item
+                android:id="@+id/option_contact"
+                android:title="@string/option_contact" />
+            <item
+                android:id="@+id/option_about"
+                android:title="@string/option_about" />
+            <item
+                android:id="@+id/option_privacy"
+                android:title="@string/option_privacy" />
+            <item
+                android:id="@+id/option_exit"
+                android:title="@string/option_exit" />
+        </menu>
+    </item>
+
+</menu>
