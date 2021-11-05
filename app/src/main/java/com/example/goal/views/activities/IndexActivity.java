@@ -8,6 +8,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.goal.R;
@@ -42,6 +43,7 @@ public class IndexActivity extends AppCompatActivity {
     // Variaveis Utilziadas
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +51,17 @@ public class IndexActivity extends AppCompatActivity {
         setContentView(R.layout.activity_index);
 
         // Configura os elementos da Activity
-        configToolBar();
+        instanceItens();
+        setSupportActionBar(toolbar);
         setUpLateralMenu();
     }
 
     /**
-     * Configura e Instancia a ToolBar (Parte Superior da Activity)
+     * Instancia os Itens que serão utilizados na Classe
      */
-    private void configToolBar() {
+    private void instanceItens() {
+        navigationView = findViewById(R.id.navigationView_categories);
         toolbar = findViewById(R.id.toolbar_category);
-        setSupportActionBar(toolbar);
     }
 
     /**
@@ -68,10 +71,8 @@ public class IndexActivity extends AppCompatActivity {
         // Variaveis utilizadas
         ActionBarDrawerToggle actionToggle;
         DrawerArrowDrawable arrowDrawable;
-        NavigationView navigationView;
 
         drawerLayout = findViewById(R.id.drawerLayout_categories);
-        navigationView = findViewById(R.id.navigationView_categories);
 
         // Cria o Botão do Menu Lateral
         actionToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
@@ -88,73 +89,82 @@ public class IndexActivity extends AppCompatActivity {
         // Listener do Botão do Drawer e dos Cliques no Menu
         drawerLayout.addDrawerListener(actionToggle);
         navigationView.setNavigationItemSelectedListener(this::itemSelect);
-
     }
 
     /**
      * Faz o Tratametno dos Cliques no Menu Lateral. É um metodo Sobrescrito.
      *
-     * @param menuItem Item selecionado no Menu
+     * @param menuItem Item do Menu selecionado
      * @return true/false
      */
     private boolean itemSelect(MenuItem menuItem) {
+        int id_item = menuItem.getItemId();
+        if (id_item != PROFILE && id_item != SEARCH && id_item != WISHES && id_item != EXIT) {
+            unselectItemsMenu();
+            menuItem.setChecked(true);
+            menuItem.setCheckable(true);
+        }
+
         // todo: Terminar Implementação (Contato, Sobre, Privacidade)
-        switch (menuItem.getItemId()) {
+        switch (id_item) {
             case HOME:
                 setUpProductsFragment(ProductsFragment.TYPE_HOME, "");
-                return true;
+                break;
             case PROFILE:
                 startActivity(new Intent(IndexActivity.this, ProfileActivity.class));
-                return true;
+                break;
             case SEARCH:
                 startActivity(new Intent(IndexActivity.this, SearchActivity.class));
-                return true;
+                break;
             case WISHES:
                 startActivity(new Intent(IndexActivity.this, WishesActivity.class));
-                return true;
+                break;
             case EQUIPMENTS:
                 setUpProductsFragment(ProductsFragment.TYPE_CATEGORY, getString(R.string.option_equipment));
-                return true;
+                break;
             case ACCESSORIES:
                 setUpProductsFragment(ProductsFragment.TYPE_CATEGORY, getString(R.string.option_accessories));
-                return true;
+                break;
             case VITAMINS:
                 setUpProductsFragment(ProductsFragment.TYPE_CATEGORY, getString(R.string.option_vitamins));
-                return true;
+                break;
             case CLOTHES:
                 setUpProductsFragment(ProductsFragment.TYPE_CATEGORY, getString(R.string.option_clothes));
-                return true;
+                break;
             case SHOES:
                 setUpProductsFragment(ProductsFragment.TYPE_CATEGORY, getString(R.string.option_shoes));
-                return true;
+                break;
             case BAGS:
                 setUpProductsFragment(ProductsFragment.TYPE_CATEGORY, getString(R.string.option_bags));
-                return true;
+                break;
             case OTHERS:
                 setUpProductsFragment(ProductsFragment.TYPE_OTHERS, "");
-                return true;
+                break;
             case CONTACT:
                 System.out.println("Item: Contato");
-                return true;
+                break;
             case ABOUT:
                 System.out.println("Item: Sobre");
-                return true;
+                break;
             case PRIVACY:
                 System.out.println("Item: Privacidade");
-                return true;
+                break;
             case EXIT:
                 // todo: limpar banco de dados local
-                // Altera a Opção do Login nas SharedPreferences e Inicia a Activity de Login
                 new ManagerSharedPreferences(IndexActivity.this,
                         ManagerSharedPreferences.NAME_PREFERENCE).rememberLogin(false);
                 startActivity(new Intent(IndexActivity.this, OpenActivity.class));
                 finish();
-                return true;
+                break;
             default:
                 new SnackBarPersonalized(drawerLayout).defaultSnackBar(
                         getString(R.string.validation_unavailable, "Opção")).show();
+                drawerLayout.closeDrawer(GravityCompat.START);
                 return false;
         }
+        // Fecha o Menu Lateral
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     /**
@@ -170,5 +180,26 @@ public class IndexActivity extends AppCompatActivity {
                 R.id.frame_fragments, productsFragment).commit();
     }
 
+    /**
+     * Remove a Seleção de todos os Itens e SubMenus do Menu Lateral
+     */
+    private void unselectItemsMenu() {
+        //Laço de Repetição para desselecionar todos os Itens do Menu
+        int sizeMenu = navigationView.getMenu().size();
+        for (int i = 0; i < sizeMenu; i++) {
+
+            MenuItem menuItem = navigationView.getMenu().getItem(i);
+            if (menuItem.hasSubMenu()) {
+                // Caso tenha um SubMenu, acessa eles para retirar a seleção
+                for (int u = 0; u < menuItem.getSubMenu().size(); u++) {
+                    menuItem.getSubMenu().getItem(u).setChecked(false);
+                    menuItem.getSubMenu().getItem(u).setCheckable(false);
+                }
+            } else {
+                navigationView.getMenu().getItem(i).setChecked(false);
+                navigationView.getMenu().getItem(i).setCheckable(false);
+            }
+        }
+    }
 
 }
