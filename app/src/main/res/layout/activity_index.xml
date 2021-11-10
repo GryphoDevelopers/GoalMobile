@@ -45,7 +45,6 @@
         android:layout_gravity="start"
         android:layout_marginTop="?attr/actionBarSize"
         android:fitsSystemWindows="false"
-        app:headerLayout="@layout/activity_navigation_header"
         app:menu="@menu/menu_lateral" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

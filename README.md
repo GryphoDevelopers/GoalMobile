@@ -28,7 +28,7 @@
 - [ ] Validação de Pagamento
 - [ ] Criação da Classe Produtos (Validações)
 - [ ] Modificação na SharedPreferences para armazenar o JWT
-- [ ] Implementar Header no NavigationView (Menu Lateral)
+- [X] Implementar Header no NavigationView (Menu Lateral)
 
 #### Documentação
 - [ ] README.md

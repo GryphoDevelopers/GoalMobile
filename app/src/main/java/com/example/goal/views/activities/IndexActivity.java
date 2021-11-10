@@ -51,7 +51,7 @@ public class IndexActivity extends AppCompatActivity {
         setContentView(R.layout.activity_index);
 
         // Configura os elementos da Activity
-        instanceItens();
+        instanceItems();
         setSupportActionBar(toolbar);
         setUpLateralMenu();
     }
@@ -59,7 +59,7 @@ public class IndexActivity extends AppCompatActivity {
     /**
      * Instancia os Itens que serão utilizados na Classe
      */
-    private void instanceItens() {
+    private void instanceItems() {
         navigationView = findViewById(R.id.navigationView_categories);
         toolbar = findViewById(R.id.toolbar_category);
     }
@@ -100,7 +100,7 @@ public class IndexActivity extends AppCompatActivity {
     private boolean itemSelect(MenuItem menuItem) {
         int id_item = menuItem.getItemId();
         if (id_item != PROFILE && id_item != SEARCH && id_item != WISHES && id_item != EXIT) {
-            unselectItemsMenu();
+            unselectedItemsMenu();
             menuItem.setChecked(true);
             menuItem.setCheckable(true);
         }
@@ -183,7 +183,7 @@ public class IndexActivity extends AppCompatActivity {
     /**
      * Remove a Seleção de todos os Itens e SubMenus do Menu Lateral
      */
-    private void unselectItemsMenu() {
+    private void unselectedItemsMenu() {
         //Laço de Repetição para desselecionar todos os Itens do Menu
         int sizeMenu = navigationView.getMenu().size();
         for (int i = 0; i < sizeMenu; i++) {
