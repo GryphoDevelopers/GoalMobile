@@ -9,6 +9,7 @@ import com.example.goal.R;
 import com.example.goal.managers.SearchInternet;
 import com.example.goal.views.widgets.MaskInputPersonalized;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
@@ -33,10 +34,10 @@ import java.util.concurrent.Future;
  * Classe User: Classe Usada para manipular as informações dos Usuario (Clientes e Vendedores)
  */
 public class User {
-
     // Constantes Usadas na manipulação da Data
     public static final String TIME_ZONE = "America/Sao_Paulo";
     public static final Locale LOCALE_BR = new Locale("pt", "BR");
+    public static final String PATERN_DATE = "dd/MM/yyyy";
     // Constantes da Força da Senha
     private static final int LOW_STRENGTH = 1;
     private static final int OK_STRENGTH = 2;
@@ -57,19 +58,20 @@ public class User {
     private final String INVALID_DDD;
     private final String INPUT_INVALID_AGE;
     private final String INPUT_INVALID;
+    // Variavies Usadas já inicializadas
     private final Context context;
-    private Date date_birth;
-    private String name;
-    private String email;
-    private String nickname;
-    private String cpf;
-    private String password;
-    private String confirmPassword;
-    private String phone;
-    private String cnpj;
-    private boolean isSeller;
-    private boolean checkedTermsUse;
     private String error_validation = "";
+    private Date date_birth = null;
+    private String name = "";
+    private String email = "";
+    private String nickname = "";
+    private String cpf = "";
+    private String password = "";
+    private String confirmPassword = "";
+    private String phone = "";
+    private String cnpj = "";
+    private int id_user = 0;
+    private boolean isSeller = false;
 
     /**
      * Construtor da Classe User
@@ -91,6 +93,26 @@ public class User {
         INVALID_DDD = Html.fromHtml(context.getString(R.string.validation_invalid_ddd)).toString();
         INPUT_INVALID_AGE = context.getString(R.string.validation_age);
         INPUT_INVALID = context.getString(R.string.validation_unavailable);
+    }
+
+    /**
+     * Compara as Informações entre dois Usuarios. Essa comparação, será armazenada no novo Usuario
+     * que conterá as novas informações em comparação com o Antigo Usuario
+     */
+    public static User compareUser(User oldUser, User newUser) {
+
+        // Verifica para cada Propriedade do Usuario se foi preenchida
+        if (newUser.getId_user() == 0) newUser.setId_user(oldUser.getId_user());
+        if (newUser.getName().equals("")) newUser.setName(oldUser.getName());
+        if (newUser.getNickname().equals("")) newUser.setNickname(oldUser.getNickname());
+        if (newUser.getEmail().equals("")) newUser.setEmail(oldUser.getEmail());
+        if (newUser.getString_dateBirth().equals(""))
+            newUser.setDate_birth(oldUser.getString_dateBirth());
+        if (newUser.getUnmaskPhone().equals("")) newUser.setPhone(oldUser.getUnmaskPhone());
+        if (newUser.getUnmaskCnpj().equals("")) newUser.setCnpj(oldUser.getUnmaskCnpj());
+        if (newUser.getUnmaskCpf().equals("")) newUser.setCpf(oldUser.getUnmaskCpf());
+
+        return newUser;
     }
 
     /**
@@ -536,7 +558,7 @@ public class User {
 
             // Alternativas para Diferentes Versões
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                LocalDate localDate = LocalDate.parse(date_birth, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                LocalDate localDate = LocalDate.parse(date_birth, DateTimeFormatter.ofPattern(PATERN_DATE));
                 LocalDate localDate_now = LocalDate.now(ZoneId.of(TIME_ZONE));
 
                 if (localDate != null && localDate_now != null) {
@@ -554,7 +576,7 @@ public class User {
             } else {
                 // Formata a Data Recebida e a Data Atual do Brasil
                 setDate_birth(date_birth);
-                Date date_birth_formatted = getDate_birth();
+                Date date_birth_formatted = getDate_dateBirth();
                 Date date_now_formatted = getDate_now();
 
                 if (date_birth_formatted != null && date_now_formatted != null) {
@@ -610,6 +632,14 @@ public class User {
     }
 
     // Getters e Setters da Classe User
+    public int getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(int id_user) {
+        this.id_user = id_user;
+    }
+
     public String getName() {
         return name;
     }
@@ -650,7 +680,7 @@ public class User {
         isSeller = seller;
     }
 
-    public String getConfirmPassword() {
+    private String getConfirmPassword() {
         return confirmPassword;
     }
 
@@ -694,7 +724,23 @@ public class User {
         return error_validation;
     }
 
-    public Date getDate_birth() {
+    /**
+     * Retorna a Data de Nascimento em uma String no Formato dd/MM/aaaa
+     *
+     * @return {@link String}|""
+     */
+    public String getString_dateBirth() {
+        DateFormat dateFormat = new SimpleDateFormat(PATERN_DATE, LOCALE_BR);
+        if (date_birth == null) return "";
+        else return dateFormat.format(date_birth);
+    }
+
+    /**
+     * Retorna a Data de Nascimento no Formato {@link Date}
+     *
+     * @return {@link Date}
+     */
+    private Date getDate_dateBirth() {
         return date_birth;
     }
 
@@ -708,7 +754,7 @@ public class User {
     public void setDate_birth(String date_birth) {
         try {
             // Configura o Formato e Fuso Horario da Data
-            SimpleDateFormat dateFormatDefault = new SimpleDateFormat("dd/MM/yyyy", LOCALE_BR);
+            SimpleDateFormat dateFormatDefault = new SimpleDateFormat(PATERN_DATE, LOCALE_BR);
             dateFormatDefault.setTimeZone(TimeZone.getTimeZone(TIME_ZONE));
 
             // Formata a Data Recebida
@@ -731,7 +777,7 @@ public class User {
     public Date getDate_now() {
         try {
             // Formata a Data Atual com a Localização e Fuso Horario Brasileiro
-            SimpleDateFormat dateFormatDefault = new SimpleDateFormat("dd/MM/yyyy", LOCALE_BR);
+            SimpleDateFormat dateFormatDefault = new SimpleDateFormat(PATERN_DATE, LOCALE_BR);
             dateFormatDefault.setTimeZone(TimeZone.getTimeZone(TIME_ZONE));
             return dateFormatDefault.parse(dateFormatDefault.format(new Date()));
         } catch (Exception ex) {

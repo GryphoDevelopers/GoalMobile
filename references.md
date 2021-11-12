@@ -11,3 +11,4 @@
 - [StackOverflow - Callable (Tarefa Assincrona)](https://stackoverflow.com/questions/12166879/using-callable-to-pass-two-parameters-and-returning-an-array-of-parameters)
 - [StackOverflow - Gravity Center Programmatically](https://stackoverflow.com/questions/50058029/progress-dialog-require-center-of-the-screen)
 - [StackOverflow - Handler Descontinuado](https://developer.android.com/reference/android/os/Handler#Handler())
+- [Receitas de Codigo - Date para String](https://receitasdecodigo.com.br/java/converter-date-para-string-em-java)

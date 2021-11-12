@@ -42,14 +42,14 @@ public class Address {
 
     // Atributos da Classe
     private final Context context;
-    private String country;
-    private String state;
-    private String city;
-    private String address;
-    private String district;
-    private String complement;
-    private int number;
-    private String cep;
+    private String country = "";
+    private String state = "";
+    private String city = "";
+    private String address = "";
+    private String district = "";
+    private String complement = "";
+    private int number = 0;
+    private String cep = "";
 
     private String error_validation;
 
