@@ -45,4 +45,13 @@ public class ManagerSharedPreferences {
         editor.apply();
     }
 
+    /**
+     * Apaga todas as SharedPreferences do APP salvas
+     */
+    public void clearPreferences() {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+    }
+
 }

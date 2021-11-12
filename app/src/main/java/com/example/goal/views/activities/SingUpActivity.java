@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -15,10 +14,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goal.R;
+import com.example.goal.managers.ManagerDataBase;
 import com.example.goal.managers.ManagerInputErrors;
 import com.example.goal.managers.ManagerServices;
 import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.User;
+import com.example.goal.models.UserAPI;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
 import com.example.goal.views.widgets.MaskInputPersonalized;
 import com.example.goal.views.widgets.SnackBarPersonalized;
@@ -177,12 +178,10 @@ public class SingUpActivity extends AppCompatActivity {
 
             userSingUp.setEmail(user.getEmail());
             userSingUp.setPassword(user.getPassword());
-            userSingUp.setConfirmPassword(user.getConfirmPassword());
             userSingUp.setName(user.getName());
             userSingUp.setDate_birth(date_birth);
             userSingUp.setNickname(user.getNickname());
             userSingUp.setSeller(opSeller.isChecked());
-            userSingUp.setCheckedTermsUse(cbx_termsUse.isChecked());
             return true;
         }
     }
@@ -192,34 +191,44 @@ public class SingUpActivity extends AppCompatActivity {
      */
     public void listenerSingUp() {
         btn_createAcount.setOnClickListener(v -> {
-            if (!new ManagerServices(context).availableInternet()) {
+
+            if (!managerServices.availableInternet()) {
                 // Conexão de Internet Indisponivel
                 new AlertDialogPersonalized(context).defaultDialog(
                         getString(R.string.title_no_internet),
                         Html.fromHtml(getString(R.string.error_network)).toString()).show();
             } else if (validationsSingUp()) {
+                managerServices.closeKeyboard(SingUpActivity.this);
 
-                // Tenta Registrar na API
-                if (registerInAPI(userSingUp)) {
-                    managerServices.closeKeyboard(SingUpActivity.this);
+                // Tenta Registrar o Usuario na API
+                if (UserAPI.registerInAPI(userSingUp)) {
+
+                    // Obtem o Token da API
+                    //todo armazenar token da api nas sharedpreferences
+                    String token_user = UserAPI.getTokenUser(userSingUp.getEmail(), userSingUp.getPassword());
+                    if (token_user.equals("")) {
+                        new AlertDialogPersonalized(SingUpActivity.this).defaultDialog(
+                                getString(R.string.title_input_invalid, "Usuario"),
+                                Html.fromHtml(getString(R.string.error_login_api)).toString()).show();
+                        return;
+                    }
 
                     // Define TRUE para lembrar o Login que acabou de ser Feiro
                     ManagerSharedPreferences preferences = new ManagerSharedPreferences(
                             context, ManagerSharedPreferences.NAME_PREFERENCE);
                     preferences.rememberLogin(true);
 
-                    // todo: inserir o registro no banco de dados Local (cada novo registro = limpa o banco)
-                    // TODO RETIRAR e implementar POST p/ API
-                    Log.e("SING UP", "Nome: " + userSingUp.getName() + "\nEmail: " +
-                            userSingUp.getEmail() + "\nData de Nascimento: " + userSingUp.getDate_birth().toString()
-                            + "\nNickname:" + userSingUp.getNickname() + "\nSenha: " +
-                            userSingUp.getPassword() + "\nConfirmar Senha: " +
-                            userSingUp.getConfirmPassword() + "\nOpção Usuario: " + userSingUp.isSeller()
-                            + "\nTermos de Uso: " + userSingUp.isCheckedTermsUse());
-
-                    // Finaliza essa Activity e Inicia a Activity do Cadastro Completo
-                    startActivity(new Intent(context, RegisterForPurchases.class));
-                    finish();
+                    // Salva o Usuario no Banco de Dados
+                    ManagerDataBase managerDataBase = new ManagerDataBase(SingUpActivity.this);
+                    if (!managerDataBase.insertUser(userSingUp)) {
+                        new AlertDialogPersonalized(SingUpActivity.this).defaultDialog(
+                                getString(R.string.title_no_register_api),
+                                managerDataBase.getError_operation()).show();
+                    } else {
+                        // Finaliza essa Activity e Inicia a Activity do Cadastro Completo
+                        startActivity(new Intent(context, RegisterForPurchases.class));
+                        finish();
+                    }
                 } else {
                     // Erro na API Goal
                     new AlertDialogPersonalized(context).defaultDialog(
@@ -234,14 +243,4 @@ public class SingUpActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Insere um Usuario no Banco de Dados via API
-     *
-     * @param userSingUp Usuario inserido no Banco de Dados
-     * @return boolean
-     */
-    private boolean registerInAPI(User userSingUp) {
-        //todo: implementação futura
-        return true;
-    }
 }

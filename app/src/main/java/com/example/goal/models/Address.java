@@ -296,7 +296,7 @@ public class Address {
         try {
             // URI de Pesquisa
             Uri build_uri = Uri.parse(SearchInternet.API_BRAZIL_CEP)
-                    .buildUpon().appendPath(address.getCep()).build();
+                    .buildUpon().appendPath(address.getUnmaskCep()).build();
 
             // Criação da Tarefa Assincrona e do Metodo que busca na Internet
             ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -472,7 +472,22 @@ public class Address {
         this.number = number;
     }
 
-    public String getCep() {
+
+    /**
+     * Retorna o CEP sem a mascara: XXXXXXXX
+     *
+     * @return {@link String}
+     */
+    public String getUnmaskCep() {
+        return MaskInputPersonalized.remove_mask(cep, MaskInputPersonalized.DEFAULT_REGEX);
+    }
+
+    /**
+     * Retorna o CEP no formato XXXXX-XXX
+     *
+     * @return {@link String}
+     */
+    public String getMaskedCep() {
         return cep;
     }
 

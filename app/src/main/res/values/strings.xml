@@ -57,6 +57,8 @@
     <string name="error_exception">Ocorreu uma Falha ao Executar a Solicitação</string>
     <string name="error_register_api">Não conseguimos Cadastrar o Usuario no Sistema. Por favor,
         Tente Novamente !</string>
+    <string name="error_login_api">Usuario não Cadastrado no Sistema.&lt;br />Tente Novamente ou
+        Realize o Login !</string>
     <string name="error_singup">Dados Incorretos. Por favor, confirme os dados das
         Etapas Anteriores</string>
 

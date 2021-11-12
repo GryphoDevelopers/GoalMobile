@@ -656,7 +656,21 @@ public class User {
         this.nickname = nickname;
     }
 
-    public String getCpf() {
+    /**
+     * Retorna o CPF no formato XXX.XXX.XXX-XX
+     *
+     * @return {@link String}
+     */
+    public String getUnmaskCpf() {
+        return MaskInputPersonalized.remove_mask(cpf, MaskInputPersonalized.DEFAULT_REGEX);
+    }
+
+    /**
+     * Retorna o CPF sem Mascara (XXXXXXXXXXX)
+     *
+     * @return {@link String}
+     */
+    public String getMaskedCpf() {
         return cpf;
     }
 
@@ -696,24 +710,54 @@ public class User {
         this.email = email;
     }
 
-    public boolean isCheckedTermsUse() {
-        return checkedTermsUse;
-    }
-
-    public void setCheckedTermsUse(boolean checkedTermsUse) {
-        this.checkedTermsUse = checkedTermsUse;
-    }
-
-    public String getPhone() {
+    /**
+     * Retorna o Telefone + DDD no formato (0XX)XXXXX-XXXX
+     *
+     * @return {@link String}
+     */
+    public String getMaskedPhone() {
         return phone;
+    }
+
+    /**
+     * Retorna o Telefone no formato XXXXXXXXX
+     *
+     * @return {@link String}
+     */
+    public String getUnmaskPhone() {
+        return MaskInputPersonalized.remove_mask(phone, MaskInputPersonalized.DEFAULT_REGEX);
+    }
+
+    /**
+     * Retorna apenas o DDD do Usuario
+     *
+     * @return {@link String}
+     */
+    public String getDDD() {
+        return validationBrazilianPhone(phone) && getUnmaskCpf() != null
+                ? getUnmaskPhone().substring(1, 3) : "";
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public String getCnpj() {
+    /**
+     * Obtem o CNPJ no seguinte formato: XX.XXX.XXX/XXXX-XX
+     *
+     * @return {@link String}
+     */
+    public String getMaskedCnpj() {
         return cnpj;
+    }
+
+    /**
+     * Retorna o CNPJ sem Mascara (XXXXXXXXXXXXXX)
+     *
+     * @return {@link String}
+     */
+    public String getUnmaskCnpj() {
+        return MaskInputPersonalized.remove_mask(cnpj, MaskInputPersonalized.DEFAULT_REGEX);
     }
 
     public void setCnpj(String cnpj) {

@@ -29,6 +29,10 @@
 - [ ] Criação da Classe Produtos (Validações)
 - [ ] Modificação na SharedPreferences para armazenar o JWT
 - [X] Implementar Header no NavigationView (Menu Lateral)
+- [ ] Separar Nome do Sobrenome
+- [ ] Fechar o Teclado ao selecionar a opçao dos estados/cidades/login/cadastro
+- [ ] Separar em Activities: Cadastro de Endereço e Cadastro Completo do Usuario (Telefone, CNPJ/CPF)
+- [ ] Correção TextWatcher
 
 #### Documentação
 - [ ] README.md

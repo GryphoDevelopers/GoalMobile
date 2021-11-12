@@ -12,6 +12,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.goal.R;
+import com.example.goal.managers.ManagerDataBase;
 import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.views.fragments.ProductsFragment;
 import com.example.goal.views.widgets.SnackBarPersonalized;
@@ -150,9 +151,9 @@ public class IndexActivity extends AppCompatActivity {
                 System.out.println("Item: Privacidade");
                 break;
             case EXIT:
-                // todo: limpar banco de dados local
+                new ManagerDataBase(IndexActivity.this).clearTables();
                 new ManagerSharedPreferences(IndexActivity.this,
-                        ManagerSharedPreferences.NAME_PREFERENCE).rememberLogin(false);
+                        ManagerSharedPreferences.NAME_PREFERENCE).clearPreferences();
                 startActivity(new Intent(IndexActivity.this, OpenActivity.class));
                 finish();
                 break;

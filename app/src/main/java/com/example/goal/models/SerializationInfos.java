@@ -1,9 +1,21 @@
 package com.example.goal.models;
 
+import static com.example.goal.managers.ManagerDataBase.DATE_BIRTH;
+import static com.example.goal.managers.ManagerDataBase.DOCUMENT_USER;
+import static com.example.goal.managers.ManagerDataBase.EMAIL_USER;
+import static com.example.goal.managers.ManagerDataBase.ID_USER;
+import static com.example.goal.managers.ManagerDataBase.IS_USER_SELLER;
+import static com.example.goal.managers.ManagerDataBase.NAME_USER;
+import static com.example.goal.managers.ManagerDataBase.NICKNAME_USER;
+import static com.example.goal.managers.ManagerDataBase.PASSWORD_USER;
+import static com.example.goal.managers.ManagerDataBase.PHONE_USER;
+
 import android.content.Context;
+import android.database.Cursor;
 import android.util.Log;
 
 import com.example.goal.R;
+import com.example.goal.managers.ManagerDataBase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -106,6 +118,55 @@ public class SerializationInfos {
 
         error_operation = context.getString(R.string.error_serialization);
         return null;
+    }
+
+    /**
+     * A partir de um {@link Cursor} obtem os dados e Instancia um Usuario
+     *
+     * @param cursor Cursor que será serializado
+     * @return {@link User}|null
+     */
+    public User serializationUserDatabase(Cursor cursor) {
+        // Verifica se o Cursor está acessivel. Caso esteja, Intanancia a Classe que será usada
+        if (cursor != null && cursor.moveToFirst()) {
+            User user = new User(context);
+
+            // Define um valor fixo caso sejam nulos ou obtem os valores
+            user.setId_user(cursor.isNull(cursor.getColumnIndex(ID_USER)) ? 0
+                    : cursor.getInt(cursor.getColumnIndex(ID_USER)));
+            user.setName(cursor.isNull(cursor.getColumnIndex(NAME_USER)) ? ""
+                    : cursor.getString(cursor.getColumnIndex(NAME_USER)));
+            user.setNickname(cursor.isNull(cursor.getColumnIndex(NICKNAME_USER)) ? ""
+                    : cursor.getString(cursor.getColumnIndex(NICKNAME_USER)));
+            user.setEmail(cursor.isNull(cursor.getColumnIndex(EMAIL_USER)) ? ""
+                    : cursor.getString(cursor.getColumnIndex(EMAIL_USER)));
+            user.setPassword(cursor.isNull(cursor.getColumnIndex(PASSWORD_USER)) ? ""
+                    : cursor.getString(cursor.getColumnIndex(PASSWORD_USER)));
+            user.setPhone(cursor.isNull(cursor.getColumnIndex(PHONE_USER)) ? ""
+                    : cursor.getString(cursor.getColumnIndex(PHONE_USER)));
+            user.setDate_birth(cursor.isNull(cursor.getColumnIndex(DATE_BIRTH)) ? ""
+                    : cursor.getString(cursor.getColumnIndex(DATE_BIRTH)));
+
+            // Verifica se é um Vendedor
+            int is_seller = (cursor.isNull(cursor.getColumnIndex(IS_USER_SELLER)) ? ManagerDataBase.FALSE
+                    : cursor.getInt(cursor.getColumnIndex(IS_USER_SELLER)));
+            user.setSeller(is_seller == ManagerDataBase.TRUE);
+
+            // Configura o CPF e CNPJ
+            String document = (cursor.isNull(cursor.getColumnIndex(DOCUMENT_USER)) ? ""
+                    : cursor.getString(cursor.getColumnIndex(DOCUMENT_USER)));
+            if (document.length() == 11) user.setCpf(document);
+            else if (document.length() == 14) user.setCnpj(document);
+            else {
+                user.setCpf("");
+                user.setCnpj("");
+            }
+
+            return user;
+        } else {
+            error_operation = context.getString(R.string.error_generic);
+            return null;
+        }
     }
 
     public String getError_operation() {

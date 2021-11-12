@@ -20,10 +20,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goal.R;
+import com.example.goal.managers.ManagerDataBase;
 import com.example.goal.managers.ManagerInputErrors;
 import com.example.goal.managers.ManagerServices;
 import com.example.goal.models.Address;
 import com.example.goal.models.User;
+import com.example.goal.models.UserAPI;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
 import com.example.goal.views.widgets.MaskInputPersonalized;
 import com.example.goal.views.widgets.SnackBarPersonalized;
@@ -291,12 +293,13 @@ public class RegisterForPurchases extends AppCompatActivity {
         int visibilityForeign = showForeign ? View.VISIBLE : View.GONE;
 
         TextWatcher textWatcherPhone = MaskInputPersonalized.managerMask(edit_phone, MaskInputPersonalized.MASK_PHONE_BR);
-        if (!showForeign) {
-            helper_phone = getString(R.string.hint_phone_br);
-            edit_phone.addTextChangedListener(textWatcherPhone);
-        } else {
+        if (showForeign) {
             helper_phone = getString(R.string.hint_phone_international);
             edit_phone.removeTextChangedListener(textWatcherPhone);
+            edit_phone.setText("");
+        } else {
+            helper_phone = getString(R.string.hint_phone_br);
+            edit_phone.addTextChangedListener(textWatcherPhone);
         }
 
         layoutEdit_phone.setHelperText(helper_phone);
@@ -318,24 +321,24 @@ public class RegisterForPurchases extends AppCompatActivity {
         if (rdBtn_cpf.isChecked()) {
             // Obtem os Dados do CPF para Validação
             user.setCpf(Objects.requireNonNull(edit_cpf.getText()).toString());
-            if (!user.validationCpf(user.getCpf())) {
+            if (!user.validationCpf(user.getMaskedCpf())) {
                 managerInputErrors.errorInputEditText(edit_cpf, user.getError_validation(), false);
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
                 //todo implementar validação do numero do cpf em api
             } else {
-                userRegister.setCpf(user.getCpf());
+                userRegister.setCpf(user.getUnmaskCpf());
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.lime_green));
                 return true;
             }
         } else if (rdBtn_cnpj.isChecked()) {
             // Obtem os dados do CNPJ para Validar
             user.setCnpj(Objects.requireNonNull(edit_cnpj.getText()).toString());
-            if (!user.validationCnpj(user.getCnpj())) {
+            if (!user.validationCnpj(user.getMaskedCnpj())) {
                 managerInputErrors.errorInputEditText(edit_cnpj, user.getError_validation(), false);
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
-            } else if (!user.validationNumberCnpj(user.getCnpj())) {
+            } else if (!user.validationNumberCnpj(user.getUnmaskCnpj())) {
                 // Mostra os Possiveris erros de Validação CNPJ (API Externa)
                 new AlertDialogPersonalized(context).defaultDialog(
                         getString(R.string.title_input_invalid, "CNPJ"), user.getError_validation()).show();
@@ -343,7 +346,7 @@ public class RegisterForPurchases extends AppCompatActivity {
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
             } else {
-                userRegister.setCnpj(user.getCnpj());
+                userRegister.setCnpj(user.getUnmaskCnpj());
                 card_dataPersonal.setStrokeColor(getResources().getColor(R.color.lime_green));
                 return true;
             }
@@ -380,15 +383,15 @@ public class RegisterForPurchases extends AppCompatActivity {
         // Verifica o Telefone Brasileiro
         User user = new User(context);
         user.setPhone(Objects.requireNonNull(edit_phone.getText()).toString());
-        if (!isForeign && !user.validationBrazilianPhone(user.getPhone())) {
+        if (!isForeign && !user.validationBrazilianPhone(user.getMaskedPhone())) {
             managerInputErrors.errorInputEditText(edit_phone, user.getError_validation(), false);
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
-        } else if (isForeign && !user.validationInternationPhone(user.getPhone())) {
+        } else if (isForeign && !user.validationInternationPhone(user.getUnmaskPhone())) {
             managerInputErrors.errorInputEditText(edit_phone, user.getError_validation(), false);
             card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
             return false;
-        } else userRegister.setPhone(user.getPhone());
+        } else userRegister.setPhone(user.getUnmaskPhone());
 
         if (isForeign) {
             // Obtem os Valores dos InputText dos Estrangeiros
@@ -459,7 +462,7 @@ public class RegisterForPurchases extends AppCompatActivity {
             // Validação do CEP (somente para Brasileiros). É necessario Endereço, UF, e Bairro
             address.setCep(Objects.requireNonNull(edit_cep.getText()).toString());
             address.setState(address.getUF(addressRegister.getState()));
-            if (!address.validationCEP(address.getCep())) {
+            if (!address.validationCEP(address.getMaskedCep())) {
                 managerInputErrors.errorInputEditText(edit_cep, address.getError_validation(), false);
                 card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
@@ -470,7 +473,7 @@ public class RegisterForPurchases extends AppCompatActivity {
                 managerInputErrors.errorInputEditText(edit_cep, address.getError_validation(), false);
                 card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
                 return false;
-            } else addressRegister.setCep(edit_cep.getText().toString());
+            } else addressRegister.setCep(address.getUnmaskCep());
         }
 
         // Evita erros ao Convertes Empty String em Int
@@ -518,22 +521,34 @@ public class RegisterForPurchases extends AppCompatActivity {
             } else if (validationPersonalInfos() && validationTerritory() && validationAddress()) {
                 managerServices.closeKeyboard(this);
 
-                // TODO RETIRAR e Implementar Cadastro POST API
-                Log.e("PURCHASES", addressRegister.getCountry() + "\n" +
-                        addressRegister.getState() + "\n" + addressRegister.getCity() + "\n" +
-                        addressRegister.getAddress() + "\n" + addressRegister.getDistrict() + "\n" +
-                        addressRegister.getNumber() + "\n" + addressRegister.getCep() + "\n" +
-                        addressRegister.getComplement() + "\n" + userRegister.getCpf() + "\n" +
-                        userRegister.getCnpj() + "\n" + userRegister.getPhone());
+                if (UserAPI.updateUserAPI(userRegister)) {
 
-                // Abre a pagina Index (Produtos) e Finaliza a Actvity
-                startActivity(new Intent(context, IndexActivity.class));
-                finishAffinity();
+                    // Atualiza os novos dados do Usuario e Endereço no Banco de Dados
+                    ManagerDataBase managerDataBase = new ManagerDataBase(RegisterForPurchases.this);
+                    if (!managerDataBase.updateUser(userRegister)) {
+                        new AlertDialogPersonalized(context).defaultDialog(
+                                getString(R.string.title_no_register_api),
+                                managerDataBase.getError_operation()).show();
+                    } else if (!managerDataBase.insertAddress(addressRegister)) {
+                        new AlertDialogPersonalized(context).defaultDialog(
+                                getString(R.string.title_no_register_api),
+                                managerDataBase.getError_operation()).show();
+                    } else {
+                        // Abre a pagina Index (Produtos) e Finaliza a Actvity
+                        startActivity(new Intent(context, IndexActivity.class));
+                        finishAffinity();
+                    }
+
+                } else {
+                    // Erro na API Goal
+                    new AlertDialogPersonalized(context).defaultDialog(
+                            getString(R.string.title_no_register_api),
+                            getString(R.string.error_register_api)).show();
+                }
             } else {
                 // Validações Não Validas ou Erro no Cadastro
-                new SnackBarPersonalized(findViewById(R.id.layout_purchases))
-                        .defaultSnackBar(getString(R.string.error_singup))
-                        .show();
+                new SnackBarPersonalized(findViewById(R.id.layout_purchases)).defaultSnackBar(
+                        getString(R.string.error_singup)).show();
             }
         });
     }
