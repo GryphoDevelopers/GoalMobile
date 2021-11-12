@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.example.goal.R;
 import com.example.goal.managers.ManagerDataBase;
+import com.example.goal.managers.SearchInternet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,10 +33,12 @@ import java.util.List;
 public class SerializationInfos {
 
     private final Context context;
-    // Constantes de Possiveis Exception usadads nos Logs
+
+    // Constantes de Possiveis Exception usadas nos Logs
     private final String NAME_CLASS = "SerializationInfos";
     private final String EXCEPTION_JSON = "Exception JSON";
-    private final String EXCEPTION = "Exception";
+    private final String EXCEPTION_GENERAL = "Exception";
+
     // Caso haja algum erro nos metodos
     private String error_operation;
 
@@ -49,38 +52,41 @@ public class SerializationInfos {
     }
 
     /**
-     * Serializa o JSON recebido da https://brasilapi.com.br, obtendo uma Lista das Cidades de acordo
-     * com o Estado
+     * Serializa um JSON (recebido pela busca da {@link SearchInternet}) que possui informações em Arrays
      *
-     * @param raw_json JSON resultante da Pesquisa na API (Consultar SearchInternet)
+     * @param raw_json   JSON resultante da Pesquisa na API (Resultande da {@link SearchInternet})
+     * @param parameters Parametros que serão recuperados da API
      * @return String[]|null
+     * @see SearchInternet
      */
-    public String[] serializationCities(String raw_json) {
+    public String[] jsonArrayToArray(String raw_json, String[] parameters) {
         try {
             // A partir da String, obtem um Array JSON e seu tamanho
             JSONArray jsonArray = new JSONArray(raw_json);
             int length_array = jsonArray.length();
 
             // Variavel que armazenará os resultados e laço de repetição para obte-los
-            String[] result_cities = new String[length_array];
+            String[] result_search = new String[length_array];
             for (int i = 0; i < length_array; i++) {
-                // Obtem a Informação Desejada
+                // Obtem as Informações Desejada
                 JSONObject jsonObject = new JSONObject(jsonArray.getString(i));
-                result_cities[i] = jsonObject.getString("nome");
+                for (String item : parameters) {
+                    result_search[i] = jsonObject.getString(item);
+                }
             }
 
             // Verifica se o Item foi Obtido com Sucesso
-            if (result_cities[0] != null && result_cities[length_array - 1] != null) {
+            if (result_search[0] != null && result_search[length_array - 1] != null) {
                 // Retorna a Lista em Ordem Alfabetica
-                Arrays.sort(result_cities);
-                return result_cities;
+                Arrays.sort(result_search);
+                return result_search;
             }
 
         } catch (JSONException ex) {
             Log.e(EXCEPTION_JSON, NAME_CLASS + " - Erro na Formaçao do JSON");
             ex.printStackTrace();
         } catch (Exception ex) {
-            Log.e(EXCEPTION, NAME_CLASS + " - Ocorreu uma Exceção");
+            Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Ocorreu uma Exceção");
             ex.printStackTrace();
         }
         error_operation = context.getString(R.string.error_serialization);
@@ -88,13 +94,14 @@ public class SerializationInfos {
     }
 
     /**
-     * Serializa o JSON recebido de uma API de acordo com os parametros passados
+     * Serializa um JSON (recebido pela busca da {@link SearchInternet}) que possui uma unica String
      *
      * @param raw_json   JSON resultante da Pesquisa na API
      * @param parameters Parametros que serão recuperados da API
      * @return String[] | null
+     * @see SearchInternet
      */
-    public String[] jsonToArray(String raw_json, String[] parameters) {
+    public String[] jsonStringToArray(String raw_json, String[] parameters) {
         try {
             // Obtem o JSON e Instancia e a String de Resposta
             JSONObject jsonObject = new JSONObject(raw_json);
@@ -112,7 +119,7 @@ public class SerializationInfos {
             Log.e(EXCEPTION_JSON, NAME_CLASS + " - Erro na Formaçao do JSON");
             ex.printStackTrace();
         } catch (Exception ex) {
-            Log.e(EXCEPTION, NAME_CLASS + " - Ocorreu uma Exceção");
+            Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Ocorreu uma Exceção");
             ex.printStackTrace();
         }
 
@@ -121,7 +128,7 @@ public class SerializationInfos {
     }
 
     /**
-     * A partir de um {@link Cursor} obtem os dados e Instancia um Usuario
+     * Obtem dados de um {@link Cursor} e retorna uma Instancia de um Usuario
      *
      * @param cursor Cursor que será serializado
      * @return {@link User}|null
@@ -169,6 +176,9 @@ public class SerializationInfos {
         }
     }
 
+    /**
+     * Obtem a mensagem de erro de algum Metodo
+     */
     public String getError_operation() {
         return error_operation;
     }

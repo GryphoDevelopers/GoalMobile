@@ -21,18 +21,22 @@
 - [ ] Layout Fragment Products (padrão de Apresentação dos Produtos)
 
 #### Backend
-- [ ] Oauth com jwt (Login)
+- [X] Implementar SQLite
+- [X] Implementar Header no NavigationView (Menu Lateral)
+- [X] Refatorar Serialização de JSONs
 - [ ] Configuração dos Fragments
 - [ ] Configuração das Activities
-- [ ] Implementar SQLite
 - [ ] Validação de Pagamento
 - [ ] Criação da Classe Produtos (Validações)
-- [ ] Modificação na SharedPreferences para armazenar o JWT
-- [X] Implementar Header no NavigationView (Menu Lateral)
-- [ ] Separar Nome do Sobrenome
+
+- [ ] Modificação na SharedPreferences para armazenar o JWT  
+- [ ] Oauth com JWT (Login)
+
+- [ ] Correção TextWatcher
 - [ ] Fechar o Teclado ao selecionar a opçao dos estados/cidades/login/cadastro
 - [ ] Separar em Activities: Cadastro de Endereço e Cadastro Completo do Usuario (Telefone, CNPJ/CPF)
-- [ ] Correção TextWatcher
+- [ ] Separar Nome do Sobrenome
+
 
 #### Documentação
 - [ ] README.md

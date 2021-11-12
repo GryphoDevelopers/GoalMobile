@@ -194,7 +194,7 @@ public class User {
 
             if (json_email != null) {
                 SerializationInfos serializationInfos = new SerializationInfos(context);
-                String[] infos_email = serializationInfos.jsonToArray(json_email, new String[]{"disposable"});
+                String[] infos_email = serializationInfos.jsonStringToArray(json_email, new String[]{"disposable"});
 
                 if (infos_email != null) {
                     if (infos_email[0].equals("false")) return true;
@@ -357,7 +357,7 @@ public class User {
 
             if (json_cnpj != null) {
                 SerializationInfos serializationInfos = new SerializationInfos(context);
-                String[] cnpj_reciver = serializationInfos.jsonToArray(json_cnpj,
+                String[] cnpj_reciver = serializationInfos.jsonStringToArray(json_cnpj,
                         new String[]{"cnpj", "descricao_situacao_cadastral"});
 
                 if (cnpj_reciver != null) {

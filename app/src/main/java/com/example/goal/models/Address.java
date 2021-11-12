@@ -317,7 +317,7 @@ public class Address {
             if (json_cep != null) {
                 // Obtem o JSON da API
                 SerializationInfos serializationInfos = new SerializationInfos(context);
-                String[] infos_cep = serializationInfos.jsonToArray(json_cep,
+                String[] infos_cep = serializationInfos.jsonStringToArray(json_cep,
                         new String[]{"street", "neighborhood", "state"});
 
                 // Obtem uma String[] serializada
@@ -402,7 +402,8 @@ public class Address {
             // Valida o JSON da API
             if (json_cities != null) {
                 SerializationInfos serializationInfos = new SerializationInfos(context);
-                String[] array_cities = serializationInfos.serializationCities(json_cities);
+                String[] array_cities = serializationInfos.jsonArrayToArray(json_cities,
+                        new String[]{"nome"});
 
                 // Obtem o array serializado e Ordena por ordem alfabetica
                 if (array_cities != null) {
