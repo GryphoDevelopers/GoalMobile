@@ -90,7 +90,7 @@ public class ManagerDataBase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
                 "create table " + TABLE_USER + " (" +
-                        ID_USER + " INTEGER PRIMARY KEY, " +
+                        ID_USER + " TEXT PRIMARY KEY, " +
                         DOCUMENT_USER + " TEXT, " +
                         NICKNAME_USER + " TEXT, " +
                         EMAIL_USER + " TEXT, " +
@@ -201,7 +201,7 @@ public class ManagerDataBase extends SQLiteOpenHelper {
         User userDatabase = this.getUserDatabase();
 
         if (userDatabase == null) return false;
-        else if (userDatabase.getId_user() != newUser.getId_user()) return insertUser(newUser);
+        else if (!userDatabase.getId_user().equals(newUser.getId_user())) return insertUser(newUser);
         User finalUser = User.compareUser(userDatabase, newUser);
 
         ContentValues values = setUpValuesUser(finalUser);

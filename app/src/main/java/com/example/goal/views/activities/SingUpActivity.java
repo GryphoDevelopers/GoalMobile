@@ -197,49 +197,57 @@ public class SingUpActivity extends AppCompatActivity {
                 new AlertDialogPersonalized(context).defaultDialog(
                         getString(R.string.title_no_internet),
                         Html.fromHtml(getString(R.string.error_network)).toString()).show();
-            } else if (validationsSingUp()) {
-                managerServices.closeKeyboard(SingUpActivity.this);
-
-                // Tenta Registrar o Usuario na API
-                if (UserAPI.registerInAPI(userSingUp)) {
-
-                    // Obtem o Token da API
-                    //todo armazenar token da api nas sharedpreferences
-                    String token_user = UserAPI.getTokenUser(userSingUp.getEmail(), userSingUp.getPassword());
-                    if (token_user.equals("")) {
-                        new AlertDialogPersonalized(SingUpActivity.this).defaultDialog(
-                                getString(R.string.title_input_invalid, "Usuario"),
-                                Html.fromHtml(getString(R.string.error_login_api)).toString()).show();
-                        return;
-                    }
-
-                    // Define TRUE para lembrar o Login que acabou de ser Feiro
-                    ManagerSharedPreferences preferences = new ManagerSharedPreferences(
-                            context, ManagerSharedPreferences.NAME_PREFERENCE);
-                    preferences.rememberLogin(true);
-
-                    // Salva o Usuario no Banco de Dados
-                    ManagerDataBase managerDataBase = new ManagerDataBase(SingUpActivity.this);
-                    if (!managerDataBase.insertUser(userSingUp)) {
-                        new AlertDialogPersonalized(SingUpActivity.this).defaultDialog(
-                                getString(R.string.title_no_register_api),
-                                managerDataBase.getError_operation()).show();
-                    } else {
-                        // Finaliza essa Activity e Inicia a Activity do Cadastro Completo
-                        startActivity(new Intent(context, RegisterForPurchases.class));
-                        finish();
-                    }
-                } else {
-                    // Erro na API Goal
-                    new AlertDialogPersonalized(context).defaultDialog(
-                            getString(R.string.title_no_register_api),
-                            getString(R.string.error_register_api)).show();
-                }
-            } else {
+                return;
+            } else if (!validationsSingUp()) {
                 // Erro na Validação do Cadastro
                 new SnackBarPersonalized(findViewById(R.id.layout_singup))
                         .defaultSnackBar(getString(R.string.error_singup)).show();
+                return;
             }
+
+            managerServices.closeKeyboard(SingUpActivity.this);
+
+            // Registra o User na API e obtem a Instancia do User com ID da API
+            UserAPI userAPI = new UserAPI(SingUpActivity.this);
+            User userReturnedAPI = userAPI.registerInAPI(userSingUp);
+
+            // Erro na API Goal
+            if (userReturnedAPI == null) {
+                new AlertDialogPersonalized(context).defaultDialog(
+                        getString(R.string.title_no_register_api), userAPI.getError_operation()).show();
+                return;
+            }
+
+            // Armazenará o Token e a Realização do Login
+            ManagerSharedPreferences preferences = new ManagerSharedPreferences(
+                    context, ManagerSharedPreferences.NAME_PREFERENCE);
+
+            // Obtem o Token da API
+            String token_user = userAPI.getTokenUser(userReturnedAPI.getEmail(), userReturnedAPI.getPassword());
+            if (token_user.equals("")) {
+                new AlertDialogPersonalized(SingUpActivity.this).defaultDialog(
+                        getString(R.string.title_input_invalid, "Usuario"),
+                        userAPI.getError_operation()).show();
+                return;
+            }
+
+            // Define o "Lembrar Login" nas Preferences e o Token do Novo Usuario
+            preferences.setJsonWebTokenUser(token_user);
+            preferences.setRememberLogin(true);
+
+            // Salva o Usuario no Banco de Dados
+            ManagerDataBase managerDataBase = new ManagerDataBase(SingUpActivity.this);
+            if (!managerDataBase.insertUser(userReturnedAPI)) {
+                new AlertDialogPersonalized(SingUpActivity.this).defaultDialog(
+                        getString(R.string.title_no_register_api),
+                        managerDataBase.getError_operation()).show();
+            } else {
+                // Finaliza essa Activity e Inicia a Activity do Cadastro Completo
+                startActivity(new Intent(context, RegisterForPurchases.class));
+                finish();
+            }
+
+
         });
     }
 

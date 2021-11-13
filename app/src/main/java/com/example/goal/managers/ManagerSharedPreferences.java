@@ -8,10 +8,14 @@ import android.content.SharedPreferences;
  */
 public class ManagerSharedPreferences {
 
-    // Constantes dos nomes das Preferences
+    /**
+     * Constante que define o Nome das SharedPreferences Padrão
+     */
     public static final String NAME_PREFERENCE = "app_goal";
+
     // Constantes das Chaves das Preferences
     private static final String REMEMBER_LOGIN_KEY = "remember_login";
+    private static final String USER_JSON_WEB_TOKEN = "jwt_user";
     private final SharedPreferences preferences;
 
     /**
@@ -39,9 +43,29 @@ public class ManagerSharedPreferences {
      *
      * @param isRememberLogin valor se irá lembrar o Login ou não
      */
-    public void rememberLogin(boolean isRememberLogin) {
+    public void setRememberLogin(boolean isRememberLogin) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(REMEMBER_LOGIN_KEY, isRememberLogin);
+        editor.apply();
+    }
+
+    /**
+     * Retorna o Token (JWT) do Usuario salvo nas SharedPreferences
+     *
+     * @return {@link String}|""
+     */
+    public String getJsonWebTokenUser() {
+        return preferences.getString(USER_JSON_WEB_TOKEN, "");
+    }
+
+    /**
+     * Salva o Token (JWT) do Usuario em uma SharedPreferences
+     *
+     * @param token Token (JWT) de Autenticação do Usuario
+     */
+    public void setJsonWebTokenUser(String token) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(USER_JSON_WEB_TOKEN, token);
         editor.apply();
     }
 

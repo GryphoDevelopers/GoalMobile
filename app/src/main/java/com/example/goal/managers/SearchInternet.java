@@ -1,5 +1,8 @@
 package com.example.goal.managers;
 
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.KITKAT;
+
 import android.content.Context;
 import android.text.Html;
 import android.util.Log;
@@ -7,31 +10,91 @@ import android.util.Log;
 import com.example.goal.R;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Classe SearchInternet: Busca/Manipula Dados em APIs Online
  */
 public class SearchInternet {
 
-    // Constantes de URLs das APIs Utilizadas
+    /**
+     * Verbo HTTPs (Metodo) GET (Obtenção de Informações ou Envio de Informação não Sensiveis) : Não
+     * há necessidade de Body
+     */
+    public static final String GET = "GET";
+
+    /**
+     * Verbo HTTPs (Metodo) POST (Envio de Dados Sensiveis): Há necessidade de Body
+     */
+    public static final String POST = "POST";
+
+    /**
+     * Verbo HTTPs (Metodo) PUT (Envio de Atualizações de Dados): Há necessidade de Body
+     */
+    public static final String PUT = "PUT";
+
+    /**
+     * Verbo HTTPs (Metodo) DELETE (Exclusão de Dados na API): Há necessidade de Body
+     */
+    public static final String DELETE = "DELETE";
+
+    /**
+     * URL de Pesquisa de Cidades na API Brasil
+     *
+     * @see <a href="https://brasilapi.com.br">API Brasil</a>
+     */
     public static final String API_BRAZIL_CITY = "https://brasilapi.com.br/api/ibge/municipios/v1";
+
+    /**
+     * URL de Pesquisa de CEP na API Brasil
+     *
+     * @see <a href="https://brasilapi.com.br">API Brasil</a>
+     */
     public static final String API_BRAZIL_CEP = "https://brasilapi.com.br/api/cep/v2/";
+
+    /**
+     * URL de Pesquisa de CNPJ na API Brasil
+     *
+     * @see <a href="https://brasilapi.com.br">API Brasil</a>
+     */
     public static final String API_BRAZIL_CNPJ = "https://brasilapi.com.br/api/cnpj/v1/";
-    public static final String API_EMAIL_DISPONABLE = "https://open.kickbox.com/v1/disposable/";
+
+    /**
+     * URL de Pesquisa de Emails na kickbox
+     *
+     * @see <a href="https://docs.kickbox.com/docs">Kickbox</a>
+     */
+    public static final String API_EMAIL_DISPOSABLE = "https://open.kickbox.com/v1/disposable/";
+
+    /**
+     * URL da Geração de Token na API Goal (API do Projeto)
+     *
+     * @see <a href="https://goalwebapi.herokuapp.com/swagger/index.html">API Goal</a>
+     */
+    public static final String API_GOAL_TOKEN = "https://goalwebapi.herokuapp.com/goal/api/v1/auth";
+
+    /**
+     * URL de Cadastro de Usuarios na API Goal (API do Projeto)
+     *
+     * @see <a href="https://goalwebapi.herokuapp.com/swagger/index.html">API Goal</a>
+     */
+    public static final String API_GOAL_INSERT_USER = "https://goalwebapi.herokuapp.com/goal/api/v1/auth/add-access";
 
     // Constantes de Possiveis Exception usadads nos Logs
     private final String NAME_CLASS = "SearchInternet";
-    private final String EXCEPTION_URL = "Exception URL";
-    private final String EXCEPTION_IO = "Exception IO";
+    private final String EXCEPTION_GENERAL = "Exception General";
+    private final String NOT_FORMAT = "Wrong Format";
+
+    // Variaveis usadas na Classe
     private final Context context;
-    // Mensagem de Erro na Operação
-    public String error_search;
+    private String error_search = "";
+    private String json_body = "";
+
 
     /**
      * Contrutor da Classe SearchInternet com o Context
@@ -47,11 +110,13 @@ public class SearchInternet {
      * <p>
      * Utiliza ExecutorService para Criar uma nova Thread e Callable para montar a Execução das Ações
      *
-     * @param uri    Caminho de Acesso da API
-     * @param method Metodo de Pesquisa (GET, POST, PUT, DELETE)
+     * @param uri                 Caminho de Acesso da API
+     * @param method              Metodo de Pesquisa (GET, POST, PUT, DELETE)
+     * @param token_authorization JsonWebToken utilizado no Request. Caso não seja necessario, insira
+     *                            "null" no valor
      * @return String|null
      */
-    public String SearchInAPI(String uri, String method) {
+    public String SearchInAPI(String uri, String method, String token_authorization) {
 
         if (!new ManagerServices(context).availableInternet()) {
             error_search = Html.fromHtml(context.getString(R.string.error_network)).toString();
@@ -67,12 +132,47 @@ public class SearchInternet {
             URL url_search = new URL(uri);
             HttpURLConnection urlConnection = (HttpURLConnection) url_search.openConnection();
             urlConnection.setRequestMethod(method);
+
+            // Configurando o Header (Tipo do Conteudo, Retorno e Token (Se Necessario))
+            urlConnection.setRequestProperty("Content-Type", "application/json; utf-8");
+            urlConnection.setRequestProperty("Accept", "application/json");
+            if (token_authorization != null) {
+                urlConnection.setRequestProperty("Authorization", String.format(
+                        "Bearer %s", token_authorization));
+            }
+
+            // Conforme a necessidade do Verbo HTTPs, valida o Body
+            if (!method.equals(GET)) {
+                if (json_body.equals("")) {
+                    // Body não Formado
+                    if (error_search.equals(""))
+                        error_search = context.getString(R.string.error_500);
+                    return null;
+                } else {
+                    //set the content length of the body
+                    urlConnection.setDoOutput(true);
+
+                    // Formação do Body da API e Conversão do Body de String para Byte em UTF-8
+                    OutputStream outputStream = urlConnection.getOutputStream();
+                    byte[] input = SDK_INT >= KITKAT ? json_body.getBytes(StandardCharsets.UTF_8)
+                            : json_body.getBytes("UTF-8");
+
+                    // Cria o Body do Post
+                    outputStream.write(input, 0, input.length);
+                    //outputStream.close();
+                }
+            }
+
+            // Executa a Conexão com os Valores Configurados
             urlConnection.connect();
 
-            // todo: criar uma serialização propria para obter o erro
+            // todo: criar uma serialização propria para obter o erro e adicionar novos codigos erros
             switch (urlConnection.getResponseCode()) {
                 case 200:
                     break;
+                case 400:
+                    error_search = context.getResources().getString(R.string.error_400);
+                    return null;
                 case 404:
                     error_search = context.getResources().getString(R.string.error_404);
                     return null;
@@ -80,7 +180,6 @@ public class SearchInternet {
                     error_search = context.getResources().getString(R.string.error_500);
                     return null;
                 default:
-                    // todo: adicionar codigos de erro da API
                     error_search = context.getResources().getString(R.string.error_generic);
                     return null;
             }
@@ -105,11 +204,8 @@ public class SearchInternet {
                     return response_json;
                 }
             }
-        } catch (MalformedURLException ex) {
-            Log.e(EXCEPTION_URL, NAME_CLASS + " - Erro na Formaçao da URL");
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            Log.e(EXCEPTION_IO, NAME_CLASS + " - Erro em algum Processamento IO");
+        } catch (Exception ex) {
+            Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Erro na Pesquisa na API: " + ex.getClass().getName());
             ex.printStackTrace();
         }
 
@@ -118,6 +214,77 @@ public class SearchInternet {
         return null;
     }
 
+    /**
+     * Cria o Body (Padrão) que será usados nos Metodos PUT, DELETE, POST e outros nas Requisições da API
+     *
+     * @param parameters Parametros que serão Inseridos no Body (não aceita valores nulos ou Vazios).
+     *                   Para Cada Parametro deve haver um valor que respeite as
+     *                   condições dos Valores
+     * @param values     Valores dos Parametros que serão inseridos (não aceita valores nulos, mas
+     *                   aceita Valores Vazios)
+     *                   <p>
+     *                   <p>
+     *                   * Valores Vazios = ""
+     */
+    public void setBodyRequest(String[] parameters, String[] values) {
+
+        StringBuilder body = new StringBuilder();
+        if (parameters != null && values != null && parameters.length == values.length) {
+
+            // Laço de Repetição para Acessar os Itens dos Arrays
+            for (int i = 0; i < parameters.length; i++) {
+
+                // Realiza uma Validação nos Valores. Caso passe, insere os valores na variavel body
+                if (parameters[i] == null || parameters[i].equals("")) {
+                    error_search = context.getString(R.string.error_500);
+                    Log.e(NOT_FORMAT, NAME_CLASS + " - Erro na Formação do Body: " +
+                            "Parametros Invalidos (Não Permitidos Valores Nulos ou Vazios)");
+                    json_body = "";
+                    return;
+                } else if (values[i] == null) {
+                    Log.e(NOT_FORMAT, NAME_CLASS + " - Erro na Formação do Body: " +
+                            "Valores do Body Invalidos (Não Permitidos Valores Nulos ou Vazios)");
+                    json_body = "";
+                    return;
+                } else {
+                    try {
+                        // Abre a Chave do JSON antes da inserção dos Primeiros Valores
+                        if (i == 0) body = new StringBuilder("{");
+
+                        // Caso Seja o Ultimo Item dos Arrays: Fechamento das Chaves, sem virgula no Final
+                        if (i == parameters.length - 1) {
+                            body.append(String.format("\"%1$s\": \"%2$s\" }", parameters[i], values[i]));
+                        } else {
+                            body.append(String.format("\"%1$s\": \"%2$s\",", parameters[i], values[i]));
+                        }
+                    } catch (Exception ex) {
+                        // Tratamento de Exceção na String Format
+                        Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Erro na Formação do Body: "
+                                + ex.getClass().getName());
+                        ex.printStackTrace();
+
+                        error_search = context.getString(R.string.error_exception);
+                        json_body = "";
+                        return;
+                    }
+                }
+            }
+
+        } else {
+            error_search = context.getString(R.string.error_500);
+            Log.e(NOT_FORMAT, NAME_CLASS + " - Erro na Formação do Body: " +
+                    "Parametros Invalidos (Não Permitidos Valores Nulos ou Vazios)");
+            json_body = "";
+        }
+
+        // Define o valor do JsonBody usado no PUT, POST, DELETE
+        json_body = body.toString();
+    }
+
+
+    /**
+     * Caso exista, retorna a mensagem de erro
+     */
     public String getError_search() {
         return error_search;
     }

@@ -1,5 +1,7 @@
 package com.example.goal.models;
 
+import static com.example.goal.managers.SearchInternet.GET;
+
 import android.content.Context;
 import android.net.Uri;
 import android.text.Html;
@@ -37,7 +39,7 @@ public class User {
     // Constantes Usadas na manipulação da Data
     public static final String TIME_ZONE = "America/Sao_Paulo";
     public static final Locale LOCALE_BR = new Locale("pt", "BR");
-    public static final String PATERN_DATE = "dd/MM/yyyy";
+    public static final String PATTERN_DATE = "dd/MM/yyyy";
     // Constantes da Força da Senha
     private static final int LOW_STRENGTH = 1;
     private static final int OK_STRENGTH = 2;
@@ -63,6 +65,8 @@ public class User {
     private String error_validation = "";
     private Date date_birth = null;
     private String name = "";
+    //todo: atlerar e utilizar a variavel de sobrenome
+    private String last_name = "TEste";
     private String email = "";
     private String nickname = "";
     private String cpf = "";
@@ -70,7 +74,8 @@ public class User {
     private String confirmPassword = "";
     private String phone = "";
     private String cnpj = "";
-    private int id_user = 0;
+    // todo: alterar o tipo String para GUID (Id_user)
+    private String id_user = "";
     private boolean isSeller = false;
 
     /**
@@ -102,7 +107,7 @@ public class User {
     public static User compareUser(User oldUser, User newUser) {
 
         // Verifica para cada Propriedade do Usuario se foi preenchida
-        if (newUser.getId_user() == 0) newUser.setId_user(oldUser.getId_user());
+        if (newUser.getId_user().equals("")) newUser.setId_user(oldUser.getId_user());
         if (newUser.getName().equals("")) newUser.setName(oldUser.getName());
         if (newUser.getNickname().equals("")) newUser.setNickname(oldUser.getNickname());
         if (newUser.getEmail().equals("")) newUser.setEmail(oldUser.getEmail());
@@ -172,7 +177,7 @@ public class User {
     public boolean validationEmailAPI(String email) {
         try {
             // URI de Pesquisa
-            Uri build_uri = Uri.parse(SearchInternet.API_EMAIL_DISPONABLE)
+            Uri build_uri = Uri.parse(SearchInternet.API_EMAIL_DISPOSABLE)
                     .buildUpon().appendPath(email).build();
 
             // Criação da Tarefa Assincrona e do Metodo que busca na Internet
@@ -182,7 +187,7 @@ public class User {
             // Configura a Tarefa Assincrona que Retorna uma String
             Set<Callable<String>> callable = new HashSet<>();
             callable.add(() -> {
-                String json_email = searchInternet.SearchInAPI(build_uri.toString(), "GET");
+                String json_email = searchInternet.SearchInAPI(build_uri.toString(), GET, null);
 
                 if (json_email == null) error_validation = searchInternet.getError_search();
                 return json_email;
@@ -345,7 +350,7 @@ public class User {
             Set<Callable<String>> callable = new HashSet<>();
             callable.add(() -> {
                 SearchInternet searchInternet = new SearchInternet(context);
-                String json_cnpj = searchInternet.SearchInAPI(build_uri.toString(), "GET");
+                String json_cnpj = searchInternet.SearchInAPI(build_uri.toString(), GET, null);
 
                 if (json_cnpj == null) error_validation = searchInternet.getError_search();
                 return json_cnpj;
@@ -558,7 +563,7 @@ public class User {
 
             // Alternativas para Diferentes Versões
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                LocalDate localDate = LocalDate.parse(date_birth, DateTimeFormatter.ofPattern(PATERN_DATE));
+                LocalDate localDate = LocalDate.parse(date_birth, DateTimeFormatter.ofPattern(PATTERN_DATE));
                 LocalDate localDate_now = LocalDate.now(ZoneId.of(TIME_ZONE));
 
                 if (localDate != null && localDate_now != null) {
@@ -632,11 +637,11 @@ public class User {
     }
 
     // Getters e Setters da Classe User
-    public int getId_user() {
+    public String getId_user() {
         return id_user;
     }
 
-    public void setId_user(int id_user) {
+    public void setId_user(String id_user) {
         this.id_user = id_user;
     }
 
@@ -646,6 +651,14 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getNickname() {
@@ -774,7 +787,7 @@ public class User {
      * @return {@link String}|""
      */
     public String getString_dateBirth() {
-        DateFormat dateFormat = new SimpleDateFormat(PATERN_DATE, LOCALE_BR);
+        DateFormat dateFormat = new SimpleDateFormat(PATTERN_DATE, LOCALE_BR);
         if (date_birth == null) return "";
         else return dateFormat.format(date_birth);
     }
@@ -798,7 +811,7 @@ public class User {
     public void setDate_birth(String date_birth) {
         try {
             // Configura o Formato e Fuso Horario da Data
-            SimpleDateFormat dateFormatDefault = new SimpleDateFormat(PATERN_DATE, LOCALE_BR);
+            SimpleDateFormat dateFormatDefault = new SimpleDateFormat(PATTERN_DATE, LOCALE_BR);
             dateFormatDefault.setTimeZone(TimeZone.getTimeZone(TIME_ZONE));
 
             // Formata a Data Recebida
@@ -821,7 +834,7 @@ public class User {
     public Date getDate_now() {
         try {
             // Formata a Data Atual com a Localização e Fuso Horario Brasileiro
-            SimpleDateFormat dateFormatDefault = new SimpleDateFormat(PATERN_DATE, LOCALE_BR);
+            SimpleDateFormat dateFormatDefault = new SimpleDateFormat(PATTERN_DATE, LOCALE_BR);
             dateFormatDefault.setTimeZone(TimeZone.getTimeZone(TIME_ZONE));
             return dateFormatDefault.parse(dateFormatDefault.format(new Date()));
         } catch (Exception ex) {

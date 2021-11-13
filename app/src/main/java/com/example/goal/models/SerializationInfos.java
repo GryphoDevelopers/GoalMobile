@@ -139,8 +139,8 @@ public class SerializationInfos {
             User user = new User(context);
 
             // Define um valor fixo caso sejam nulos ou obtem os valores
-            user.setId_user(cursor.isNull(cursor.getColumnIndex(ID_USER)) ? 0
-                    : cursor.getInt(cursor.getColumnIndex(ID_USER)));
+            user.setId_user(cursor.isNull(cursor.getColumnIndex(ID_USER)) ? ""
+                    : cursor.getString(cursor.getColumnIndex(ID_USER)));
             user.setName(cursor.isNull(cursor.getColumnIndex(NAME_USER)) ? ""
                     : cursor.getString(cursor.getColumnIndex(NAME_USER)));
             user.setNickname(cursor.isNull(cursor.getColumnIndex(NICKNAME_USER)) ? ""

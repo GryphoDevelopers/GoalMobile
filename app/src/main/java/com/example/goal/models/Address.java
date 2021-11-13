@@ -1,5 +1,7 @@
 package com.example.goal.models;
 
+import static com.example.goal.managers.SearchInternet.GET;
+
 import android.content.Context;
 import android.net.Uri;
 import android.text.Html;
@@ -305,7 +307,7 @@ public class Address {
             // Configura a Tarefa Assincrona que Retorna uma String
             Set<Callable<String>> callable = new HashSet<>();
             callable.add(() -> {
-                String json_cep = searchInternet.SearchInAPI(build_uri.toString(), "GET");
+                String json_cep = searchInternet.SearchInAPI(build_uri.toString(), GET, null);
                 if (json_cep == null) error_validation = searchInternet.getError_search();
                 return json_cep;
             });
@@ -390,7 +392,8 @@ public class Address {
             Set<Callable<String>> callable = new HashSet<>();
             callable.add(() -> {
                 SearchInternet searchInternet = new SearchInternet(context);
-                String json_cities = searchInternet.SearchInAPI(build_uri_cities.toString(), "GET");
+                String json_cities = searchInternet.SearchInAPI(build_uri_cities.toString(),
+                        GET, null);
                 if (json_cities == null) error_validation = searchInternet.getError_search();
                 return json_cities;
             });

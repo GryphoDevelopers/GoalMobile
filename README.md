@@ -24,18 +24,22 @@
 - [X] Implementar SQLite
 - [X] Implementar Header no NavigationView (Menu Lateral)
 - [X] Refatorar Serialização de JSONs
-- [ ] Configuração dos Fragments
+- [X] Modificação na SharedPreferences para armazenar o JWT
+  - [X] Obter Token do Usuario
+  - [X] Armazenar Token com o usuario
+- [X] Implementação do Cadastro do Usuario na API
+  
 - [ ] Configuração das Activities
 - [ ] Validação de Pagamento
 - [ ] Criação da Classe Produtos (Validações)
+- [ ] Login usando Dados Pessoais + Token (JWT)
 
-- [ ] Modificação na SharedPreferences para armazenar o JWT  
-- [ ] Oauth com JWT (Login)
-
-- [ ] Correção TextWatcher
+14/11
 - [ ] Fechar o Teclado ao selecionar a opçao dos estados/cidades/login/cadastro
-- [ ] Separar em Activities: Cadastro de Endereço e Cadastro Completo do Usuario (Telefone, CNPJ/CPF)
 - [ ] Separar Nome do Sobrenome
+- [ ] Separar em Activities: Cadastro de Endereço e Cadastro Completo do Usuario (Telefone, CNPJ/CPF)
+- [ ] Correção TextWatcher
+- [ ] Configuração dos Fragments
 
 
 #### Documentação

@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         btn_nextStage.setOnClickListener(v -> {
             // O Usuario sempre será Redirecionado à tela de Login/Cadastro antes de ir para a Index
             new ManagerSharedPreferences(LoginActivity.this, ManagerSharedPreferences.NAME_PREFERENCE)
-                    .rememberLogin(false);
+                    .setRememberLogin(false);
             startActivity(new Intent(LoginActivity.this, IndexActivity.class));
             finishAffinity();
         });
@@ -111,45 +111,54 @@ public class LoginActivity extends AppCompatActivity {
                 new AlertDialogPersonalized(LoginActivity.this).defaultDialog(
                         getString(R.string.title_no_internet),
                         Html.fromHtml(getString(R.string.error_network)).toString()).show();
-
-            } else if (validationInputs()) {
-
-                managerServices.closeKeyboard(this);
-                // Obtem o Token do Usuario da API para obter mais Informações do Usuario
-                //todo obter mais informações do Usuario, como Endereço, Metodos de Pagamento e Lista de Desejo
-                //todo armazenar token da api nas sharedpreferences
-                String token = UserAPI.getTokenUser(userLogin.getEmail(), userLogin.getPassword());
-                User userAPI = token.equals("") ? null : UserAPI.getInfoUserAPI(userLogin.getEmail(),
-                        userLogin.getPassword(), token, LoginActivity.this);
-
-                if (userAPI == null) {
-                    new AlertDialogPersonalized(LoginActivity.this).defaultDialog(
-                            getString(R.string.title_input_invalid, "Usuario"),
-                            Html.fromHtml(getString(R.string.error_login_api)).toString()).show();
-                    return;
-                }
-
-                // Define o Valor do  "Lembrar Usuario" para as seções futuras
-                MaterialCheckBox checkBox_remember = findViewById(R.id.checkbox_remember);
-                ManagerSharedPreferences preferences = new ManagerSharedPreferences(LoginActivity.this,
-                        ManagerSharedPreferences.NAME_PREFERENCE);
-                preferences.rememberLogin(checkBox_remember.isChecked());
-
-                // Salva o Usuario no Banco de Dados
-                ManagerDataBase managerDataBase = new ManagerDataBase(LoginActivity.this);
-                if (!managerDataBase.insertUser(userAPI)) {
-                    new AlertDialogPersonalized(LoginActivity.this).defaultDialog(
-                            getString(R.string.title_no_register_api),
-                            managerDataBase.getError_operation()).show();
-                } else {
-                    // Inicia a Pagina Index (Produtos) e Finaliza essa Activity
-                    startActivity(new Intent(LoginActivity.this, IndexActivity.class));
-                    finishAffinity();
-                }
-            } else {
+                return;
+            } else if (!validationInputs()) {
                 new SnackBarPersonalized(findViewById(R.id.layout_initial))
                         .defaultSnackBar(getString(R.string.error_login)).show();
+                return;
             }
+
+            managerServices.closeKeyboard(this);
+            // Obtem o Token do Usuario da API para obter mais Informações do Usuario
+            // todo obter informações do Usuario (Cadastro, Endereço, Metodos de Pagamento e Lista de Desejo)
+            UserAPI userAPI = new UserAPI(LoginActivity.this);
+            String token = userAPI.getTokenUser(userLogin.getEmail(), userLogin.getPassword());
+            if (token.equals("")) {
+                new AlertDialogPersonalized(LoginActivity.this).defaultDialog(
+                        getString(R.string.title_input_invalid, "Usuario"),
+                        userAPI.getError_operation()).show();
+                return;
+            }
+
+            User user_receivedAPI = userAPI.getInfoUserAPI(userLogin.getEmail(),
+                    userLogin.getPassword(), token);
+            if (user_receivedAPI == null) {
+                new AlertDialogPersonalized(LoginActivity.this).defaultDialog(
+                        getString(R.string.title_error_api), userAPI.getError_operation()).show();
+                return;
+            }
+
+            // Armazena os Valores Simples que serão utilizados depois no APP
+            ManagerSharedPreferences preferences = new ManagerSharedPreferences(LoginActivity.this,
+                    ManagerSharedPreferences.NAME_PREFERENCE);
+            preferences.setJsonWebTokenUser(token);
+
+            // Define o Valor do "Lembrar Usuario
+            MaterialCheckBox checkBox_remember = findViewById(R.id.checkbox_remember);
+            preferences.setRememberLogin(checkBox_remember.isChecked());
+
+            // Salva o Usuario no Banco de Dados
+            ManagerDataBase managerDataBase = new ManagerDataBase(LoginActivity.this);
+            if (!managerDataBase.insertUser(user_receivedAPI)) {
+                new AlertDialogPersonalized(LoginActivity.this).defaultDialog(
+                        getString(R.string.title_no_register_api),
+                        managerDataBase.getError_operation()).show();
+            } else {
+                // Inicia a Pagina Index (Produtos) e Finaliza essa Activity
+                startActivity(new Intent(LoginActivity.this, IndexActivity.class));
+                finishAffinity();
+            }
+
         });
     }
 

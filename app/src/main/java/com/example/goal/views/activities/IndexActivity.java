@@ -155,7 +155,7 @@ public class IndexActivity extends AppCompatActivity {
                 new ManagerSharedPreferences(IndexActivity.this,
                         ManagerSharedPreferences.NAME_PREFERENCE).clearPreferences();
                 startActivity(new Intent(IndexActivity.this, OpenActivity.class));
-                finish();
+                finishAffinity();
                 break;
             default:
                 new SnackBarPersonalized(drawerLayout).defaultSnackBar(

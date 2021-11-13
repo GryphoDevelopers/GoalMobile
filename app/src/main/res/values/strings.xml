@@ -33,6 +33,7 @@
     </string>
 
     <!-- Mensagens de Erro da API -->
+    <string name="error_400">Dados Inseridos Incorretos ! Tente Novamente</string>
     <string name="error_404">Os dados Inseridos não Existe ! Tente Novamente</string>
     <string name="error_500">Dados não Encontrados ! Tente Novamente</string>
     <string name="error_generic">Houve um Erro ao executar a Solicitação ! Tente Novamente</string>
