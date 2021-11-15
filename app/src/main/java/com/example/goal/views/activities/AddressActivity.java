@@ -1,5 +1,7 @@
 package com.example.goal.views.activities;
 
+import static com.example.goal.managers.ManagerResources.EXCEPTION;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -310,10 +312,9 @@ public class AddressActivity extends AppCompatActivity {
         try {
             String number = Objects.requireNonNull(edit_number.getText()).toString();
             address.setNumber(number.equals("") ? 0 : Integer.parseInt(number));
-        } catch (NumberFormatException ex) {
-            String EXCEPTION_CONVERT = "EX_CONVERT";
+        } catch (Exception ex) {
             String NAME_CLASS = "RegisterForPurchases";
-            Log.e(EXCEPTION_CONVERT, NAME_CLASS + " - Erro ao Converter o Numero do Endereço");
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro ao Converter o Numero do Endereço");
             ex.printStackTrace();
         }
         address.setComplement(Objects.requireNonNull(edit_complement.getText()).toString());

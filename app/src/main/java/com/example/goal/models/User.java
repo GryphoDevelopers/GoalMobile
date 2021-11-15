@@ -1,5 +1,9 @@
 package com.example.goal.models;
 
+import static com.example.goal.managers.ManagerResources.EXCEPTION;
+import static com.example.goal.managers.ManagerResources.LOCALE_BR;
+import static com.example.goal.managers.ManagerResources.PATTERN_DATE;
+import static com.example.goal.managers.ManagerResources.TIME_ZONE;
 import static com.example.goal.managers.SearchInternet.GET;
 
 import android.content.Context;
@@ -8,6 +12,7 @@ import android.text.Html;
 import android.util.Log;
 
 import com.example.goal.R;
+import com.example.goal.managers.ManagerResources;
 import com.example.goal.managers.SearchInternet;
 import com.example.goal.views.widgets.MaskInputPersonalized;
 
@@ -23,11 +28,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -36,18 +39,11 @@ import java.util.concurrent.Future;
  * Classe User: Classe Usada para manipular as informações dos Usuario (Clientes e Vendedores)
  */
 public class User {
-    // Constantes Usadas na manipulação da Data
-    public static final String TIME_ZONE = "America/Sao_Paulo";
-    public static final Locale LOCALE_BR = new Locale("pt", "BR");
-    public static final String PATTERN_DATE = "dd/MM/yyyy";
     // Constantes da Força da Senha
     private static final int LOW_STRENGTH = 1;
     private static final int OK_STRENGTH = 2;
     // Constantes de Possiveis Exception usadads nos Logs
     private final String NAME_CLASS = "User";
-    private final String EXECUTION_EXCEPTION = "Exception Execution";
-    private final String INTERRUPTED_EXCEPTION = "Exception Interrupted";
-    private final String EXCEPTION_GLOBAL = "Exception General";
     // Constantes Usadas nos Erros
     private final String INPUT_NULL;
     private final String INPUT_MIN_LENGTH;
@@ -106,15 +102,21 @@ public class User {
     public static User compareUser(User oldUser, User newUser) {
 
         // Verifica para cada Propriedade do Usuario se foi preenchida
-        if (newUser.getId_user().equals("")) newUser.setId_user(oldUser.getId_user());
-        if (newUser.getName().equals("")) newUser.setName(oldUser.getName());
-        if (newUser.getNickname().equals("")) newUser.setNickname(oldUser.getNickname());
-        if (newUser.getEmail().equals("")) newUser.setEmail(oldUser.getEmail());
-        if (newUser.getString_dateBirth().equals(""))
+        if (ManagerResources.isNullOrEmpty(newUser.getId_user()))
+            newUser.setId_user(oldUser.getId_user());
+        if (ManagerResources.isNullOrEmpty(newUser.getName())) newUser.setName(oldUser.getName());
+        if (ManagerResources.isNullOrEmpty(newUser.getNickname()))
+            newUser.setNickname(oldUser.getNickname());
+        if (ManagerResources.isNullOrEmpty(newUser.getEmail()))
+            newUser.setEmail(oldUser.getEmail());
+        if (ManagerResources.isNullOrEmpty(newUser.getString_dateBirth()))
             newUser.setDate_birth(oldUser.getString_dateBirth());
-        if (newUser.getUnmaskPhone().equals("")) newUser.setPhone(oldUser.getUnmaskPhone());
-        if (newUser.getUnmaskCnpj().equals("")) newUser.setCnpj(oldUser.getUnmaskCnpj());
-        if (newUser.getUnmaskCpf().equals("")) newUser.setCpf(oldUser.getUnmaskCpf());
+        if (ManagerResources.isNullOrEmpty(newUser.getUnmaskPhone()))
+            newUser.setPhone(oldUser.getUnmaskPhone());
+        if (ManagerResources.isNullOrEmpty(newUser.getUnmaskCnpj()))
+            newUser.setCnpj(oldUser.getUnmaskCnpj());
+        if (ManagerResources.isNullOrEmpty(newUser.getUnmaskCpf()))
+            newUser.setCpf(oldUser.getUnmaskCpf());
 
         return newUser;
     }
@@ -128,7 +130,7 @@ public class User {
      * @return true/false
      */
     public boolean validationName(String name) {
-        if (name == null || name.equals("")) {
+        if (ManagerResources.isNullOrEmpty(name)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (name.length() < 3) {
@@ -152,7 +154,7 @@ public class User {
      * @return true/false
      */
     public boolean validationEmail(String email) {
-        if (email == null || email.equals("")) {
+        if (ManagerResources.isNullOrEmpty(email)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (email.length() < 10) {
@@ -207,15 +209,13 @@ public class User {
 
             }
 
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(INTERRUPTED_EXCEPTION, NAME_CLASS + " - Tarefa Assincrona Interrompida");
-            ex.printStackTrace();
-        } catch (ExecutionException ex) {
-            error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXECUTION_EXCEPTION, NAME_CLASS + " - Falha na Execução da Tarefa Assincrona");
+            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro na Consulta do Email: " +
+                    ex.getClass().getName());
             ex.printStackTrace();
         }
+
         // Alguma etapa não foi bem sucedida
         return false;
     }
@@ -229,7 +229,7 @@ public class User {
      * @return true/false
      */
     public boolean validationNickname(String nickname) {
-        if (nickname == null || nickname.equals("")) {
+        if (ManagerResources.isNullOrEmpty(nickname)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (nickname.length() < 5) {
@@ -252,14 +252,14 @@ public class User {
      * @return true/false
      */
     public boolean validationCpf(String cpf) {
-        if (cpf != null && !cpf.equals("")) {
+        if (!ManagerResources.isNullOrEmpty(cpf)) {
             if (cpf.length() != 14) {
                 error_validation = String.format(INPUT_NOT_FORMAT, "CPF", "000.000.000-00");
                 return false;
             }
 
             String cfp_unmask = MaskInputPersonalized.remove_mask(cpf, MaskInputPersonalized.DEFAULT_REGEX);
-            if (cfp_unmask != null && !cfp_unmask.equals("")) {
+            if (!ManagerResources.isNullOrEmpty(cfp_unmask)) {
                 if (cfp_unmask.length() != 11) {
                     error_validation = String.format(INPUT_MIN_LENGTH, "CPF", "11 Numeros");
                     return false;
@@ -294,14 +294,14 @@ public class User {
      * @return true/false
      */
     public boolean validationCnpj(String cnpj) {
-        if (cnpj != null && !cnpj.equals("")) {
+        if (!ManagerResources.isNullOrEmpty(cnpj)) {
             if (cnpj.length() != 18) {
                 error_validation = String.format(INPUT_NOT_FORMAT, "CNPJ", "00.000.000/000X-YY");
                 return false;
             }
 
             String cnpj_unmask = MaskInputPersonalized.remove_mask(cnpj, MaskInputPersonalized.DEFAULT_REGEX);
-            if (cnpj_unmask != null && !cnpj_unmask.equals("")) {
+            if (!ManagerResources.isNullOrEmpty(cnpj_unmask)) {
                 if (cnpj_unmask.length() != 14) {
                     error_validation = String.format(INPUT_MIN_LENGTH, "CNPJ", "14 Numeros");
                     return false;
@@ -328,11 +328,11 @@ public class User {
     public boolean validationNumberCnpj(String cnpj) {
         try {
             String unmask_cnpj = "";
-            if (cnpj != null && !cnpj.equals("")) {
+            if (!ManagerResources.isNullOrEmpty(cnpj)) {
                 unmask_cnpj = MaskInputPersonalized.remove_mask(cnpj, MaskInputPersonalized.DEFAULT_REGEX);
             }
 
-            if (unmask_cnpj == null || unmask_cnpj.equals("")) {
+            if (ManagerResources.isNullOrEmpty(unmask_cnpj)) {
                 // CNPJ com ou sem Mascara é invalido
                 error_validation = INPUT_NULL;
                 return false;
@@ -374,15 +374,13 @@ public class User {
                 error_validation = CNPJ_INVALID;
             }
 
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(INTERRUPTED_EXCEPTION, NAME_CLASS + " - Tarefa Assincrona Interrompida");
-            ex.printStackTrace();
-        } catch (ExecutionException ex) {
-            error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXECUTION_EXCEPTION, NAME_CLASS + " - Falha na Execução da Tarefa Assincrona");
+            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro na Consulta do CNPJ: " +
+                    ex.getClass().getName());
             ex.printStackTrace();
         }
+
         // Alguma etapa não foi bem sucedida
         return false;
     }
@@ -397,7 +395,7 @@ public class User {
      * @return true/false
      */
     public boolean validationPassword(String password) {
-        if (password == null || password.equals("")) {
+        if (ManagerResources.isNullOrEmpty(password)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (password.length() < 5) {
@@ -441,7 +439,7 @@ public class User {
         String confirmPassword = user.getConfirmPassword();
         String password = user.getPassword();
 
-        if (confirmPassword == null || confirmPassword.equals("")) {
+        if (ManagerResources.isNullOrEmpty(confirmPassword)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (validationPassword(confirmPassword)) {
@@ -461,14 +459,14 @@ public class User {
      * @return true/false
      */
     public boolean validationBrazilianPhone(String phone) {
-        if (phone != null && !phone.equals("")) {
+        if (!ManagerResources.isNullOrEmpty(phone)) {
             if (phone.length() != 15) {
                 error_validation = String.format(INPUT_NOT_FORMAT, "Telefone", "(0XX) 90000-0000");
                 return false;
             }
 
             String unmask_phone = MaskInputPersonalized.remove_mask(phone, MaskInputPersonalized.DEFAULT_REGEX);
-            if (unmask_phone != null && !unmask_phone.equals("")) {
+            if (!ManagerResources.isNullOrEmpty(unmask_phone)) {
                 if (unmask_phone.length() != 12) {
                     error_validation = String.format(INPUT_MIN_LENGTH,
                             "Telefone", "12 Digitos (DDD + Numero)");
@@ -503,7 +501,7 @@ public class User {
      * @return true/false
      */
     public boolean validationInternationPhone(String internation_phone) {
-        if (internation_phone == null || internation_phone.equals("")) {
+        if (ManagerResources.isNullOrEmpty(internation_phone)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (!internation_phone.matches("^[0-9+]*")) {
@@ -524,7 +522,7 @@ public class User {
      */
     public boolean validationDateBirth(String date_birth) {
         try {
-            if (date_birth == null || date_birth.equals("")) {
+            if (ManagerResources.isNullOrEmpty(date_birth)) {
                 error_validation = INPUT_NULL;
                 return false;
             } else if (!date_birth.matches("[0-9]{2}/[0-9]{2}/[0-9]{4}")) {
@@ -613,7 +611,7 @@ public class User {
             return false;
         } catch (Exception ex) {
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXCEPTION_GLOBAL, NAME_CLASS + " - Falha na Manipulação da Data");
+            Log.e(EXCEPTION, NAME_CLASS + " - Falha na Manipulação da Data");
             ex.printStackTrace();
             return false;
         }
@@ -818,7 +816,7 @@ public class User {
         } catch (Exception ex) {
             this.date_birth = null;
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXCEPTION_GLOBAL, NAME_CLASS + " - Falha na Conversão da Data");
+            Log.e(EXCEPTION, NAME_CLASS + " - Falha na Conversão da Data");
             ex.printStackTrace();
         }
     }
@@ -838,7 +836,7 @@ public class User {
             return dateFormatDefault.parse(dateFormatDefault.format(new Date()));
         } catch (Exception ex) {
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXCEPTION_GLOBAL, NAME_CLASS + " - Falha na Conversão da Data");
+            Log.e(EXCEPTION, NAME_CLASS + " - Falha na Conversão da Data");
             ex.printStackTrace();
             return null;
         }

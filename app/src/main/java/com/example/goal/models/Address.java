@@ -1,5 +1,7 @@
 package com.example.goal.models;
 
+import static com.example.goal.managers.ManagerResources.EXCEPTION;
+import static com.example.goal.managers.ManagerResources.LOCALE_BR;
 import static com.example.goal.managers.SearchInternet.GET;
 
 import android.content.Context;
@@ -8,6 +10,7 @@ import android.text.Html;
 import android.util.Log;
 
 import com.example.goal.R;
+import com.example.goal.managers.ManagerResources;
 import com.example.goal.managers.SearchInternet;
 import com.example.goal.views.widgets.MaskInputPersonalized;
 
@@ -27,9 +30,6 @@ public class Address {
 
     // Constantes de Possiveis Exception usadads nos Logs
     private final String NAME_CLASS = "Address";
-    private final String EXECUTION_EXCEPTION = "Exception Execution";
-    private final String INTERRUPTED_EXCEPTION = "Exception Interrupted";
-    private final String EXCEPTION = "Exception";
 
     // Constantes Usadas nos Erros
     private final String INPUT_NULL;
@@ -85,7 +85,7 @@ public class Address {
 
         String state = address.getState();
 
-        if (state == null || state.equals("")) {
+        if (ManagerResources.isNullOrEmpty(state)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (address.getCountry().equals("Estrangeiro")) {
@@ -111,7 +111,7 @@ public class Address {
      */
     public boolean validationCity(Address address) {
         String city = address.getCity();
-        if (city == null || city.equals("")) {
+        if (ManagerResources.isNullOrEmpty(city)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (address.getCountry().equals("Estrangeiro")) {
@@ -133,7 +133,7 @@ public class Address {
      * @return true/false
      */
     public boolean validationAddress(String address) {
-        if (address == null || address.equals("")) {
+        if (ManagerResources.isNullOrEmpty(address)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (address.length() < 3) {
@@ -155,7 +155,7 @@ public class Address {
      * @return true/false
      */
     public boolean validationDistrict(String district) {
-        if (district == null || district.equals("")) {
+        if (ManagerResources.isNullOrEmpty(district)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (district.length() < 3) {
@@ -196,7 +196,7 @@ public class Address {
      * @return true/false
      */
     public boolean validationComplement(String complement) {
-        if (complement == null || complement.equals("")) {
+        if (ManagerResources.isNullOrEmpty(complement)) {
             return true;
         } else {
             // Caso Preenchido, tem que ser validado
@@ -222,14 +222,14 @@ public class Address {
      */
     public boolean validationCEP(String cep) {
         try {
-            if (cep != null && !cep.equals("")) {
+            if (!ManagerResources.isNullOrEmpty(cep)) {
                 if (cep.length() != 9) {
                     error_validation = String.format(INPUT_NOT_FORMAT, "CEP", "00000-000");
                     return false;
                 }
 
                 String cep_unmask = MaskInputPersonalized.remove_mask(cep, MaskInputPersonalized.DEFAULT_REGEX);
-                if (cep_unmask != null && !cep_unmask.equals("")) {
+                if (!ManagerResources.isNullOrEmpty(cep_unmask)) {
                     if (cep_unmask.matches("[0-9]*")) {
                         int cep_convert = Integer.parseInt(cep_unmask);
 
@@ -303,12 +303,12 @@ public class Address {
                 if (infos_cep != null) {
                     // Deixa em Letras minusculas a Serialização
                     for (int i = 0; i < infos_cep.length; i++) {
-                        infos_cep[i] = infos_cep[i].toLowerCase();
+                        infos_cep[i] = getNormalizedString(infos_cep[i]);
                     }
                     // Valida os Dados
-                    if (infos_cep[0].equals(address.getAddress().toLowerCase()) &&
-                            infos_cep[1].equals(address.getDistrict().toLowerCase()) &&
-                            infos_cep[2].equals(address.getState().toLowerCase())) {
+                    if (infos_cep[0].equals(getNormalizedString(address.getAddress())) &&
+                            infos_cep[1].equals(getNormalizedString(address.getDistrict())) &&
+                            infos_cep[2].equals(getNormalizedString(address.getState()))) {
                         return true;
                     } else error_validation = String.format(CEP_INVALID, infos_cep);
                 } else error_validation = serializationInfos.getError_operation();
@@ -349,7 +349,7 @@ public class Address {
      */
     public String[] getCities(String uf) {
         try {
-            if (uf == null || uf.equals("") || uf.length() != 2) {
+            if (ManagerResources.isNullOrEmpty(uf) || uf.length() != 2) {
                 error_validation = String.format(INPUT_INVALID, "Estado/UF");
                 return null;
             }
@@ -491,6 +491,42 @@ public class Address {
             Log.e(EXCEPTION, NAME_CLASS + " - Erro na Obtenção do String Array: " + ex.getClass().getName());
             ex.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * Normaliza uma String Passada. Irá retornar um String em Letras Minusculas e Sem espaço no Fim
+     *
+     * @return {@link String}|""
+     */
+    public String getNormalizedString(String old_string) {
+        try {
+            if (ManagerResources.isNullOrEmpty(old_string)) return "";
+
+            String normalized = old_string.toLowerCase(LOCALE_BR);
+
+            // Inverte a String
+            StringBuilder reverse_string = new StringBuilder();
+            reverse_string.append(normalized);
+
+            // Obtem uma lista das letras das Strings
+            char[] reverse_char = reverse_string.reverse().toString().toCharArray();
+            int split_length = normalized.length();
+
+            // Contabiliza quantos espaços em branco tem no fim da String
+            for (int i = 0; i < split_length; i++) {
+                if (reverse_char[i] == ' ') split_length--;
+                else i = split_length;
+            }
+
+            // Corta a String Retirando os Espaços em Branco
+            normalized = normalized.substring(0, split_length);
+
+            return normalized;
+        } catch (Exception ex) {
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro na Normalização da String: " + ex.getClass().getName());
+            ex.printStackTrace();
+            return "";
         }
     }
 

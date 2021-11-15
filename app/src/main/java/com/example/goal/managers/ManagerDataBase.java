@@ -1,5 +1,7 @@
 package com.example.goal.managers;
 
+import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -201,7 +203,8 @@ public class ManagerDataBase extends SQLiteOpenHelper {
         User userDatabase = this.getUserDatabase();
 
         if (userDatabase == null) return false;
-        else if (!userDatabase.getId_user().equals(newUser.getId_user())) return insertUser(newUser);
+        else if (!userDatabase.getId_user().equals(newUser.getId_user()))
+            return insertUser(newUser);
         User finalUser = User.compareUser(userDatabase, newUser);
 
         ContentValues values = setUpValuesUser(finalUser);
@@ -326,9 +329,9 @@ public class ManagerDataBase extends SQLiteOpenHelper {
             values.put(PASSWORD_USER, user.getPassword());
             values.put(DATE_BIRTH, user.getString_dateBirth());
 
-            if (user.getUnmaskCnpj() != null && user.getUnmaskCpf() != null) {
+            if (isNullOrEmpty(user.getUnmaskCnpj()) && isNullOrEmpty(user.getUnmaskCpf())) {
                 // Faz parte do Cadastro Completo (Opcional)
-                values.put(DOCUMENT_USER, user.getUnmaskCnpj().equals("") ? user.getUnmaskCpf() : user.getUnmaskCnpj());
+                values.put(DOCUMENT_USER, isNullOrEmpty(user.getUnmaskCnpj()) ? user.getUnmaskCpf() : user.getUnmaskCnpj());
                 values.put(PHONE_USER, user.getUnmaskPhone());
             }
             return values;
