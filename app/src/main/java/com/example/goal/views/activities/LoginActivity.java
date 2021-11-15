@@ -13,7 +13,7 @@ import com.example.goal.managers.ManagerInputErrors;
 import com.example.goal.managers.ManagerServices;
 import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.User;
-import com.example.goal.models.UserAPI;
+import com.example.goal.models.api.UserAPI;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
 import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.checkbox.MaterialCheckBox;

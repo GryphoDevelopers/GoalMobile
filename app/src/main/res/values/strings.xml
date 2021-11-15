@@ -75,13 +75,15 @@
     <!-- Cadastro (SingUp) -->
     <string name="title_singUp">Nos fale um pouco sobre você !</string>
     <string name="title_personal">Dados Pessoais</string>
+    <string name="title_documents">Documentos Pessoais</string>
     <string name="title_login">Dados de Login</string>
     <string name="title_termsUse">Termos de Uso</string>
     <string-array name="options_peopleType">
         <item>Vendedor</item>
         <item>Cliente</item>
     </string-array>
-    <string name="label_name">Nome e Sobrenome</string>
+    <string name="label_name">Nome</string>
+    <string name="label_lastName">Sobrenome</string>
     <string name="label_date_birth">Data de Nascimento</string>
     <string name="label_nickname">Nome de Usuario</string>
     <string name="label_peopleType">Você é um <b>Vendedor</b> ou <b>Cliente</b> ?</string>
@@ -89,6 +91,7 @@
     <string name="label_password">Senha</string>
     <string name="label_confirmPassword">Confirmar Senha</string>
     <string name="hint_name">Qual é o seu <b>Nome</b> ?</string>
+    <string name="hint_lastName">Qual é o seu <b>Sobrenome</b> ?</string>
     <string name="hint_date_birth">Ex: 20/12/2005</string>
     <string name="hint_nickname">Ex: "gabriel_souza"</string>
     <string name="hint_email">Digite seu endereço de <b>E-mail</b></string>
@@ -104,10 +107,6 @@
     <string name="title_country">Dados do País</string>
     <string name="title_address">Dados do Endereço</string>
     <string name="label_typeDocument">Usar <b>CPF</b> ou <b>CNPJ</b> ?</string>
-    <string-array name="cpf_cnpj">
-        <item>CPF</item>
-        <item>CNPJ</item>
-    </string-array>
     <string name="label_cpf">CPF</string>
     <string name="label_cnpj">CNPJ</string>
     <string name="label_telephone">Telefone</string>
@@ -135,6 +134,7 @@
         <item>Brasil</item>
         <item>Estrangeiro</item>
     </string-array>
+    <string name="option_foreign">Estrangeiro</string>
     <string-array name="state">
         <item>Acre</item>
         <item>Alagoas</item>

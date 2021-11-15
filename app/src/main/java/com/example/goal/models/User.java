@@ -65,8 +65,7 @@ public class User {
     private String error_validation = "";
     private Date date_birth = null;
     private String name = "";
-    //todo: atlerar e utilizar a variavel de sobrenome
-    private String last_name = "TEste";
+    private String last_name = "";
     private String email = "";
     private String nickname = "";
     private String cpf = "";

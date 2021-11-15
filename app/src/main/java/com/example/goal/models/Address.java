@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -72,29 +71,6 @@ public class Address {
         INPUT_INVALID = context.getString(R.string.validation_unavailable);
         CEP_INVALID = Html.fromHtml(context.getString(R.string.validation_invalid_cep)).toString();
         MESSAGE_EXCEPTION = context.getString(R.string.error_exception);
-    }
-
-    /**
-     * Valida o País Informado
-     *
-     * @param country País informado pelo Usuario
-     * @return true/false
-     */
-    public boolean validationCountry(String country) {
-        String[] countries = context.getResources().getStringArray(R.array.pays);
-
-        if (country == null || country.equals("")) {
-            error_validation = INPUT_NULL;
-            return false;
-        }
-
-        // Busca no Array se Existe a Opção Passada
-        for (String itemCountry : countries) {
-            if (itemCountry.equals(country)) return true;
-        }
-
-        error_validation = INPUT_NULL;
-        return false;
     }
 
     /**
@@ -280,8 +256,9 @@ public class Address {
             return false;
         } catch (Exception ex) {
             error_validation = String.format(INPUT_INVALID, "CEP");
-            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro na Conversão do CEP");
             ex.printStackTrace();
+            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro na Conversão do CEP: " +
+                    ex.getClass().getName());
             return false;
         }
     }
@@ -337,13 +314,9 @@ public class Address {
                 } else error_validation = serializationInfos.getError_operation();
             }
 
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(INTERRUPTED_EXCEPTION, NAME_CLASS + " - Tarefa Assincrona Interrompida");
-            ex.printStackTrace();
-        } catch (ExecutionException ex) {
-            error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXECUTION_EXCEPTION, NAME_CLASS + " - Falha na Execução da Tarefa Assincrona");
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro na Validação do CEP: " + ex.getClass().getName());
             ex.printStackTrace();
         }
         return false;
@@ -362,8 +335,8 @@ public class Address {
             return context.getResources().getStringArray(R.array.uf)[positionOfArray];
         } catch (Exception ex) {
             error_validation = String.format(INPUT_INVALID, "Estado");
+            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro ao Obter a UF: " + ex.getClass().getName());
             ex.printStackTrace();
-            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro ao Obter a UF");
             return null;
         }
     }
@@ -415,13 +388,9 @@ public class Address {
                 } else error_validation = serializationInfos.getError_operation();
             }
 
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(INTERRUPTED_EXCEPTION, NAME_CLASS + " - Tarefa Assincrona Interrompida");
-            ex.printStackTrace();
-        } catch (ExecutionException ex) {
-            error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXECUTION_EXCEPTION, NAME_CLASS + " - Falha na Execução da Tarefa Assincrona");
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro na Obtenção das Cidades: " + ex.getClass().getName());
             ex.printStackTrace();
         }
         return null;
@@ -505,6 +474,24 @@ public class Address {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    /**
+     * Obtem a Nacionalidade a partir de um valor booleano
+     *
+     * @param isForeign Variavel boelana que define se o Usuario é Brasileiro ou Estrangeiro
+     * @return {@link String}|null
+     */
+    public String getCountryForBoolean(boolean isForeign) {
+        try {
+            String[] array_countries = context.getResources().getStringArray(R.array.pays);
+            return isForeign ? array_countries[1] : array_countries[0];
+        } catch (Exception ex) {
+            error_validation = MESSAGE_EXCEPTION;
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro na Obtenção do String Array: " + ex.getClass().getName());
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     // Obtem os Erros das Etapas de Validação

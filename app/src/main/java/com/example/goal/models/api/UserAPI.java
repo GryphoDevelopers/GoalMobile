@@ -1,4 +1,4 @@
-package com.example.goal.models;
+package com.example.goal.models.api;
 
 import static com.example.goal.managers.SearchInternet.API_GOAL_INSERT_USER;
 import static com.example.goal.managers.SearchInternet.API_GOAL_TOKEN;
@@ -10,6 +10,8 @@ import android.util.Log;
 
 import com.example.goal.R;
 import com.example.goal.managers.SearchInternet;
+import com.example.goal.models.SerializationInfos;
+import com.example.goal.models.User;
 
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +28,7 @@ public class UserAPI {
     private final String NAME_CLASS = "UserAPI";
     private final String BLANK_GUID = "00000000-0000-0000-0000-000000000000";
     private final String ERROR_SEARCH = "Error Search";
-    private String error_operation;
+    private String error_operation = "";
 
     public UserAPI(Context context) {
         this.context = context;
