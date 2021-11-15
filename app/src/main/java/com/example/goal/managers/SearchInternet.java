@@ -2,6 +2,7 @@ package com.example.goal.managers;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.KITKAT;
+import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
 
 import android.content.Context;
 import android.text.Html;
@@ -134,7 +135,6 @@ public class SearchInternet {
             urlConnection.setRequestMethod(method);
 
             // Configurando o Header (Tipo do Conteudo, Retorno e Token (Se Necessario))
-            urlConnection.setRequestProperty("Content-Type", "application/json; utf-8");
             urlConnection.setRequestProperty("Accept", "application/json");
             if (token_authorization != null) {
                 urlConnection.setRequestProperty("Authorization", String.format(
@@ -143,23 +143,25 @@ public class SearchInternet {
 
             // Conforme a necessidade do Verbo HTTPs, valida o Body
             if (!method.equals(GET)) {
-                if (json_body.equals("")) {
+                if (isNullOrEmpty(json_body)) {
                     // Body não Formado
-                    if (error_search.equals(""))
+                    if (isNullOrEmpty(error_search))
                         error_search = context.getString(R.string.error_500);
                     return null;
                 } else {
-                    //set the content length of the body
+                    // Configura as propriedades do Body
+                    urlConnection.setRequestProperty("Content-Type", "application/json");
                     urlConnection.setDoOutput(true);
 
-                    // Formação do Body da API e Conversão do Body de String para Byte em UTF-8
-                    OutputStream outputStream = urlConnection.getOutputStream();
+                    // Conversão de String para Byte em UTF-8 e COnfiguração do Tamanho no Header
                     byte[] input = SDK_INT >= KITKAT ? json_body.getBytes(StandardCharsets.UTF_8)
                             : json_body.getBytes("UTF-8");
+                    urlConnection.setRequestProperty("Content-Length", String.valueOf(input.length));
 
                     // Cria o Body do Post
+                    OutputStream outputStream = urlConnection.getOutputStream();
                     outputStream.write(input, 0, input.length);
-                    //outputStream.close();
+                    outputStream.close();
                 }
             }
 

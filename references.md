@@ -5,6 +5,7 @@
 - [TI Enxame - Subir o ScrollView](https://www.ti-enxame.com/pt/android/como-rolar-para-o-topo-do-layout-longo-do-scrollview/970871069/)
 - [StackOverflow - ProgressBar no AlertDialog](https://stackoverflow.com/questions/10977150/showing-progress-bar-in-alert-dialog/27320282)
 - [StackOverflow - Fechar a SnackBar](https://stackoverflow.com/questions/35347711/snackbar-click-to-dismiss)
+- [Guru's Blog - Requisições HTTPs com Body](http://guruparang.blogspot.com/2016/01/example-on-working-with-json-and.html)
 
 #### Correções
 - [Tutorial CUP - Correção nas Tarefas Assincronas](https://www.tutorialcup.com/pt/java/executorservice-in-java.htm)

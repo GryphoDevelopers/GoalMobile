@@ -28,17 +28,15 @@
   - [X] Obter Token do Usuario
   - [X] Armazenar Token com o usuario
 - [X] Implementação do Cadastro do Usuario na API
+- [X] Separar Nome do Sobrenome
+- [X] Separar em Activities: Cadastro de Endereço e Cadastro Completo do Usuario (Telefone, CNPJ/CPF)
+- [X] Correção TextWatcher
+- [X] Fechar o Teclado ao selecionar a opçao dos estados/cidades/login/cadastro
   
 - [ ] Configuração das Activities
 - [ ] Validação de Pagamento
 - [ ] Criação da Classe Produtos (Validações)
 - [ ] Login usando Dados Pessoais + Token (JWT)
-
-14/11
-- [ ] Fechar o Teclado ao selecionar a opçao dos estados/cidades/login/cadastro
-- [ ] Separar Nome do Sobrenome
-- [ ] Separar em Activities: Cadastro de Endereço e Cadastro Completo do Usuario (Telefone, CNPJ/CPF)
-- [ ] Correção TextWatcher
 - [ ] Configuração dos Fragments
 
 

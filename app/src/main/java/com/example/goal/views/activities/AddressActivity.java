@@ -165,8 +165,8 @@ public class AddressActivity extends AppCompatActivity {
             String state = array_state[position];
             addressRegister.setState(state);
             setUpDropdownCities(addressRegister.getUF(state));
-            layoutEdit_city.setEnabled(true);
         });
+        autoComplete_state.setOnClickListener(v -> managerServices.closeKeyboard(this));
     }
 
     /**
@@ -199,6 +199,7 @@ public class AddressActivity extends AppCompatActivity {
                     ArrayAdapter<String> adapterCity = new ArrayAdapter<>(context,
                             android.R.layout.simple_dropdown_item_1line, array_cities);
                     autoComplete_city.setAdapter(adapterCity);
+                    layoutEdit_city.setEnabled(true);
 
                     // Listener do AutoComplete das Cidades
                     autoComplete_city.setOnItemClickListener((parent, view, position, id) -> {
@@ -207,11 +208,13 @@ public class AddressActivity extends AppCompatActivity {
                         layoutEdit_cep.setVisibility(View.VISIBLE);
                     });
                 } else {
+                    layoutEdit_city.setEnabled(false);
                     dialog_personalized.defaultDialog(getString(R.string.title_input_invalid, "Estado"),
                             addressRegister.getError_validation()).show();
                 }
             });
         });
+        autoComplete_city.setOnClickListener(v -> managerServices.closeKeyboard(this));
     }
 
     /**
