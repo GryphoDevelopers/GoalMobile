@@ -3,6 +3,8 @@ package com.example.goal.views.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.goal.R;
 import com.example.goal.managers.ManagerDataBase;
+import com.example.goal.managers.ManagerResources;
 import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.Product;
 import com.example.goal.views.fragments.ProductsFragment;
@@ -61,7 +64,7 @@ public class IndexActivity extends AppCompatActivity {
 
         // Configura os elementos da Activity
         instanceItems();
-        setSupportActionBar(toolbar);
+        setUpToolBar();
         setUpLateralMenu();
 
         // Obtem uma Lista com os Produtos
@@ -77,6 +80,23 @@ public class IndexActivity extends AppCompatActivity {
     private void instanceItems() {
         navigationView = findViewById(R.id.navigationView_categories);
         toolbar = findViewById(R.id.toolbar_category);
+    }
+
+    /**
+     * Configura a ToolBar, centralizando a Imagem no Meio
+     */
+    private void setUpToolBar() {
+        setSupportActionBar(toolbar);
+
+        // Configura a Logo no Centro da ToolBar
+        ImageView logo_goal = toolbar.findViewById(R.id.image_logo_goal);
+
+        int margin_for_center = ManagerResources.dpToPixel(IndexActivity.this, 52);
+        Toolbar.LayoutParams layoutParams = new Toolbar.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        layoutParams.setMargins(0, 0, margin_for_center, 0);
+
+        logo_goal.setLayoutParams(layoutParams);
     }
 
     /**
