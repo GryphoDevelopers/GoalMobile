@@ -6,6 +6,7 @@
 - [StackOverflow - ProgressBar no AlertDialog](https://stackoverflow.com/questions/10977150/showing-progress-bar-in-alert-dialog/27320282)
 - [StackOverflow - Fechar a SnackBar](https://stackoverflow.com/questions/35347711/snackbar-click-to-dismiss)
 - [Guru's Blog - Requisições HTTPs com Body](http://guruparang.blogspot.com/2016/01/example-on-working-with-json-and.html)
+- [StackOverflow - Inserindo Margem em DP pelo Codigo Java](https://stackoverflow.com/questions/12728255/in-android-how-do-i-set-margins-in-dp-programmatically)
 
 #### Correções
 - [Tutorial CUP - Correção nas Tarefas Assincronas](https://www.tutorialcup.com/pt/java/executorservice-in-java.htm)

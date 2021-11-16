@@ -14,9 +14,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.goal.R;
 import com.example.goal.managers.ManagerDataBase;
 import com.example.goal.managers.ManagerSharedPreferences;
+import com.example.goal.models.Product;
 import com.example.goal.views.fragments.ProductsFragment;
 import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Activity IndexActivity: Activity Inicial, onde será mostrado os Produtos e toda a parte da
@@ -36,6 +40,9 @@ public class IndexActivity extends AppCompatActivity {
     private static final int SHOES = R.id.option_shoes;
     private static final int BAGS = R.id.option_bags;
     private static final int OTHERS = R.id.option_others;
+    private static final int REGISTER_PRODUCT = R.id.option_registerProduct;
+    private static final int UPDATE_PRODUCT = R.id.option_updateProduct;
+    private static final int DELETE_PRODUCT = R.id.option_deleteProduct;
     private static final int CONTACT = R.id.option_contact;
     private static final int ABOUT = R.id.option_about;
     private static final int PRIVACY = R.id.option_privacy;
@@ -45,6 +52,7 @@ public class IndexActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private List<Product> productList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,12 @@ public class IndexActivity extends AppCompatActivity {
         instanceItems();
         setSupportActionBar(toolbar);
         setUpLateralMenu();
+
+        // Obtem uma Lista com os Produtos
+        getCatalogProducts();
+
+        // Exibe o Fragment da Tela Principal
+        setUpProductsFragment(ProductsFragment.TYPE_HOME, "");
     }
 
     /**
@@ -63,6 +77,21 @@ public class IndexActivity extends AppCompatActivity {
     private void instanceItems() {
         navigationView = findViewById(R.id.navigationView_categories);
         toolbar = findViewById(R.id.toolbar_category);
+    }
+
+    /**
+     * Obtem os Produtos que serão exibidos na Tela Inicial
+     */
+    private void getCatalogProducts() {
+        // todo Implementar busca na api
+        productList = new ArrayList<>();
+        String[] names = new String[]{"Produto 1", "Produto 2", "Produto 3", "Produto 4", "Produto 5",
+                "Produto 6", "Produto 7", "Produto 8", "Produto 9", "Produto 10", "Produto 11", "Produto 12"};
+        for (String item : names) {
+            Product product = new Product(IndexActivity.this);
+            product.setName_product(item);
+            productList.add(product);
+        }
     }
 
     /**
@@ -150,6 +179,16 @@ public class IndexActivity extends AppCompatActivity {
             case PRIVACY:
                 System.out.println("Item: Privacidade");
                 break;
+            case REGISTER_PRODUCT:
+                // todo: adicionar fragment de cadastro/atualização de produtos
+                System.out.println("Item: Adicionar Produto");
+                break;
+            case UPDATE_PRODUCT:
+                System.out.println("Item: Atualizar Produto");
+                break;
+            case DELETE_PRODUCT:
+                System.out.println("Item: Excluir Produto");
+                break;
             case EXIT:
                 new ManagerDataBase(IndexActivity.this).clearTables();
                 new ManagerSharedPreferences(IndexActivity.this,
@@ -176,7 +215,7 @@ public class IndexActivity extends AppCompatActivity {
      */
     private void setUpProductsFragment(String type, String category) {
         // Instancia a Classe do Fragment e Insere no Local de Exibição do Fragment
-        ProductsFragment productsFragment = ProductsFragment.newInstance(type, category);
+        ProductsFragment productsFragment = ProductsFragment.newInstance(type, category, productList);
         getSupportFragmentManager().beginTransaction().replace(
                 R.id.frame_fragments, productsFragment).commit();
     }

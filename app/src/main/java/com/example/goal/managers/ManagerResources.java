@@ -1,5 +1,8 @@
 package com.example.goal.managers;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.util.Locale;
 
 /**
@@ -34,5 +37,17 @@ public class ManagerResources {
      */
     public static boolean isNullOrEmpty(String check_string) {
         return check_string == null || check_string.equals("");
+    }
+
+    public static int dpToPixel(Context context, int value_dp) {
+        try {
+            // Obtem unidade de Conversão e Converte o dp para Pixels
+            float dpRatio = context.getResources().getDisplayMetrics().density;
+            return (int) (value_dp * dpRatio);
+        } catch (Exception ex) {
+            Log.e(EXCEPTION, "ManagerResources - Exceção ao Converter DP em Pixel: " + ex.getClass().getName());
+            ex.printStackTrace();
+            return 0;
+        }
     }
 }

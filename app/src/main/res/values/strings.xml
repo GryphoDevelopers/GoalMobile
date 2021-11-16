@@ -212,10 +212,17 @@
     <string name="option_shoes">Calçados</string>
     <string name="option_bags">Bolsas</string>
     <string name="option_others">Outros</string>
+    <string name="title_seller">Vendedor</string>
+    <string name="option_registerProduct">Cadastrar Produto</string>
+    <string name="option_updateProduct">Atualizar Produto</string>
+    <string name="option_deleteProduct">Excluir Produto</string>
     <string name="title_otherOptions">Empresa</string>
     <string name="option_contact">Contato GOAL</string>
     <string name="option_about">Sobre a GOAL</string>
     <string name="option_privacy">Politicas de Privacidade</string>
     <string name="option_exit">Sair</string>
+
+    <!-- Layout do RecyclerView de Produtos -->
+    <string name="description_image_product">Imagem do Produto</string>
 
 </resources>

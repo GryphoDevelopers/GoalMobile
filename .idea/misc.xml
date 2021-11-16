@@ -4,7 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/layout/activity_address.xml" value="0.25" />
+        <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/layout/activity_index.xml" value="0.14130434782608695" />
+        <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/layout/activity_profile.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/layout/activity_sing_up.xml" value="0.29110512129380056" />
+        <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/layout/fragment_products.xml" value="0.22" />
+        <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/layout/layout_header.xml" value="0.16077898550724637" />
+        <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/layout/layout_loading.xml" value="0.16077898550724637" />
+        <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/layout/layout_recycler_products.xml" value="0.25" />
+        <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/layout/line_gol.xml" value="0.16077898550724637" />
+        <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/layout/tool_bar.xml" value="0.14130434782608695" />
+        <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/menu/menu_lateral.xml" value="0.25" />
       </map>
     </option>
   </component>

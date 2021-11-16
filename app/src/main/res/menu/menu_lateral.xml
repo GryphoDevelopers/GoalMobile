@@ -50,6 +50,20 @@
         </menu>
     </item>
 
+    <item android:title="@string/title_seller">
+        <menu>
+            <item
+                android:id="@+id/option_registerProduct"
+                android:title="@string/option_registerProduct" />
+            <item
+                android:id="@+id/option_updateProduct"
+                android:title="@string/option_updateProduct" />
+            <item
+                android:id="@+id/option_deleteProduct"
+                android:title="@string/option_deleteProduct" />
+        </menu>
+    </item>
+
     <item android:title="@string/title_otherOptions">
         <menu>
             <item

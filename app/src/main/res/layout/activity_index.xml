@@ -23,8 +23,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Todo: remover esse botão de Teste-->
-
         <FrameLayout
             android:id="@+id/frame_fragments"
             android:layout_width="0dp"
