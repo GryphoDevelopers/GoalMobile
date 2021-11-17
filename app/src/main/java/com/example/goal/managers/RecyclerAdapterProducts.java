@@ -118,7 +118,8 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
             if (isSmallItem(position)) {
                 ((ItemsViewHolder) holder).image_product.setMaxWidth(120);
                 ((ItemsViewHolder) holder).image_product.setMaxHeight(120);
-                ((ItemsViewHolder) holder).txt_nameProduct.setVisibility(View.GONE);
+                //     ((ItemsViewHolder) holder).txt_nameProduct.setVisibility(View.GONE);
+                ((ItemsViewHolder) holder).txt_nameProduct.setText(productItem.getName_product());
             } else {
                 // Coloca o Texto nos Itens Grandes ou Medios
                 ((ItemsViewHolder) holder).txt_nameProduct.setText(productItem.getName_product());
@@ -256,5 +257,4 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
             super(itemView);
         }
     }
-
 }
