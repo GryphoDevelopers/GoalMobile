@@ -1,6 +1,7 @@
 package com.example.goal.managers;
 
 import static com.example.goal.managers.ManagerResources.dpToPixel;
+import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,8 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
      */
     private final List<Integer> positions_smallItems = Arrays.asList(1, 2, 3, 7, 8, 9);
 
+    private RecyclerView recyclerView;
+
     /**
      * Construtor da Classe RecyclerAdapterProducts
      *
@@ -115,7 +118,8 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
             if (isSmallItem(position)) {
                 ((ItemsViewHolder) holder).image_product.setMaxWidth(120);
                 ((ItemsViewHolder) holder).image_product.setMaxHeight(120);
-                ((ItemsViewHolder) holder).txt_nameProduct.setVisibility(View.GONE);
+                //     ((ItemsViewHolder) holder).txt_nameProduct.setVisibility(View.GONE);
+                ((ItemsViewHolder) holder).txt_nameProduct.setText(productItem.getName_product());
             } else {
                 // Coloca o Texto nos Itens Grandes ou Medios
                 ((ItemsViewHolder) holder).txt_nameProduct.setText(productItem.getName_product());
@@ -136,7 +140,18 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
             int margin_top_pixel = dpToPixel(holder.itemView.getContext(), 16);
             params.setMargins(0, margin_top_pixel, 0, 0);
             holder.itemView.setLayoutParams(params);
+
+            if (!isNullOrEmpty(productList.get(position).getName_product())) {
+                productList.add(position, new Product(holder.itemView.getContext()));
+                recyclerView.post(() -> notifyItemChanged((position) + 1));
+            }
         }
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
     }
 
     /**
@@ -242,5 +257,4 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
             super(itemView);
         }
     }
-
 }
