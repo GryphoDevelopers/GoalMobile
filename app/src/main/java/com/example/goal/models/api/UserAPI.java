@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.example.goal.R;
 import com.example.goal.managers.SearchInternet;
-import com.example.goal.models.SerializationInfos;
+import com.example.goal.models.SerializationInfo;
 import com.example.goal.models.User;
 
 import java.util.HashSet;
@@ -78,8 +78,8 @@ public class UserAPI {
 
             if (json_email == null) return null;
 
-            SerializationInfos serializationInfos = new SerializationInfos(context);
-            String[] return_user = serializationInfos.jsonStringToArray(json_email,
+            SerializationInfo serializationInfo = new SerializationInfo(context);
+            String[] return_user = serializationInfo.jsonStringToArray(json_email,
                     new String[]{"id", "name", "surname", "email", "password"});
 
             if (return_user != null) {
@@ -138,8 +138,8 @@ public class UserAPI {
 
             // Valida o Resultado e Serializa
             if (json_email != null) {
-                SerializationInfos serializationInfos = new SerializationInfos(context);
-                String[] return_user = serializationInfos.jsonStringToArray(json_email,
+                SerializationInfo serializationInfo = new SerializationInfo(context);
+                String[] return_user = serializationInfo.jsonStringToArray(json_email,
                         new String[]{"token"});
 
                 // Caso esteja disponivel, retorna o JWT (TOken) do Usuario

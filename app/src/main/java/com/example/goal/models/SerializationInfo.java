@@ -9,6 +9,7 @@ import static com.example.goal.managers.ManagerDataBase.NAME_USER;
 import static com.example.goal.managers.ManagerDataBase.NICKNAME_USER;
 import static com.example.goal.managers.ManagerDataBase.PASSWORD_USER;
 import static com.example.goal.managers.ManagerDataBase.PHONE_USER;
+import static com.example.goal.managers.ManagerResources.EXCEPTION;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -19,25 +20,21 @@ import com.example.goal.managers.ManagerDataBase;
 import com.example.goal.managers.SearchInternet;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Classe SerializationInfos: Serializa Dados para exibir para o usuario. Seja eles retornos da API
  * ou do Banco de Dados Local
  */
-public class SerializationInfos {
+public class SerializationInfo {
 
     private final Context context;
 
     // Constantes de Possiveis Exception usadas nos Logs
-    private final String NAME_CLASS = "SerializationInfos";
-    private final String EXCEPTION_JSON = "Exception JSON";
-    private final String EXCEPTION_GENERAL = "Exception";
+    private final String NAME_CLASS = "SerializationInfo";
 
     // Caso haja algum erro nos metodos
     private String error_operation;
@@ -47,48 +44,50 @@ public class SerializationInfos {
      *
      * @param context Usado para obter string do string.xml
      */
-    public SerializationInfos(Context context) {
+    public SerializationInfo(Context context) {
         this.context = context;
     }
 
     /**
-     * Serializa um JSON (recebido pela busca da {@link SearchInternet}) que possui informações em Arrays
+     * Serializa um JSON (recebido pela busca da {@link SearchInternet}) que possui informações em Arrays.
+     * A ordem dos resultados dos {@link String} Array será dada na sequencia dos parametros Passados
      *
      * @param raw_json   JSON resultante da Pesquisa na API (Resultande da {@link SearchInternet})
      * @param parameters Parametros que serão recuperados da API
      * @return String[]|null
      * @see SearchInternet
      */
-    public String[] jsonArrayToArray(String raw_json, String[] parameters) {
+    public List<String[]> jsonArrayToArray(String raw_json, String[] parameters) {
         try {
             // A partir da String, obtem um Array JSON e seu tamanho
             JSONArray jsonArray = new JSONArray(raw_json);
             int length_array = jsonArray.length();
 
             // Variavel que armazenará os resultados e laço de repetição para obte-los
-            String[] result_search = new String[length_array];
+            List<String[]> result_search = new ArrayList<>();
             for (int i = 0; i < length_array; i++) {
-                // Obtem as Informações Desejada
+                // Lista que armazenará os Valores do Array em especifico
+                List<String> items_array = new ArrayList<>();
+
+                // Obtem as Informações do Array
                 JSONObject jsonObject = new JSONObject(jsonArray.getString(i));
                 for (String item : parameters) {
-                    result_search[i] = jsonObject.getString(item);
+                    items_array.add(jsonObject.getString(item));
                 }
+
+                // Adiciona ao Array os Itens em um ArrayString
+                result_search.add(items_array.toArray(new String[0]));
             }
 
-            // Verifica se o Item foi Obtido com Sucesso
-            if (result_search[0] != null && result_search[length_array - 1] != null) {
-                // Retorna a Lista em Ordem Alfabetica
-                Arrays.sort(result_search);
-                return result_search;
-            }
+            // Retorna o Resultado do Array
+            if (!result_search.isEmpty()) return result_search;
 
-        } catch (JSONException ex) {
-            Log.e(EXCEPTION_JSON, NAME_CLASS + " - Erro na Formaçao do JSON");
-            ex.printStackTrace();
         } catch (Exception ex) {
-            Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Ocorreu uma Exceção");
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro na Serialização do JSON Array - "
+                    + ex.getClass().getName());
             ex.printStackTrace();
         }
+
         error_operation = context.getString(R.string.error_serialization);
         return null;
     }
@@ -115,11 +114,9 @@ public class SerializationInfos {
             }
 
             return response_api.toArray(new String[0]);
-        } catch (JSONException ex) {
-            Log.e(EXCEPTION_JSON, NAME_CLASS + " - Erro na Formaçao do JSON");
-            ex.printStackTrace();
         } catch (Exception ex) {
-            Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Ocorreu uma Exceção");
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro na Serialização do JSON String - " +
+                    ex.getClass().getName());
             ex.printStackTrace();
         }
 

@@ -295,8 +295,8 @@ public class Address {
 
             if (json_cep != null) {
                 // Obtem o JSON da API
-                SerializationInfos serializationInfos = new SerializationInfos(context);
-                String[] infos_cep = serializationInfos.jsonStringToArray(json_cep,
+                SerializationInfo serializationInfo = new SerializationInfo(context);
+                String[] infos_cep = serializationInfo.jsonStringToArray(json_cep,
                         new String[]{"street", "neighborhood", "state"});
 
                 // Obtem uma String[] serializada
@@ -311,7 +311,7 @@ public class Address {
                             infos_cep[2].equals(getNormalizedString(address.getState()))) {
                         return true;
                     } else error_validation = String.format(CEP_INVALID, infos_cep);
-                } else error_validation = serializationInfos.getError_operation();
+                } else error_validation = serializationInfo.getError_operation();
             }
 
         } catch (Exception ex) {
@@ -377,15 +377,24 @@ public class Address {
 
             // Valida o JSON da API
             if (json_cities != null) {
-                SerializationInfos serializationInfos = new SerializationInfos(context);
-                String[] array_cities = serializationInfos.jsonArrayToArray(json_cities,
+                SerializationInfo serializationInfo = new SerializationInfo(context);
+                List<String[]> array_cities = serializationInfo.jsonArrayToArray(json_cities,
                         new String[]{"nome"});
 
                 // Obtem o array serializado e Ordena por ordem alfabetica
                 if (array_cities != null) {
-                    Arrays.sort(array_cities);
-                    return array_cities;
-                } else error_validation = serializationInfos.getError_operation();
+                    // Obtem o Tamanho do Array e Cria uma variavel que armazenará os resultados
+                    int size_cities = array_cities.size();
+                    String[] result_cities = new String[size_cities];
+
+                    // Obtem os Items e Oganiza por Ordem alfabetica
+                    for (int i = 0; i < size_cities; i++) {
+                        result_cities[i] = array_cities.get(i)[0];
+                    }
+                    Arrays.sort(result_cities);
+
+                    return result_cities;
+                } else error_validation = serializationInfo.getError_operation();
             }
 
         } catch (Exception ex) {

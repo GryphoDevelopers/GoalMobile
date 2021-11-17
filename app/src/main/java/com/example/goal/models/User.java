@@ -199,13 +199,13 @@ public class User {
             String json_email = futureTasksList.get(0).get();
 
             if (json_email != null) {
-                SerializationInfos serializationInfos = new SerializationInfos(context);
-                String[] infos_email = serializationInfos.jsonStringToArray(json_email, new String[]{"disposable"});
+                SerializationInfo serializationInfo = new SerializationInfo(context);
+                String[] infos_email = serializationInfo.jsonStringToArray(json_email, new String[]{"disposable"});
 
                 if (infos_email != null) {
                     if (infos_email[0].equals("false")) return true;
                     error_validation = EMAIL_DISPOSABLE;
-                } else error_validation = serializationInfos.getError_operation();
+                } else error_validation = serializationInfo.getError_operation();
 
             }
 
@@ -360,15 +360,15 @@ public class User {
             String json_cnpj = futureTasksList.get(0).get();
 
             if (json_cnpj != null) {
-                SerializationInfos serializationInfos = new SerializationInfos(context);
-                String[] cnpj_reciver = serializationInfos.jsonStringToArray(json_cnpj,
+                SerializationInfo serializationInfo = new SerializationInfo(context);
+                String[] cnpj_reciver = serializationInfo.jsonStringToArray(json_cnpj,
                         new String[]{"cnpj", "descricao_situacao_cadastral"});
 
                 if (cnpj_reciver != null) {
                     if (cnpj_reciver[0].equals(unmask_cnpj) && cnpj_reciver[1].equals("Ativa")) {
                         return true;
                     } else error_validation = CNPJ_INVALID;
-                } else error_validation = serializationInfos.getError_operation();
+                } else error_validation = serializationInfo.getError_operation();
 
             } else if (error_validation.equals(context.getString(R.string.error_generic))) {
                 error_validation = CNPJ_INVALID;

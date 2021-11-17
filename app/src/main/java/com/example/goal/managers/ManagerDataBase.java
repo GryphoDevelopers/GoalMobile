@@ -13,7 +13,7 @@ import android.util.Log;
 import com.example.goal.R;
 import com.example.goal.models.Address;
 import com.example.goal.models.Product;
-import com.example.goal.models.SerializationInfos;
+import com.example.goal.models.SerializationInfo;
 import com.example.goal.models.User;
 
 import java.util.ArrayList;
@@ -255,11 +255,11 @@ public class ManagerDataBase extends SQLiteOpenHelper {
         Cursor cursor = this.getReadableDatabase().query(TABLE_USER, null, null,
                 null, null, null, null);
 
-        SerializationInfos serializationInfos = new SerializationInfos(context);
-        User userSerialized = serializationInfos.serializationUserDatabase(cursor);
+        SerializationInfo serializationInfo = new SerializationInfo(context);
+        User userSerialized = serializationInfo.serializationUserDatabase(cursor);
 
         if (cursor != null && !cursor.isClosed()) cursor.close();
-        if (userSerialized == null) error_operation = serializationInfos.getError_operation();
+        if (userSerialized == null) error_operation = serializationInfo.getError_operation();
 
         return userSerialized;
     }
