@@ -95,9 +95,8 @@ public class AlertDialogPersonalized {
         // Adiciona o ProgressIndicator com os Parametros
         linearLayout.addView(progressIndicator, layoutParams);
 
-        //Adiciona o CircularPorgress e Não permite com que o Usuario Feche o Dialog
+        //Adiciona o CircularPorgress
         alertDialogBuilder.setView(linearLayout);
-        alertDialogBuilder.setCancelable(false);
         return alertDialogBuilder.create();
     }
 
