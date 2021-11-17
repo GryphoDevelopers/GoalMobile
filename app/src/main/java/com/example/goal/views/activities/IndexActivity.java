@@ -106,7 +106,11 @@ public class IndexActivity extends AppCompatActivity {
         // todo Implementar busca na api
         productList = new ArrayList<>();
         String[] names = new String[]{"Produto 1", "Produto 2", "Produto 3", "Produto 4", "Produto 5",
-                "Produto 6", "Produto 7", "Produto 8", "Produto 9", "Produto 10", "Produto 11", "Produto 12"};
+                "Produto 6", "Produto 7", "Produto 8", "Produto 9", "Produto 10", "Produto 11",
+                "Produto 12","Produto 13", "Produto 14", "Produto 15", "Produto 16", "Produto 17",
+                "Produto 18", "Produto 19", "Produto 20", "Produto 21", "Produto 22", "Produto 23",
+                "Produto 25","Produto 25", "Produto 26", "Produto 27", "Produto 28", "Produto 29",
+                "Produto 30", "Produto 31", "Produto 32", "Produto 33", "Produto 34", "Produto 35"};
         for (String item : names) {
             Product product = new Product(IndexActivity.this);
             product.setName_product(item);

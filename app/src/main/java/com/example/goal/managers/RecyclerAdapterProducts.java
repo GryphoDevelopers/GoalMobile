@@ -1,6 +1,7 @@
 package com.example.goal.managers;
 
 import static com.example.goal.managers.ManagerResources.dpToPixel;
+import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +65,8 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
      * Lista com os Valores que definem as Posições dos Itens Menores
      */
     private final List<Integer> positions_smallItems = Arrays.asList(1, 2, 3, 7, 8, 9);
+
+    private RecyclerView recyclerView;
 
     /**
      * Construtor da Classe RecyclerAdapterProducts
@@ -136,7 +139,18 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
             int margin_top_pixel = dpToPixel(holder.itemView.getContext(), 16);
             params.setMargins(0, margin_top_pixel, 0, 0);
             holder.itemView.setLayoutParams(params);
+
+            if (!isNullOrEmpty(productList.get(position).getName_product())) {
+                productList.add(position, new Product(holder.itemView.getContext()));
+                recyclerView.post(() -> notifyItemChanged((position) + 1));
+            }
         }
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
     }
 
     /**
