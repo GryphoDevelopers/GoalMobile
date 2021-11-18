@@ -184,7 +184,8 @@ public class AddressActivity extends AppCompatActivity {
         }
 
         // Instancia a Classe de AlertDialog que será usado
-        AlertDialog progressDialog = dialog_personalized.loadingDialog();
+        AlertDialog progressDialog = dialog_personalized.loadingDialog(
+                getString(R.string.message_loadingDownload, "das Cidades"), true);
 
         // Executa uma tarefa assincrona
         Executors.newSingleThreadExecutor().execute(() -> {

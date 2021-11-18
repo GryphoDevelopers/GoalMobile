@@ -108,7 +108,8 @@ public class IndexActivity extends AppCompatActivity {
      */
     private void getCatalogProducts() {
         // Configura o AlertDialog que exibe "Carregando" enquanto busca os Itens
-        AlertDialog dialogLoading = alertDialogPersonalized.loadingDialog();
+        AlertDialog dialogLoading = alertDialogPersonalized.loadingDialog(
+                getString(R.string.message_loadingDownload, "dos Produtos"), false);
         dialogLoading.show();
 
         // Cria uma Thread para execução em Segundo Plano

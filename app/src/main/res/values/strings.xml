@@ -49,6 +49,8 @@
     <string name="title_no_register_api">Falha no Cadastro</string>
     <string name="title_no_internet">Internet Indisponivel</string>
     <string name="title_loading">Carregando …</string>
+    <string name="message_loadingDownload">Obtendo Dados %s no Sistema</string>
+    <string name="message_loadingSingUp">Realizando Cadastro no Sistema</string>
     <string name="button_close">Fechar</string>
 
     <string name="notice_city">Algumas cidades podem não estar aparecendo por conta da divisão
