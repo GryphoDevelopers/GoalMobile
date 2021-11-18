@@ -14,6 +14,8 @@
     <string name="validation_format">%1$s deve ter estar no Seguinte Formato: "%2$s"</string>
     <string name="validation_unavailable">%s Invalido. Tente Novamente</string>
     <string name="validation_password">A senha deve conter %s</string>
+    <string name="validation_stock">O Estoque deve conter %s Item</string>
+    <string name="validation_price">O Preço deve conter %s</string>
     <string name="validation_age">Idade %1$s de <b>%2$s Anos</b></string>
     <string name="validation_equal_password">As Senhas não são Iguais</string>
     <string name="validation_invalid_ddd">DDD Invalido. Tente novamente

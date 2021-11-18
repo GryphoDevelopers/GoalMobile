@@ -1,5 +1,7 @@
 package com.example.goal.views.activities;
 
+import static com.example.goal.managers.SearchInternet.URL_PRODUCTS;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -7,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.appcompat.widget.Toolbar;
@@ -19,11 +22,13 @@ import com.example.goal.managers.ManagerResources;
 import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.Product;
 import com.example.goal.views.fragments.ProductsFragment;
+import com.example.goal.views.widgets.AlertDialogPersonalized;
 import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Activity IndexActivity: Activity Inicial, onde será mostrado os Produtos e toda a parte da
@@ -56,6 +61,7 @@ public class IndexActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private List<Product> productList;
+    private AlertDialogPersonalized alertDialogPersonalized;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +75,6 @@ public class IndexActivity extends AppCompatActivity {
 
         // Obtem uma Lista com os Produtos
         getCatalogProducts();
-
-        // Exibe o Fragment da Tela Principal
-        setUpProductsFragment(ProductsFragment.TYPE_HOME, "");
     }
 
     /**
@@ -80,6 +83,7 @@ public class IndexActivity extends AppCompatActivity {
     private void instanceItems() {
         navigationView = findViewById(R.id.navigationView_categories);
         toolbar = findViewById(R.id.toolbar_category);
+        alertDialogPersonalized = new AlertDialogPersonalized(IndexActivity.this);
     }
 
     /**
@@ -100,22 +104,40 @@ public class IndexActivity extends AppCompatActivity {
     }
 
     /**
-     * Obtem os Produtos que serão exibidos na Tela Inicial
+     * Configura o Fragment com os Produtos obitidos da API
      */
     private void getCatalogProducts() {
-        // todo Implementar busca na api
-        productList = new ArrayList<>();
-        String[] names = new String[]{"Produto 1", "Produto 2", "Produto 3", "Produto 4", "Produto 5",
-                "Produto 6", "Produto 7", "Produto 8", "Produto 9", "Produto 10", "Produto 11",
-                "Produto 12","Produto 13", "Produto 14", "Produto 15", "Produto 16", "Produto 17",
-                "Produto 18", "Produto 19", "Produto 20", "Produto 21", "Produto 22", "Produto 23",
-                "Produto 25","Produto 25", "Produto 26", "Produto 27", "Produto 28", "Produto 29",
-                "Produto 30", "Produto 31", "Produto 32", "Produto 33", "Produto 34", "Produto 35"};
-        for (String item : names) {
+        // Configura o AlertDialog que exibe "Carregando" enquanto busca os Itens
+        AlertDialog dialogLoading = alertDialogPersonalized.loadingDialog();
+        dialogLoading.show();
+
+        // Cria uma Thread para execução em Segundo Plano
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.execute(() -> {
+            runOnUiThread(dialogLoading::show);
+
+            // Obtem os Itens que serão Exibidos
             Product product = new Product(IndexActivity.this);
-            product.setName_product(item);
-            productList.add(product);
-        }
+            List<Product> listCatalogProducts = product.getProducts_catalog(URL_PRODUCTS, executorService);
+
+            // Exibe o Resultado na Tela
+            runOnUiThread(() -> {
+                if (listCatalogProducts == null || listCatalogProducts.size() == 0) {
+
+                    // Exibe o Erro do Catalogo para o Usuario
+                    alertDialogPersonalized.defaultDialog(
+                            getString(R.string.title_input_invalid, "Catalogo"),
+                            product.getError_operation()).show();
+
+                    //todo adicionar fragment null p/ erros
+                } else {
+                    // Configura a Lista dos Produtos Exibe o Fragment da Tela Principal
+                    productList = listCatalogProducts;
+                    setUpProductsFragment(ProductsFragment.TYPE_HOME, "");
+                }
+                dialogLoading.dismiss();
+            });
+        });
     }
 
     /**

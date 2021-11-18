@@ -2,6 +2,7 @@ package com.example.goal.managers;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.KITKAT;
+import static com.example.goal.managers.ManagerResources.EXCEPTION;
 import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
 
 import android.content.Context;
@@ -86,10 +87,15 @@ public class SearchInternet {
      */
     public static final String API_GOAL_INSERT_USER = "https://goalwebapi.herokuapp.com/goal/api/v1/auth/add-access";
 
+
+    // todo: alterar para URL correta e colocar na Classe SearchInternet
+    /**
+     * URL que Obtem os Produtos que serão Exibidos (URL de Teste)
+     */
+    public static final String URL_PRODUCTS = "http://makeup-api.herokuapp.com/api/v1/products.json?rating_greater_than=4.5";
+
     // Constantes de Possiveis Exception usadads nos Logs
     private final String NAME_CLASS = "SearchInternet";
-    private final String EXCEPTION_GENERAL = "Exception General";
-    private final String NOT_FORMAT = "Wrong Format";
 
     // Variaveis usadas na Classe
     private final Context context;
@@ -207,7 +213,7 @@ public class SearchInternet {
                 }
             }
         } catch (Exception ex) {
-            Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Erro na Pesquisa na API: " + ex.getClass().getName());
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro na Pesquisa na API: " + ex.getClass().getName());
             ex.printStackTrace();
         }
 
@@ -239,12 +245,12 @@ public class SearchInternet {
                 // Realiza uma Validação nos Valores. Caso passe, insere os valores na variavel body
                 if (parameters[i] == null || parameters[i].equals("")) {
                     error_search = context.getString(R.string.error_500);
-                    Log.e(NOT_FORMAT, NAME_CLASS + " - Erro na Formação do Body: " +
+                    Log.e(EXCEPTION, NAME_CLASS + " - Erro na Formação do Body: " +
                             "Parametros Invalidos (Não Permitidos Valores Nulos ou Vazios)");
                     json_body = "";
                     return;
                 } else if (values[i] == null) {
-                    Log.e(NOT_FORMAT, NAME_CLASS + " - Erro na Formação do Body: " +
+                    Log.e(EXCEPTION, NAME_CLASS + " - Erro na Formação do Body: " +
                             "Valores do Body Invalidos (Não Permitidos Valores Nulos ou Vazios)");
                     json_body = "";
                     return;
@@ -261,7 +267,7 @@ public class SearchInternet {
                         }
                     } catch (Exception ex) {
                         // Tratamento de Exceção na String Format
-                        Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Erro na Formação do Body: "
+                        Log.e(EXCEPTION, NAME_CLASS + " - Erro na Formação do Body: "
                                 + ex.getClass().getName());
                         ex.printStackTrace();
 
@@ -274,7 +280,7 @@ public class SearchInternet {
 
         } else {
             error_search = context.getString(R.string.error_500);
-            Log.e(NOT_FORMAT, NAME_CLASS + " - Erro na Formação do Body: " +
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro na Formação do Body: " +
                     "Parametros Invalidos (Não Permitidos Valores Nulos ou Vazios)");
             json_body = "";
         }

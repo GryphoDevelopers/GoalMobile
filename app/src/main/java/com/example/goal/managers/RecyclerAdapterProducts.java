@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.goal.R;
 import com.example.goal.models.Product;
+import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 import java.util.List;
@@ -116,21 +117,28 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
 
             // Configura os Diferentes tipos de Itens
             if (isSmallItem(position)) {
-                ((ItemsViewHolder) holder).image_product.setMaxWidth(120);
-                ((ItemsViewHolder) holder).image_product.setMaxHeight(120);
-                //     ((ItemsViewHolder) holder).txt_nameProduct.setVisibility(View.GONE);
-                ((ItemsViewHolder) holder).txt_nameProduct.setText(productItem.getName_product());
+                ((ItemsViewHolder) holder).image_product.getLayoutParams().height = dpToPixel(
+                        holder.itemView.getContext(), 100);
+                ((ItemsViewHolder) holder).image_product.requestLayout();
+                ((ItemsViewHolder) holder).txt_nameProduct.setVisibility(View.GONE);
             } else {
                 // Coloca o Texto nos Itens Grandes ou Medios
                 ((ItemsViewHolder) holder).txt_nameProduct.setText(productItem.getName_product());
 
                 // Configurações Adicionais para os Itens Maiores
                 if (isBigItem(position)) {
-                    ((ItemsViewHolder) holder).image_product.setMaxHeight(300);
-                    ((ItemsViewHolder) holder).image_product.setMinimumHeight(300);
+                    ((ItemsViewHolder) holder).image_product.getLayoutParams().height = dpToPixel(
+                            holder.itemView.getContext(), 320);
+                    ((ItemsViewHolder) holder).image_product.requestLayout();
                     ((ItemsViewHolder) holder).txt_nameProduct.setText(productItem.getName_product());
                 }
             }
+
+            // Carrega a URL da Imagem na ImageView (se não estiver disponivel, usa uma imagem de erro)
+            Picasso.get().load(productItem.getUrl_image())
+                    .error(R.drawable.error_image)
+                    .into(((ItemsViewHolder) holder).image_product);
+
         } else if (holder instanceof EmptyViewHolder && getItemViewType(position) == POSITION_LINE) {
             // Obtem os parametros do Layout
             GridLayoutManager.LayoutParams params =

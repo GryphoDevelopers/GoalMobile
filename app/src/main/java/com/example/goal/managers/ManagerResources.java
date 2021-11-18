@@ -50,4 +50,23 @@ public class ManagerResources {
             return 0;
         }
     }
+
+    /**
+     * Retorna uma String cortada com reticencias (...) no Final caso seja maior que
+     *
+     * @param old_string  String que será cortada
+     * @param max_length  Tamanho maximo que a String terá
+     * @param putEllipsis Define se será ou não adicionado Reticencias (...) ao fim da String (Somente
+     *                    se ela for maior que o "max_length"
+     * @return {@link String}|""
+     */
+    public static String getSlideText(String old_string, int max_length, boolean putEllipsis) {
+        if (isNullOrEmpty(old_string)) return "";
+        else if (old_string.length() > max_length) {
+            String new_string = old_string.substring(0, max_length + 1);
+            if (putEllipsis) new_string += "...";
+
+            return new_string;
+        } else return old_string;
+    }
 }
