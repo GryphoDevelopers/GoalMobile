@@ -119,7 +119,7 @@ public class IndexActivity extends AppCompatActivity {
 
             // Obtem os Itens que serão Exibidos
             Product product = new Product(IndexActivity.this);
-            List<Product> listCatalogProducts = product.getProducts_catalog(URL_PRODUCTS, executorService);
+            List<Product> listCatalogProducts = product.getProducts_catalog(executorService, URL_PRODUCTS);
 
             // Exibe o Resultado na Tela
             runOnUiThread(() -> {

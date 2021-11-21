@@ -32,7 +32,6 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
@@ -172,17 +171,19 @@ public class User {
     /**
      * Valida o email a partir de uma API. Esse é um metodo Independente da Validação do Email
      *
-     * @param email Email utilizado na Validação
+     * @param email           Email utilizado na Validação
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
      * @return true/false
      */
-    public boolean validationEmailAPI(String email) {
+    public boolean validationEmailAPI(ExecutorService executorService, String email) {
         try {
             // URI de Pesquisa
             Uri build_uri = Uri.parse(SearchInternet.API_EMAIL_DISPOSABLE)
                     .buildUpon().appendPath(email).build();
 
             // Criação da Tarefa Assincrona e do Metodo que busca na Internet
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
             SearchInternet searchInternet = new SearchInternet(context);
 
             // Configura a Tarefa Assincrona que Retorna uma String
@@ -322,10 +323,13 @@ public class User {
      * Valida o CNPJ na API BRASIL, Verificando se possui um cadastro na Receita Federal e tambem se
      * está ativo o CNPJ. Este é um metodo Independente da Validação do CNPJ
      *
-     * @param cnpj CNPJ informado pelo Usuario
+     * @param cnpj            CNPJ informado pelo Usuario
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
      * @return true/false
      */
-    public boolean validationNumberCnpj(String cnpj) {
+    public boolean validationNumberCnpj(ExecutorService executorService, String cnpj) {
         try {
             String unmask_cnpj = "";
             if (!ManagerResources.isNullOrEmpty(cnpj)) {
@@ -341,9 +345,6 @@ public class User {
             // URI de Pesquisa
             Uri build_uri = Uri.parse(SearchInternet.API_BRAZIL_CNPJ)
                     .buildUpon().appendPath(unmask_cnpj).build();
-
-            // Criação da Tarefa Assincrona e do Metodo que busca na Internet
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
 
             // Configura a Tarefa Assincrona que Retorna uma String
             Set<Callable<String>> callable = new HashSet<>();

@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
@@ -267,18 +266,20 @@ public class Address {
      * Verifica o CEP com o Endereço Informado. Esse é um metodo Independente da Validação do CEP.
      * Ele precisa do Endereço (Avenida/Rua), Bairro e Estado
      *
-     * @param address Instancia da Classe Address, que será usado para Comparar os Dados do CEP com
-     *                o endereço Informado
+     * @param address         Instancia da Classe Address, que será usado para Comparar os Dados do CEP com
+     *                        o endereço Informado
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
      * @return true/false
      */
-    public boolean checkCEP(Address address) {
+    public boolean checkCEP(ExecutorService executorService, Address address) {
         try {
             // URI de Pesquisa
             Uri build_uri = Uri.parse(SearchInternet.API_BRAZIL_CEP)
                     .buildUpon().appendPath(address.getUnmaskCep()).build();
 
             // Criação da Tarefa Assincrona e do Metodo que busca na Internet
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
             SearchInternet searchInternet = new SearchInternet(context);
 
             // Configura a Tarefa Assincrona que Retorna uma String
@@ -344,10 +345,13 @@ public class Address {
     /**
      * Obtem uma Lista (em Ordem Alfabetica) de Municipios a partir do Estado esppecificado
      *
-     * @param uf Unidade Federativa do Estado das Cidades que serão obtidas
+     * @param uf              Unidade Federativa do Estado das Cidades que serão obtidas
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
      * @return String[]|null
      */
-    public String[] getCities(String uf) {
+    public String[] getCities(ExecutorService executorService, String uf) {
         try {
             if (ManagerResources.isNullOrEmpty(uf) || uf.length() != 2) {
                 error_validation = String.format(INPUT_INVALID, "Estado/UF");
@@ -357,9 +361,6 @@ public class Address {
             // URI de Pesquisa
             Uri build_uri_cities = Uri.parse(SearchInternet.API_BRAZIL_CITY)
                     .buildUpon().appendPath(uf).build();
-
-            // Criação da Tarefa Assincrona e do Metodo que busca na Internet
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
 
             // Configura a Tarefa Assincrona que Retorna uma String (JSON)
             Set<Callable<String>> callable = new HashSet<>();

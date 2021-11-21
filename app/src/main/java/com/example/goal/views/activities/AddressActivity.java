@@ -5,6 +5,8 @@ import static com.example.goal.managers.ManagerResources.EXCEPTION;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -24,13 +26,13 @@ import com.example.goal.models.Address;
 import com.example.goal.models.api.AddressAPI;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
 import com.example.goal.views.widgets.MaskInputPersonalized;
-import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -58,8 +60,8 @@ public class AddressActivity extends AppCompatActivity {
     private String[] array_state, array_cities;
     private ManagerServices managerServices;
     private AlertDialogPersonalized dialog_personalized;
-    private ManagerInputErrors managerInputErrors;
     private Address addressRegister;
+    private Handler handlerMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,9 +99,11 @@ public class AddressActivity extends AppCompatActivity {
     private void instanceItems() {
         context = AddressActivity.this;
         managerServices = new ManagerServices(context);
-        managerInputErrors = new ManagerInputErrors(context);
         dialog_personalized = new AlertDialogPersonalized(context);
         addressRegister = new Address(context);
+
+        // Exibirá os Resultados Assincronos sempre na Thread Principal
+        handlerMain = new Handler(Looper.getMainLooper());
 
         card_dataAddress = findViewById(R.id.card_address);
         card_dataTerritory = findViewById(R.id.card_territory);
@@ -187,11 +191,12 @@ public class AddressActivity extends AppCompatActivity {
         AlertDialog progressDialog = dialog_personalized.loadingDialog(
                 getString(R.string.message_loadingDownload, "das Cidades"), true);
 
+        ExecutorService executorService = Executors.newCachedThreadPool();
         // Executa uma tarefa assincrona
-        Executors.newSingleThreadExecutor().execute(() -> {
-            runOnUiThread(progressDialog::show);
-            String[] array_cities_async = addressRegister.getCities(uf);
-            runOnUiThread(() -> {
+        executorService.execute(() -> {
+            handlerMain.post(progressDialog::show);
+            String[] array_cities_async = addressRegister.getCities(executorService, uf);
+            handlerMain.post(() -> {
                 array_cities = array_cities_async;
                 progressDialog.dismiss();
 
@@ -219,127 +224,89 @@ public class AddressActivity extends AppCompatActivity {
     }
 
     /**
-     * Valida as Informações da Localização (País, Estado, Cidade)
+     * Valida as Informações da Localização de Endereços Estrangeiros (País, Estado, Cidade)
      *
-     * @return boolean
+     * @return {@link TextInputEditText}|null
      */
-    private boolean validationTerritory() {
-        Address address = new Address(context);
-
+    private TextInputEditText validationTerritoryForeign() {
         // Configura o País e Realiza as Validações
-        address.setCountry(address.getCountryForBoolean(isForeign));
-        if (isForeign) {
-            // Obtem os Valores dos InputText dos Estrangeiros
-            address.setState(Objects.requireNonNull(edit_exState.getText()).toString());
-            address.setCity(Objects.requireNonNull(edit_exCity.getText()).toString());
-            if (!address.validationState(address)) {
-                managerInputErrors.errorInputEditText(edit_exState, address.getError_validation(), false);
-                card_dataTerritory.setStrokeColor(getResources().getColor(R.color.ruby_red));
-                return false;
-            } else if (!address.validationCity(address)) {
-                managerInputErrors.errorInputEditText(edit_exCity, address.getError_validation(), false);
-                card_dataTerritory.setStrokeColor(getResources().getColor(R.color.ruby_red));
-                return false;
-            }
-        } else {
-            // Remove o Erro dos Layouts (se Hourver) e Obtem os Valores do AutoCompleteText
-            layoutEdit_state.setErrorEnabled(false);
-            layoutEdit_city.setErrorEnabled(false);
-            address.setState(addressRegister.getState());
-            address.setCity(addressRegister.getCity());
+        addressRegister.setCountry(addressRegister.getCountryForBoolean(isForeign));
 
-            // Valida o Endereço
-            if (!address.validationState(address)) {
-                managerInputErrors.errorInputLayout(layoutEdit_state, address.getError_validation());
-                card_dataTerritory.setStrokeColor(getResources().getColor(R.color.ruby_red));
-                return false;
-            } else if (!address.validationCity(address)) {
-                managerInputErrors.errorInputLayout(layoutEdit_city, address.getError_validation());
-                card_dataTerritory.setStrokeColor(getResources().getColor(R.color.ruby_red));
-                return false;
-            }
+        // Obtem os Valores dos InputText dos Estrangeiros
+        addressRegister.setState(Objects.requireNonNull(edit_exState.getText()).toString());
+        addressRegister.setCity(Objects.requireNonNull(edit_exCity.getText()).toString());
+        if (!addressRegister.validationState(addressRegister)) return edit_exState;
+        else if (!addressRegister.validationCity(addressRegister)) return edit_exCity;
+        else return null;
+    }
+
+    /**
+     * Valida as Informações da Localização de Brasileiros (País, Estado, Cidade)
+     *
+     * @return {@link TextInputEditText}|null
+     */
+    private TextInputLayout validationTerritoryBrazilian() {
+        // Configura o País e Realiza as Validações
+        addressRegister.setCountry(addressRegister.getCountryForBoolean(isForeign));
+        // Valida o Endereço dos Brasileiros
+        if (!addressRegister.validationState(addressRegister)) return layoutEdit_state;
+        else if (!addressRegister.validationCity(addressRegister)) return layoutEdit_city;
+        else return null;
+    }
+
+    /**
+     * Valida as Informações da Verificação da do CEP
+     * <p>
+     * * Caso haja erro, na Posição 0 estará o Titulo, e na Posição 1 na Mensagem
+     *
+     * @return String[]|null
+     */
+    private String[] validationAPI(ExecutorService executorService) {
+        if (!addressRegister.checkCEP(executorService, addressRegister)) {
+            return new String[]{getString(R.string.title_input_invalid, "CEP"),
+                    addressRegister.getError_validation()};
         }
-
-        // Passou por todas as dados da Validação
-        addressRegister.setCountry(address.getCountry());
-        addressRegister.setState(address.getState());
-        addressRegister.setCity(address.getCity());
-        card_dataTerritory.setStrokeColor(getResources().getColor(R.color.lime_green));
-        return true;
+        return null;
     }
 
     /**
      * Valida as Informações do Endereço (Endereço, Bairro, Numero, Complemento)
      *
-     * @return boolean
+     * @return {@link TextInputEditText}|null
      */
-    private boolean validationAddress() {
-        // Obtem os Valores
-        Address address = new Address(context);
-        address.setAddress(Objects.requireNonNull(edit_address.getText()).toString());
-        address.setDistrict(Objects.requireNonNull(edit_district.getText()).toString());
+    private TextInputEditText validationAddress() {
+        // Obtem os Valores dos Inputs
+        addressRegister.setAddress(Objects.requireNonNull(edit_address.getText()).toString());
+        addressRegister.setDistrict(Objects.requireNonNull(edit_district.getText()).toString());
 
-        if (!address.validationAddress(address.getAddress())) {
-            managerInputErrors.errorInputEditText(edit_address, address.getError_validation(), false);
-            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else if (!address.validationDistrict(address.getDistrict())) {
-            managerInputErrors.errorInputEditText(edit_district, address.getError_validation(), false);
-            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else {
-            addressRegister.setAddress(address.getAddress());
-            addressRegister.setDistrict(address.getDistrict());
-        }
+        if (!addressRegister.validationAddress(addressRegister.getAddress()))
+            return edit_address;
+        else if (!addressRegister.validationDistrict(addressRegister.getDistrict()))
+            return edit_district;
 
-        // Caso o CEP Esteja disponivel (País = Brasil)
+        // Valida o CEP caso esteja disponivel (País = Brasil)
         if (layoutEdit_cep.getVisibility() == View.VISIBLE) {
-
             // Validação do CEP (somente para Brasileiros). É necessario Endereço, UF, e Bairro
-            address.setCep(Objects.requireNonNull(edit_cep.getText()).toString());
-            address.setState(address.getUF(addressRegister.getState()));
-            if (!address.validationCEP(address.getMaskedCep())) {
-                managerInputErrors.errorInputEditText(edit_cep, address.getError_validation(), false);
-                card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
-                return false;
-            } else if (!address.checkCEP(address)) {
-                dialog_personalized.defaultDialog(
-                        getString(R.string.title_input_invalid, "CEP"),
-                        address.getError_validation()).show();
-                managerInputErrors.errorInputEditText(edit_cep, address.getError_validation(), false);
-                card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
-                return false;
-            } else addressRegister.setCep(address.getUnmaskCep());
+            addressRegister.setCep(Objects.requireNonNull(edit_cep.getText()).toString());
+            addressRegister.setState(addressRegister.getUF(addressRegister.getState()));
+            if (!addressRegister.validationCEP(addressRegister.getMaskedCep())) return edit_cep;
         }
 
         // Evita erros ao Convertes Empty String em Int
         try {
             String number = Objects.requireNonNull(edit_number.getText()).toString();
-            address.setNumber(number.equals("") ? 0 : Integer.parseInt(number));
+            addressRegister.setNumber(number.equals("") ? 0 : Integer.parseInt(number));
         } catch (Exception ex) {
-            String NAME_CLASS = "RegisterForPurchases";
-            Log.e(EXCEPTION, NAME_CLASS + " - Erro ao Converter o Numero do Endereço");
+            Log.e(EXCEPTION, "RegisterForPurchases - Erro ao Converter o Numero do Endereço");
             ex.printStackTrace();
         }
-        address.setComplement(Objects.requireNonNull(edit_complement.getText()).toString());
+        addressRegister.setComplement(Objects.requireNonNull(edit_complement.getText()).toString());
 
         // Validação do Numero e Complemento
-        if (!address.validationNumber(address.getNumber())) {
-            managerInputErrors.errorInputEditText(edit_number, address.getError_validation(), false);
-            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else if (!address.validationComplement(address.getComplement())) {
-            managerInputErrors.errorInputEditText(edit_complement, address.getError_validation(), false);
-            card_dataAddress.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else {
-            addressRegister.setNumber(address.getNumber());
-            addressRegister.setComplement(address.getComplement());
-        }
-
-        // Todos os Dados Validados
-        card_dataAddress.setStrokeColor(getResources().getColor(R.color.lime_green));
-        return true;
+        if (!addressRegister.validationNumber(addressRegister.getNumber())) return edit_number;
+        else if (!addressRegister.validationComplement(addressRegister.getComplement()))
+            return edit_complement;
+        else return null;
     }
 
     /**
@@ -349,36 +316,103 @@ public class AddressActivity extends AppCompatActivity {
         // Instancia e Obtem o Listener do Botão
         Button registerCompleteUser = findViewById(R.id.btn_registerCompleteUser);
         registerCompleteUser.setOnClickListener(v -> {
+            // Fecha o Teclado (Caso esteja aberto)
+            managerServices.closeKeyboard(this);
+
+            // Valida a Conexão com a Internet
             if (!managerServices.availableInternet()) {
-                dialog_personalized.defaultDialog(getString(R.string.title_no_internet),
+                dialog_personalized.defaultDialog(
+                        getString(R.string.title_no_internet),
                         Html.fromHtml(getString(R.string.error_network)).toString()).show();
-            } else if (validationTerritory() && validationAddress()) {
-                managerServices.closeKeyboard(this);
+                return;
+            }
 
-                AddressAPI addressAPI = new AddressAPI(AddressActivity.this);
-                if (addressAPI.insertAddress(addressRegister)) {
+            // Cria um AlertDialog do Estilo "Carregando..."
+            AlertDialog dialogLoading = dialog_personalized.loadingDialog(
+                    getString(R.string.message_loadingSingUp, "Endereço"), false);
 
-                    // Insere o Endereço no Banco de Dados
-                    ManagerDataBase managerDataBase = new ManagerDataBase(AddressActivity.this);
-                    if (!managerDataBase.insertAddress(addressRegister)) {
+            // Executa as Validações e Cadatros em uma Tarefa Assincrona
+            ExecutorService executorService = Executors.newCachedThreadPool();
+            executorService.execute(() -> {
+
+                handlerMain.post(dialogLoading::show);
+
+                // Realiza a Validação dos Dados Inseridos
+                TextInputEditText wrongForeign = isForeign ? validationTerritoryForeign() : null;
+                TextInputLayout wrongBrazilian = isForeign ? null : validationTerritoryBrazilian();
+                String[] wrongAPI = validationAPI(executorService);
+                TextInputEditText wrongAddress = validationAddress();
+                ManagerInputErrors inputErrors = new ManagerInputErrors(context);
+
+                if (wrongForeign != null) {
+                    handlerMain.post(() -> {
+                        dialogLoading.dismiss();
+                        inputErrors.errorInputEditText(wrongForeign,
+                                addressRegister.getError_validation(), false);
+                    });
+                    return;
+                } else if (wrongBrazilian != null) {
+                    handlerMain.post(() -> {
+                        dialogLoading.dismiss();
+                        inputErrors.errorInputLayout(wrongBrazilian, addressRegister.getError_validation());
+                    });
+                    return;
+                } else {
+                    handlerMain.post(() -> {
+                        card_dataTerritory.setStrokeColor(getResources().getColor(R.color.lime_green));
+                        layoutEdit_state.setErrorEnabled(false);
+                        layoutEdit_city.setErrorEnabled(false);
+                    });
+                }
+
+                if (wrongAddress != null) {
+                    handlerMain.post(() -> {
+                        dialogLoading.dismiss();
+                        inputErrors.errorInputEditText(wrongAddress,
+                                addressRegister.getError_validation(), false);
+                    });
+                    return;
+                } else if (wrongAPI != null) {
+                    handlerMain.post(() -> {
+                        dialogLoading.dismiss();
+                        dialog_personalized.defaultDialog(wrongAPI[0], wrongAPI[1]).show();
+                    });
+                    return;
+                } else handlerMain.post(() -> card_dataAddress.setStrokeColor(getResources()
+                        .getColor(R.color.lime_green)));
+
+
+                // Tenta Inserir o Endereço na API (de forma Assincrona)
+                AddressAPI addressAPI = new AddressAPI(context);
+                if (!addressAPI.insertAddress(executorService, addressRegister)) {
+                    handlerMain.post(() -> {
+                        // Remove o Alert Dialog "Carregando" e exibe o Erro do Registro na API
+                        dialogLoading.dismiss();
                         dialog_personalized.defaultDialog(getString(R.string.title_no_register_api),
+                                addressAPI.getError_operation()).show();
+                    });
+                    return;
+                }
+
+                // Insere o Endereço no Banco de Dados Local (SQLite)
+                ManagerDataBase managerDataBase = new ManagerDataBase(context);
+                if (!managerDataBase.insertAddress(addressRegister)) {
+                    handlerMain.post(() -> {
+                        // Remove o Alert Dialog "Carregando" e exibe o Erro do Banco Local
+                        dialogLoading.dismiss();
+                        dialog_personalized.defaultDialog(
+                                getString(R.string.title_no_register_api),
                                 managerDataBase.getError_operation()).show();
-                    } else {
-                        // Abre a pagina Index (Produtos) e Finaliza a Actvity
+                    });
+                } else {
+                    handlerMain.post(() -> {
+                        // Abre a pagina Index (Produtos) e Finaliza a Actvity na Thread Principal
+                        dialogLoading.dismiss();
                         startActivity(new Intent(context, IndexActivity.class));
                         finishAffinity();
-                    }
-
-                } else {
-                    // Erro na API Goal
-                    dialog_personalized.defaultDialog(getString(R.string.title_no_register_api),
-                            addressAPI.getError_operation()).show();
+                    });
                 }
-            } else {
-                // Validações Não Validas ou Erro no Cadastro
-                new SnackBarPersonalized(findViewById(R.id.layout_purchases)).defaultSnackBar(
-                        getString(R.string.error_singup)).show();
-            }
+            });
         });
     }
 

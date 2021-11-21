@@ -1,5 +1,6 @@
 package com.example.goal.views.activities;
 
+import static com.example.goal.managers.ManagerResources.EXCEPTION;
 import static com.example.goal.views.widgets.MaskInputPersonalized.MASK_CNPJ;
 import static com.example.goal.views.widgets.MaskInputPersonalized.MASK_CPF;
 import static com.example.goal.views.widgets.MaskInputPersonalized.MASK_DATE;
@@ -9,7 +10,10 @@ import static com.example.goal.views.widgets.MaskInputPersonalized.managerMask;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,6 +21,7 @@ import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goal.R;
@@ -27,20 +32,31 @@ import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.User;
 import com.example.goal.models.api.UserAPI;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
-import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Activity SingUpActivity: Activity Responsavel por Controlar e Realizar o Cadastro do Usuario
  */
 public class SingUpActivity extends AppCompatActivity {
 
-    private TextInputEditText editDateBirth, editCpf, editCnpj, editPhoneBrazilian;
+    private TextInputEditText editDateBirth;
+    private TextInputEditText editCpf;
+    private TextInputEditText editCnpj;
+    private TextInputEditText editPhoneBrazilian;
+    private TextInputEditText editEmail;
+    private TextInputEditText editPassword;
+    private TextInputEditText editConfirmPassword;
+    private TextInputEditText editName;
+    private TextInputEditText editLastName;
+    private TextInputEditText editNickname;
+
     private TextView errorOptionUser;
     private TextView errorTermsUse;
 
@@ -49,10 +65,15 @@ public class SingUpActivity extends AppCompatActivity {
     private Button btn_createAcount;
     private Button see_termsUse;
 
+    /**
+     * Armazena os Cards que os dados já estão validados
+     */
+    private MaterialCardView[] card_corrects;
     private MaterialCardView card_dataPersonal, card_documents, card_dataLogin, card_terms;
     private ScrollView scrollView;
 
     private Context context;
+    private AlertDialogPersonalized dialogPersonalized;
     private ManagerServices managerServices;
     private User userSingUp;
 
@@ -83,6 +104,7 @@ public class SingUpActivity extends AppCompatActivity {
         userSingUp = new User(context);
         managerServices = new ManagerServices(context);
         scrollView = findViewById(R.id.scrollView_singUp);
+        dialogPersonalized = new AlertDialogPersonalized(context);
 
         // Insere as Mascaras no EditText
         editDateBirth = findViewById(R.id.edittext_dateBirth);
@@ -94,9 +116,17 @@ public class SingUpActivity extends AppCompatActivity {
         editCnpj.addTextChangedListener(managerMask(editCnpj, MASK_CNPJ));
         editPhoneBrazilian.addTextChangedListener(managerMask(editPhoneBrazilian, MASK_PHONE_BR));
 
+        editName = findViewById(R.id.edittext_name);
+        editLastName = findViewById(R.id.edittext_lastName);
+        editNickname = findViewById(R.id.edittext_nickname);
+        editEmail = findViewById(R.id.edittext_email);
+        editPassword = findViewById(R.id.edittext_password);
+        editConfirmPassword = findViewById(R.id.edittext_confirmPassword);
+
         errorOptionUser = findViewById(R.id.error_optionUser);
         errorTermsUse = findViewById(R.id.error_termsUse);
 
+        card_corrects = new MaterialCardView[4];
         card_dataPersonal = findViewById(R.id.card_personalData);
         card_documents = findViewById(R.id.card_documments);
         card_dataLogin = findViewById(R.id.card_loginData);
@@ -159,154 +189,136 @@ public class SingUpActivity extends AppCompatActivity {
 
     /**
      * Validação do Usuario (Nome, Nickname, Tipo do Usuario, Email, Senhas e Termo de Uso)
+     *
+     * @return {@link TextInputEditText}|null
      */
-    private boolean validationsSingUp() {
-        User user = new User(context);
-        ManagerInputErrors managerInputErrors = new ManagerInputErrors(context);
-
+    private TextInputEditText validationsSingUp() {
         // Obtem os Dados Inseridos nos Inputs
-        TextInputEditText editName = findViewById(R.id.edittext_name);
-        TextInputEditText editLastName = findViewById(R.id.edittext_lastName);
-        TextInputEditText editNickname = findViewById(R.id.edittext_nickname);
-        user.setName(Objects.requireNonNull(editName.getText()).toString());
-        user.setLast_name(Objects.requireNonNull(editLastName.getText()).toString());
-        user.setNickname(Objects.requireNonNull(editNickname.getText()).toString());
+        userSingUp.setName(Objects.requireNonNull(editName.getText()).toString());
+        userSingUp.setLast_name(Objects.requireNonNull(editLastName.getText()).toString());
+        userSingUp.setNickname(Objects.requireNonNull(editNickname.getText()).toString());
         String date_birth = Objects.requireNonNull(editDateBirth.getText()).toString();
 
         // Valida a Primeira Parte (Nome, Nickname e Tipo de Usuario)
-        if (!user.validationName(user.getName())) {
-            managerInputErrors.errorInputEditText(editName, user.getError_validation(), false);
-            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else if (!user.validationName(user.getLast_name())) {
-            managerInputErrors.errorInputEditText(editLastName, user.getError_validation(), false);
-            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else if (!user.validationDateBirth(date_birth)) {
-            managerInputErrors.errorInputEditText(editDateBirth, user.getError_validation(), false);
-            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else if (!user.validationNickname(user.getNickname())) {
-            managerInputErrors.errorInputEditText(editNickname, user.getError_validation(), false);
-            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else if (!opClient.isChecked() && !opSeller.isChecked()) {
-            scrollView.fullScroll(ScrollView.FOCUS_UP);
-            errorOptionUser.setVisibility(View.VISIBLE);
-            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else {
-            card_dataPersonal.setStrokeColor(getResources().getColor(R.color.lime_green));
-            errorOptionUser.setVisibility(View.GONE);
-        }
-
+        if (!userSingUp.validationName(userSingUp.getName())) return editName;
+        else if (!userSingUp.validationName(userSingUp.getLast_name())) return editLastName;
+        else if (!userSingUp.validationDateBirth(date_birth)) return editDateBirth;
+        else if (!userSingUp.validationNickname(userSingUp.getNickname())) return editNickname;
+        else if (validationTypeUser() == null) card_corrects[0] = card_dataPersonal;
+        else userSingUp.setDate_birth(date_birth);
 
         // Valida a Segunda Parte (CPF/CNPJ)
         if (switch_documents.isChecked()) {
             // CNPJ foi selecionado
-            user.setCnpj(Objects.requireNonNull(editCnpj.getText()).toString());
-            if (!user.validationCnpj(user.getMaskedCnpj())) {
-                managerInputErrors.errorInputEditText(editCnpj, user.getError_validation(), false);
-                card_documents.setStrokeColor(getResources().getColor(R.color.ruby_red));
-                return false;
-            } else if (!user.validationNumberCnpj(user.getUnmaskCnpj())) {
-                // Mostra os Possiveris erros de Validação CNPJ (API Externa)
-                new AlertDialogPersonalized(context).defaultDialog(
-                        getString(R.string.title_input_invalid, "CNPJ"),
-                        user.getError_validation()).show();
-                managerInputErrors.errorInputEditText(editCnpj, user.getError_validation(), false);
-                card_documents.setStrokeColor(getResources().getColor(R.color.ruby_red));
-                return false;
+            userSingUp.setCnpj(Objects.requireNonNull(editCnpj.getText()).toString());
+            if (!userSingUp.validationCnpj(userSingUp.getMaskedCnpj())) {
+                card_corrects[1] = null;
+                return editCnpj;
             }
         } else {
             // Usuario não selecionou = Opção CPF
-            user.setCpf(Objects.requireNonNull(editCpf.getText()).toString());
-            if (!user.validationCpf(user.getMaskedCpf())) {
-                managerInputErrors.errorInputEditText(editCpf, user.getError_validation(), false);
-                card_documents.setStrokeColor(getResources().getColor(R.color.ruby_red));
-                return false;
-            } //todo implementar validação do numero do cpf em api
+            userSingUp.setCpf(Objects.requireNonNull(editCpf.getText()).toString());
+            if (!userSingUp.validationCpf(userSingUp.getMaskedCpf())) {
+                card_corrects[1] = null;
+                return editCpf;
+            }
+            //todo implementar validação do numero do cpf em api
         }
 
         // Valida a Segunda Parte (Telefone)
         if (switch_phone.isChecked()) {
             // Selecionou a Opção "Estrangeiro"
             TextInputEditText editForeignPhone = findViewById(R.id.edit_foreignPhone);
-            user.setPhone(Objects.requireNonNull(editForeignPhone.getText()).toString());
-            if (!user.validationInternationPhone(user.getMaskedPhone())) {
-                managerInputErrors.errorInputEditText(editForeignPhone,
-                        user.getError_validation(), false);
-                card_documents.setStrokeColor(getResources().getColor(R.color.ruby_red));
-                return false;
+            userSingUp.setPhone(Objects.requireNonNull(editForeignPhone.getText()).toString());
+            if (!userSingUp.validationInternationPhone(userSingUp.getMaskedPhone())) {
+                card_corrects[1] = null;
+                return editForeignPhone;
             }
         } else {
             // Manteve a Opção do Telefone Brasileiro
-            user.setPhone(Objects.requireNonNull(editPhoneBrazilian.getText()).toString());
-            if (!user.validationBrazilianPhone(user.getMaskedPhone())) {
-                managerInputErrors.errorInputEditText(editPhoneBrazilian,
-                        user.getError_validation(), false);
-                card_documents.setStrokeColor(getResources().getColor(R.color.ruby_red));
-                return false;
+            userSingUp.setPhone(Objects.requireNonNull(editPhoneBrazilian.getText()).toString());
+            if (!userSingUp.validationBrazilianPhone(userSingUp.getMaskedPhone())) {
+                card_corrects[1] = null;
+                return editPhoneBrazilian;
             }
         }
-        // Passou por todas as Validações da Segunda Parte
-        card_documents.setStrokeColor(getResources().getColor(R.color.lime_green));
 
         // Valida a Terceira Parte (Email, Internet e Consulta na API) e Senhas)
-        TextInputEditText editEmail = findViewById(R.id.edittext_email);
-        TextInputEditText editPassword = findViewById(R.id.edittext_password);
-        TextInputEditText editConfirmPassword = findViewById(R.id.edittext_confirmPassword);
-        user.setEmail(Objects.requireNonNull(editEmail.getText()).toString());
-        user.setPassword(Objects.requireNonNull(editPassword.getText()).toString());
-        user.setConfirmPassword(Objects.requireNonNull(editConfirmPassword.getText()).toString());
+        userSingUp.setEmail(Objects.requireNonNull(editEmail.getText()).toString());
+        userSingUp.setPassword(Objects.requireNonNull(editPassword.getText()).toString());
+        userSingUp.setConfirmPassword(Objects.requireNonNull(editConfirmPassword.getText()).toString());
+        if (!userSingUp.validationEmail(userSingUp.getEmail())) {
+            card_corrects[2] = null;
+            return editEmail;
+        } else if (!userSingUp.validationPassword(userSingUp.getPassword())) {
+            card_corrects[2] = null;
+            return editPassword;
+        } else if (!userSingUp.validationConfirmPassword(userSingUp)) {
+            card_corrects[2] = null;
+            return editConfirmPassword;
+        }
 
-        if (!user.validationEmail(user.getEmail())) {
-            managerInputErrors.errorInputEditText(editEmail, user.getError_validation(), false);
-            card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else if (!user.validationEmailAPI(user.getEmail())) {
-            managerInputErrors.errorInputEditText(editEmail, user.getError_validation(), false);
-            card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            // Cria um AlertDialog na Tela
-            new AlertDialogPersonalized(context).defaultDialog(
-                    getString(R.string.title_input_invalid, "Email"),
-                    Html.fromHtml(user.getError_validation()).toString()).show();
-            return false;
-        } else if (!user.validationPassword(user.getPassword())) {
-            managerInputErrors.errorInputEditText(editPassword, user.getError_validation(), false);
-            card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else if (!user.validationConfirmPassword(user)) {
-            managerInputErrors.errorInputEditText(editConfirmPassword, user.getError_validation(), false);
-            card_dataLogin.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else card_dataLogin.setStrokeColor(getResources().getColor(R.color.lime_green));
+        // Atribui os Valores Corretos após ter Executado todas as Validações
+        if (switch_documents.isChecked()) userSingUp.setCnpj(userSingUp.getUnmaskCnpj());
+        else userSingUp.setCpf(userSingUp.getUnmaskCpf());
+        userSingUp.setPhone(userSingUp.getUnmaskPhone());
+        return null;
+    }
 
+    /**
+     * Valida o CNPJ e Telefone em uma API.
+     * <p>
+     * * Caso haja erro, o Titulo estará na Posição 0 e a Mensagem na Posição 1
+     *
+     * @param executorService {@link ExecutorService} utilizado nas consultas e validações em APIs
+     * @return String[]|null
+     */
+    private String[] validationAPI(ExecutorService executorService) {
+        if (!userSingUp.validationNumberCnpj(executorService, userSingUp.getUnmaskCnpj())) {
+            // Obtem os Possiveis erros de Validação CNPJ (API Externa)
+            return new String[]{getString(R.string.title_input_invalid, "CNPJ"),
+                    userSingUp.getError_validation()};
+        } else if (!userSingUp.validationEmailAPI(executorService, userSingUp.getEmail())) {
+            // Obtem se o Erro se o email é descartavel
+            return new String[]{getString(R.string.title_input_invalid, "Email"),
+                    Html.fromHtml(userSingUp.getError_validation()).toString()};
+        } else {
+            // Passou por todas as Validações da Segunda Parte
+            card_corrects[1] = card_documents;
+            card_corrects[2] = card_dataLogin;
+            return null;
+        }
+    }
+
+    /**
+     * Valida se o Usuario aceitou os Termos de Uso
+     * <p>
+     * *Retorno é o Texto exibindo o Erro
+     *
+     * @return {@link TextView}|null
+     */
+    private TextView validationTermsUse() {
         // Valida os Temos de Uso
         CheckBox cbx_termsUse = findViewById(R.id.cbx_termsUse);
-        if (!cbx_termsUse.isChecked()) {
-            errorTermsUse.setVisibility(View.VISIBLE);
-            card_terms.setStrokeColor(getResources().getColor(R.color.ruby_red));
-            return false;
-        } else {
-            // Passou por todas as validações: Define na Classe userSingUp (Usada p/ fazer o Cadastro)
-            card_terms.setStrokeColor(getResources().getColor(R.color.lime_green));
-            errorOptionUser.setVisibility(View.GONE);
-            errorTermsUse.setVisibility(View.GONE);
+        if (cbx_termsUse.isChecked()) {
+            card_corrects[3] = card_terms;
+            return null;
+        } else return errorTermsUse;
+    }
 
-            userSingUp.setName(user.getName());
-            userSingUp.setLast_name(user.getLast_name());
-            userSingUp.setDate_birth(date_birth);
-            userSingUp.setNickname(user.getNickname());
+    /**
+     * Valida se o Usuario selecionou algum Tipo de Usuario (Vendedor, Cliente)
+     * <p>
+     * *Retorno é o Texto exibindo o Erro
+     *
+     * @return {@link TextView}|null
+     */
+    private TextView validationTypeUser() {
+        // Valida o Tipo de Usuario
+        if (!opClient.isChecked() && !opSeller.isChecked()) return errorOptionUser;
+        else {
             userSingUp.setSeller(opSeller.isChecked());
-
-            if (switch_documents.isChecked()) userSingUp.setCnpj(user.getUnmaskCnpj());
-            else userSingUp.setCpf(user.getUnmaskCpf());
-            userSingUp.setPhone(user.getUnmaskPhone());
-
-            userSingUp.setEmail(user.getEmail());
-            userSingUp.setPassword(user.getPassword());
-            return true;
+            return null;
         }
     }
 
@@ -316,62 +328,139 @@ public class SingUpActivity extends AppCompatActivity {
     public void listenerSingUp() {
         btn_createAcount.setOnClickListener(v -> {
 
-            if (!managerServices.availableInternet()) {
-                // Conexão de Internet Indisponivel
-                new AlertDialogPersonalized(context).defaultDialog(
-                        getString(R.string.title_no_internet),
-                        Html.fromHtml(getString(R.string.error_network)).toString()).show();
-                return;
-            } else if (!validationsSingUp()) {
-                // Erro na Validação do Cadastro
-                new SnackBarPersonalized(findViewById(R.id.layout_singup))
-                        .defaultSnackBar(getString(R.string.error_singup)).show();
-                return;
+            // Dialog que exibe um Alerta de "Carregando..." na Tela
+            AlertDialog dialogLoading = dialogPersonalized.loadingDialog(
+                    getString(R.string.message_loadingSingUp, "Usuario"), false);
+
+            try {
+                // Fecha o Teclado caso esteja Aberto
+                managerServices.closeKeyboard(SingUpActivity.this);
+
+                // Verifica se a Conexão de Internet está disponivel
+                if (!managerServices.availableInternet()) {
+                    dialogPersonalized.defaultDialog(getString(R.string.title_no_internet),
+                            Html.fromHtml(getString(R.string.error_network)).toString()).show();
+                    return;
+                }
+
+                dialogLoading.show();
+
+                // Exibirá os Resultados sempre na Thread Principal
+                Handler handlerMain = new Handler(Looper.getMainLooper());
+
+                // Realiza as Tarefas Assincronas
+                ExecutorService executorService = Executors.newCachedThreadPool();
+                executorService.execute(() -> {
+
+                    // Obtem o Resultado das Validações
+                    TextInputEditText wrongSingUp = validationsSingUp();
+                    String[] errorAPI = validationAPI(executorService);
+                    TextView wrongTypeUser = validationTypeUser();
+                    TextView wrongTermsUse = validationTermsUse();
+
+                    // Atribui as Cores nos Cards já Validados
+                    for (MaterialCardView item : card_corrects) {
+                        if (item != null) handlerMain.post(() -> item.setStrokeColor(
+                                getResources().getColor(R.color.lime_green)));
+                    }
+
+                    if (wrongSingUp != null) {
+                        handlerMain.post(() -> {
+                            dialogLoading.dismiss();
+                            new ManagerInputErrors(context).errorInputEditText(wrongSingUp,
+                                    userSingUp.getError_validation(), false);
+                        });
+                        return;
+                    } else if (wrongTypeUser != null) {
+                        handlerMain.post(() -> {
+                            dialogLoading.dismiss();
+                            wrongTypeUser.setVisibility(View.VISIBLE);
+                            scrollView.fullScroll(ScrollView.FOCUS_UP);
+                        });
+                        return;
+                    } else if (errorAPI != null) {
+                        handlerMain.post(() -> {
+                            dialogLoading.dismiss();
+                            dialogPersonalized.defaultDialog(errorAPI[0], errorAPI[1]).show();
+                        });
+                        return;
+                    } else if (wrongTermsUse != null) {
+                        handlerMain.post(() -> {
+                            dialogLoading.dismiss();
+                            wrongTermsUse.setVisibility(View.VISIBLE);
+                        });
+                        return;
+                    } else {
+                        // Tudo foi Validado
+                        handlerMain.post(() -> {
+                            errorOptionUser.setVisibility(View.GONE);
+                            errorTermsUse.setVisibility(View.GONE);
+                        });
+                    }
+
+                    // Registra o User na API e obtem a Instancia do User com ID da API
+                    UserAPI userAPI = new UserAPI(context);
+                    User userReturnedAPI = userAPI.registerInAPI(executorService, userSingUp);
+                    if (userReturnedAPI == null) {
+                        handlerMain.post(() -> {
+                            // Erro no Cadastro da API Invalida. Tira o Loading e Exibe o Erro
+                            dialogLoading.dismiss();
+                            dialogPersonalized.defaultDialog(getString(R.string.title_no_register_api),
+                                    userAPI.getError_operation()).show();
+                        });
+                        return;
+                    }
+
+                    // Armazenará o Token e a Realização do Login
+                    ManagerSharedPreferences preferences = new ManagerSharedPreferences(context,
+                            ManagerSharedPreferences.NAME_PREFERENCE);
+
+                    // Obtem e Valida o Token gerado pela API
+                    String token_user = userAPI.getTokenUser(executorService, userReturnedAPI.getEmail(),
+                            userReturnedAPI.getPassword());
+                    if (token_user.equals("")) {
+                        handlerMain.post(() -> {
+                            // Erro no Cadastro da API Invalida. Tira o Loading e Exibe o Erro
+                            dialogLoading.dismiss();
+                            dialogPersonalized.defaultDialog(
+                                    getString(R.string.title_input_invalid, "Usuario"),
+                                    userAPI.getError_operation()).show();
+                        });
+                        return;
+                    }
+
+                    // Define o "Lembrar Login" nas Preferences e o Token do Novo Usuario
+                    preferences.setJsonWebTokenUser(token_user);
+                    preferences.setRememberLogin(true);
+
+                    // Salva o Usuario no Banco de Dados
+                    ManagerDataBase managerDataBase = new ManagerDataBase(context);
+                    if (!managerDataBase.insertUser(userReturnedAPI)) {
+                        handlerMain.post(() -> {
+                            // Erro no Salavar o Usuario no Banco de DAdos Local (SQLite)
+                            dialogLoading.dismiss();
+                            dialogPersonalized.defaultDialog(
+                                    getString(R.string.title_no_register_api),
+                                    managerDataBase.getError_operation()).show();
+                        });
+                    } else {
+                        handlerMain.post(() -> {
+                            dialogLoading.dismiss();
+                            // Finaliza essa Activity e Inicia a Activity do Cadastro Completo
+                            startActivity(new Intent(context, AddressActivity.class));
+                            finish();
+                        });
+                    }
+                });
+
+            } catch (Exception ex) {
+                Log.e(EXCEPTION, "SingUpActivity - Erro no Cadastro do Usuario: " + ex.getClass().getName());
+                ex.printStackTrace();
+                dialogLoading.dismiss();
+                dialogPersonalized.defaultDialog(
+                        getString(R.string.title_input_invalid, "Cadastro"),
+                        getString(R.string.error_exception)).show();
             }
-
-            managerServices.closeKeyboard(SingUpActivity.this);
-
-            // Registra o User na API e obtem a Instancia do User com ID da API
-            UserAPI userAPI = new UserAPI(SingUpActivity.this);
-            User userReturnedAPI = userAPI.registerInAPI(userSingUp);
-
-            // Erro na API Goal
-            if (userReturnedAPI == null) {
-                new AlertDialogPersonalized(context).defaultDialog(
-                        getString(R.string.title_no_register_api), userAPI.getError_operation()).show();
-                return;
-            }
-
-            // Armazenará o Token e a Realização do Login
-            ManagerSharedPreferences preferences = new ManagerSharedPreferences(
-                    context, ManagerSharedPreferences.NAME_PREFERENCE);
-
-            // Obtem o Token da API
-            String token_user = userAPI.getTokenUser(userReturnedAPI.getEmail(), userReturnedAPI.getPassword());
-            if (token_user.equals("")) {
-                new AlertDialogPersonalized(SingUpActivity.this).defaultDialog(
-                        getString(R.string.title_input_invalid, "Usuario"),
-                        userAPI.getError_operation()).show();
-                return;
-            }
-
-            // Define o "Lembrar Login" nas Preferences e o Token do Novo Usuario
-            preferences.setJsonWebTokenUser(token_user);
-            preferences.setRememberLogin(true);
-
-            // Salva o Usuario no Banco de Dados
-            ManagerDataBase managerDataBase = new ManagerDataBase(SingUpActivity.this);
-            if (!managerDataBase.insertUser(userReturnedAPI)) {
-                new AlertDialogPersonalized(SingUpActivity.this).defaultDialog(
-                        getString(R.string.title_no_register_api),
-                        managerDataBase.getError_operation()).show();
-            } else {
-                // Finaliza essa Activity e Inicia a Activity do Cadastro Completo
-                startActivity(new Intent(context, AddressActivity.class));
-                finish();
-            }
-
-
         });
     }
 

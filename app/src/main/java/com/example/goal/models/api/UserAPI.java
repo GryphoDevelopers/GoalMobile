@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class UserAPI {
@@ -37,9 +36,13 @@ public class UserAPI {
     /**
      * Atualiza as Informações do Usuario na API
      *
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
+     * @param userRegister    {@link User} que será registrado na API
      * @return true|false
      */
-    public static boolean updateUserAPI(User userRegister) {
+    public static boolean updateUserAPI(ExecutorService executorService, User userRegister) {
         //todo: implementação futura
         return true;
     }
@@ -47,13 +50,15 @@ public class UserAPI {
     /**
      * Insere um Usuario no Banco de Dados via API
      *
-     * @param user_register Usuario inserido no Banco de Dados
+     * @param user_register   Usuario inserido no Banco de Dados
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
      * @return {@link User}|null
      */
-    public User registerInAPI(User user_register) {
+    public User registerInAPI(ExecutorService executorService, User user_register) {
         try {
             // Criação da Tarefa Assincrona e do Metodo que busca na Internet
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
             SearchInternet searchInternet = new SearchInternet(context);
 
             // Configura a Tarefa Assincrona que Retorna uma String
@@ -106,15 +111,17 @@ public class UserAPI {
     /**
      * Obtem o JWT (Json Web Token) / Token de um Usuario cadastrado na API
      *
-     * @param email    Email do Usuario que será gerado o Token da API
-     * @param password Senha do Usuario que será gerado o Token da API
+     * @param email           Email do Usuario que será gerado o Token da API
+     * @param password        Senha do Usuario que será gerado o Token da API
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
      * @return {@link String}|""
-     * @see #registerInAPI(User)
+     * @see #registerInAPI(ExecutorService, User) 
      */
-    public String getTokenUser(String email, String password) {
+    public String getTokenUser(ExecutorService executorService, String email, String password) {
         try {
             // Criação da Tarefa Assincrona e do Metodo que busca na Internet
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
             SearchInternet searchInternet = new SearchInternet(context);
 
             // Configura a Tarefa Assincrona que Retorna uma String
@@ -160,12 +167,15 @@ public class UserAPI {
     /**
      * Obtem os dados do Usuario da API
      *
-     * @param email    Email do Usuario que será obtido na API
-     * @param password Senha do Usuario que será obtida na API
-     * @param token    Token do Usuario que será obtido
+     * @param email           Email do Usuario que será obtido na API
+     * @param password        Senha do Usuario que será obtida na API
+     * @param token           Token do Usuario que será obtido
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
      * @return {@link User}|null
      */
-    public User getInfoUserAPI(String email, String password, String token) {
+    public User getInfoUserAPI(ExecutorService executorService, String email, String password, String token) {
         // todo: Remover e Implementar Obtenção do usuario da API
         User userAPI = new User(context);
         userAPI.setId_user("56");

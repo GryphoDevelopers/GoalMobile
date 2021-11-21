@@ -209,10 +209,13 @@ public class Product {
     /**
      * A partir de uma URL, obtem os Produtos da API
      *
-     * @param url URL que será obtida os Produtos
+     * @param url             URL que será obtida os Produtos
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
      * @return {@link List<Product>}|null
      */
-    public List<Product> getProducts_catalog(String url, ExecutorService executorService) {
+    public List<Product> getProducts_catalog(ExecutorService executorService, String url) {
         try {
             // Configura a Tarefa Assincrona que Retorna uma String
             Set<Callable<String>> callable = new HashSet<>();
