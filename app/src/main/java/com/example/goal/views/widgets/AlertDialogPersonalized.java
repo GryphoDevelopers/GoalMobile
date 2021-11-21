@@ -2,7 +2,6 @@ package com.example.goal.views.widgets;
 
 import android.app.Activity;
 import android.content.Context;
-import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -81,10 +80,6 @@ public class AlertDialogPersonalized {
         MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(context);
         alertDialogBuilder.setTitle(context.getString(R.string.title_loading));
         alertDialogBuilder.setMessage(message_body);
-
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0, 24, 0, 32);
 
         //Adiciona o CircularPorgress
         alertDialogBuilder.setView(R.layout.layout_loading);
