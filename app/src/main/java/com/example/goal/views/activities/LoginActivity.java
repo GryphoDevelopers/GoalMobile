@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Html;
 import android.widget.Button;
 
 import androidx.appcompat.app.AlertDialog;
@@ -119,14 +118,6 @@ public class LoginActivity extends AppCompatActivity {
             // Fecha o Teclado (Caso esteja aberto)
             managerServices.closeKeyboard(this);
 
-            // Valida a Conexão com a Internet
-            if (!managerServices.availableInternet()) {
-                new AlertDialogPersonalized(context).defaultDialog(
-                        getString(R.string.title_no_internet),
-                        Html.fromHtml(getString(R.string.error_network)).toString()).show();
-                return;
-            }
-
             // Cria um AlertDialog do Estilo "Carregando..."
             AlertDialog dialogLoading = dialogPersonalized.loadingDialog(
                     getString(R.string.message_loadingSingIn), false);
@@ -138,8 +129,6 @@ public class LoginActivity extends AppCompatActivity {
             // Executa as Validações e Cadatros em uma Tarefa Assincrona
             ExecutorService executorService = Executors.newCachedThreadPool();
             executorService.execute(() -> {
-
-                handlerMain.post(dialogLoading::show);
 
                 // Valida os Inputs para Verificar se há algum erro
                 TextInputEditText inputWrong = validationInputs();

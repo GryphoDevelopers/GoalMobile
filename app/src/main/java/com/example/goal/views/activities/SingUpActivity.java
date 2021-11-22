@@ -335,14 +335,6 @@ public class SingUpActivity extends AppCompatActivity {
             try {
                 // Fecha o Teclado caso esteja Aberto
                 managerServices.closeKeyboard(SingUpActivity.this);
-
-                // Verifica se a Conexão de Internet está disponivel
-                if (!managerServices.availableInternet()) {
-                    dialogPersonalized.defaultDialog(getString(R.string.title_no_internet),
-                            Html.fromHtml(getString(R.string.error_network)).toString()).show();
-                    return;
-                }
-
                 dialogLoading.show();
 
                 // Exibirá os Resultados sempre na Thread Principal

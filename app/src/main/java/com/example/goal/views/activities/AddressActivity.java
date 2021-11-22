@@ -181,12 +181,6 @@ public class AddressActivity extends AppCompatActivity {
     private void setUpDropdownCities(String uf) {
         AutoCompleteTextView autoComplete_city = findViewById(R.id.autoCompleteCity);
 
-        // Verifica se a Internet está disponivel
-        if (!managerServices.availableInternet()) {
-            dialog_personalized.defaultDialog(getString(R.string.title_no_internet),
-                    Html.fromHtml(getString(R.string.error_network)).toString()).show();
-        }
-
         // Instancia a Classe de AlertDialog que será usado
         AlertDialog progressDialog = dialog_personalized.loadingDialog(
                 getString(R.string.message_loadingDownload, "das Cidades"), true);
@@ -318,14 +312,6 @@ public class AddressActivity extends AppCompatActivity {
         registerCompleteUser.setOnClickListener(v -> {
             // Fecha o Teclado (Caso esteja aberto)
             managerServices.closeKeyboard(this);
-
-            // Valida a Conexão com a Internet
-            if (!managerServices.availableInternet()) {
-                dialog_personalized.defaultDialog(
-                        getString(R.string.title_no_internet),
-                        Html.fromHtml(getString(R.string.error_network)).toString()).show();
-                return;
-            }
 
             // Cria um AlertDialog do Estilo "Carregando..."
             AlertDialog dialogLoading = dialog_personalized.loadingDialog(
