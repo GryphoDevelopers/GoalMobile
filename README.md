@@ -32,11 +32,11 @@
 - [X] Separar em Activities: Cadastro de Endereço e Cadastro Completo do Usuario (Telefone, CNPJ/CPF)
 - [X] Correção TextWatcher
 - [X] Fechar o Teclado ao selecionar a opçao dos estados/cidades/login/cadastro
+- [X] Login usando Dados Pessoais + Token (JWT)
   
 - [ ] Configuração das Activities
 - [ ] Validação de Pagamento
 - [ ] Criação da Classe Produtos (Validações)
-- [ ] Login usando Dados Pessoais + Token (JWT)
 - [ ] Configuração dos Fragments
 
 

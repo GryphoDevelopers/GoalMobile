@@ -108,7 +108,7 @@ public class ProductsTest {
     @Test
     public void validationStock() {
         String[] stock_valids = new String[]{"1", "3", "65", "20", "0245", "03"};
-        String[] stock_invalids = new String[]{"0", "-2", " ", "20", "0245", "03"};
+        String[] stock_invalids = new String[]{"0", "-2", " ", "3.6", "sa", "&a/s/a-s+s-a/"};
 
         assertTrue(product.validationStock(stock_valids[0]));
         assertTrue(product.validationStock(stock_valids[1]));
@@ -118,12 +118,12 @@ public class ProductsTest {
         assertTrue(product.validationStock(stock_valids[5]));
 
         assertFalse(product.validationStock(null));
-        assertFalse(product.validationStock(stock_valids[0]));
-        assertFalse(product.validationStock(stock_valids[1]));
-        assertFalse(product.validationStock(stock_valids[2]));
-        assertFalse(product.validationStock(stock_valids[3]));
-        assertFalse(product.validationStock(stock_valids[4]));
-        assertFalse(product.validationStock(stock_valids[5]));
+        assertFalse(product.validationStock(stock_invalids[0]));
+        assertFalse(product.validationStock(stock_invalids[1]));
+        assertFalse(product.validationStock(stock_invalids[2]));
+        assertFalse(product.validationStock(stock_invalids[3]));
+        assertFalse(product.validationStock(stock_invalids[4]));
+        assertFalse(product.validationStock(stock_invalids[5]));
 
     }
 

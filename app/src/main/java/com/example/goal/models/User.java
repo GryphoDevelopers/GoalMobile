@@ -462,7 +462,7 @@ public class User {
     public boolean validationBrazilianPhone(String phone) {
         if (!ManagerResources.isNullOrEmpty(phone)) {
             if (phone.length() != 15) {
-                error_validation = String.format(INPUT_NOT_FORMAT, "Telefone", "(0XX) 90000-0000");
+                error_validation = String.format(INPUT_NOT_FORMAT, "Telefone", "(0XX)90000-0000");
                 return false;
             }
 

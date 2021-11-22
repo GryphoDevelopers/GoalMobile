@@ -1,21 +1,8 @@
 package com.example.goal;
 
-import android.util.Log;
-
-import com.example.goal.models.User;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Example local unit test, which will execute on the development machine (host).

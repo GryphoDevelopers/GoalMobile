@@ -21,6 +21,7 @@ import com.example.goal.managers.ManagerDataBase;
 import com.example.goal.managers.ManagerResources;
 import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.Product;
+import com.example.goal.models.api.ProductsAPI;
 import com.example.goal.views.fragments.ProductsFragment;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
 import com.example.goal.views.widgets.SnackBarPersonalized;
@@ -118,8 +119,8 @@ public class IndexActivity extends AppCompatActivity {
             runOnUiThread(dialogLoading::show);
 
             // Obtem os Itens que serão Exibidos
-            Product product = new Product(IndexActivity.this);
-            List<Product> listCatalogProducts = product.getProducts_catalog(executorService, URL_PRODUCTS);
+            ProductsAPI productAPI = new ProductsAPI(IndexActivity.this);
+            List<Product> listCatalogProducts = productAPI.getCatalog(executorService, URL_PRODUCTS);
 
             // Exibe o Resultado na Tela
             runOnUiThread(() -> {
@@ -128,7 +129,7 @@ public class IndexActivity extends AppCompatActivity {
                     // Exibe o Erro do Catalogo para o Usuario
                     alertDialogPersonalized.defaultDialog(
                             getString(R.string.title_input_invalid, "Catalogo"),
-                            product.getError_operation()).show();
+                            productAPI.getError_operation()).show();
 
                     //todo adicionar fragment null p/ erros
                 } else {

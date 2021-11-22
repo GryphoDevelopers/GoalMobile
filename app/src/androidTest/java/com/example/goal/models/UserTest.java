@@ -1,5 +1,10 @@
 package com.example.goal.models;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import android.content.Context;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -10,11 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Random;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import java.util.concurrent.Executors;
 
 /**
  * Classe de Testes da Classe do Usuario.
@@ -141,12 +142,8 @@ public class UserTest {
     public void validationCpf() {
 
         // Cpf disponibilizados por: https://www.4devs.com.br/gerador_de_cpf
-        String[] valid_cpf = new String[5];
-        valid_cpf[0] = "69022895068";
-        valid_cpf[1] = "40560427050";
-        valid_cpf[2] = "98339670000";
-        valid_cpf[3] = "61656389029";
-        valid_cpf[4] = "57411423033";
+        String[] valid_cpf = new String[]{"690.228.950-68", "405.604.270-50", "983.396.700-00",
+                "616.563.890-29", "574.114.230-33"};
 
         assertFalse(user.validationCpf(null));
         assertFalse(user.validationCpf(""));
@@ -156,17 +153,17 @@ public class UserTest {
         assertFalse(user.validationCpf(String.valueOf(0)));
         assertFalse(user.validationCpf("Lums" + 256));
 
-        for (String item : valid_cpf) {
-            assertTrue(user.validationCpf(item));
-        }
+        assertTrue(user.validationCpf(valid_cpf[0]));
+        assertTrue(user.validationCpf(valid_cpf[1]));
+        assertTrue(user.validationCpf(valid_cpf[2]));
+        assertTrue(user.validationCpf(valid_cpf[3]));
+        assertTrue(user.validationCpf(valid_cpf[4]));
     }
 
     @Test
     public void validationCnpj() {
         // Cpf disponibilizados por: https://www.4devs.com.br/gerador_de_cnpj
-        String[] valid_cnpj = new String[2];
-        valid_cnpj[0] = "27601226000102";
-        valid_cnpj[1] = "35108454000165";
+        String[] valid_cnpj = new String[]{"27.601.226/0001-02", "35.108.454/0001-65"};
 
         assertFalse(user.validationCnpj(null));
         assertFalse(user.validationCnpj(""));
@@ -176,10 +173,10 @@ public class UserTest {
         assertFalse(user.validationCnpj(String.valueOf(0)));
         assertFalse(user.validationCnpj("Lums" + 256));
 
-        for (String item : valid_cnpj) {
-            assertTrue(user.validationCnpj(item));
-            assertTrue(user.validationNumberCnpj(item));
-        }
+        assertTrue(user.validationCnpj(valid_cnpj[0]));
+        assertTrue(user.validationNumberCnpj(Executors.newSingleThreadExecutor(), valid_cnpj[0]));
+        assertTrue(user.validationCnpj(valid_cnpj[1]));
+        assertTrue(user.validationNumberCnpj(Executors.newSingleThreadExecutor(), valid_cnpj[1]));
     }
 
     @Test
@@ -204,7 +201,6 @@ public class UserTest {
 
     @Test
     public void validationConfirmPassword() {
-
         User empty_password = new User(context);
         empty_password.setPassword("");
         empty_password.setConfirmPassword("");
@@ -254,13 +250,8 @@ public class UserTest {
 
     @Test
     public void validationPhone() {
-
-        String[] valid_numbers = new String[5];
-        valid_numbers[0] = "77841009622";
-        valid_numbers[1] = "54827590235";
-        valid_numbers[2] = "17176309513";
-        valid_numbers[3] = "61605370906";
-        valid_numbers[4] = "43477218084";
+        String[] valid_numbers = new String[]{"(077)84100-9622", "(054)82759-0235", "(017)17630-9513",
+                "(061)60537-0906", "(043)47721-8084"};
 
         assertFalse(user.validationBrazilianPhone(null));
         assertFalse(user.validationBrazilianPhone(""));
@@ -270,9 +261,11 @@ public class UserTest {
         assertFalse(user.validationBrazilianPhone(String.valueOf(1234)));
         assertFalse(user.validationBrazilianPhone("123 153"));
 
-        for (String item : valid_numbers) {
-            assertTrue(user.validationBrazilianPhone(item));
-        }
+        assertTrue(user.validationBrazilianPhone(valid_numbers[0]));
+        assertTrue(user.validationBrazilianPhone(valid_numbers[1]));
+        assertTrue(user.validationBrazilianPhone(valid_numbers[2]));
+        assertTrue(user.validationBrazilianPhone(valid_numbers[3]));
+        assertTrue(user.validationBrazilianPhone(valid_numbers[4]));
     }
 
     @Test

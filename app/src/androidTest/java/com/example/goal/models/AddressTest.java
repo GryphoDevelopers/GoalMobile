@@ -30,13 +30,13 @@ public class AddressTest {
      * Instancia os Items (Variaveis, Classes) que serão usados
      */
     @Before
-    public void instanceItens() {
+    public void instanceItems() {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         address = new Address(context);
         array_states = context.getResources().getStringArray(R.array.state);
         array_uf = context.getResources().getStringArray(R.array.uf);
-        array_cep_valid = new String[]{"69313035", "69099096", "77015387", "97037174"};
-        array_cep_invalid = new String[]{"148100055", "999999999", "100000000", "0", "", " ",
+        array_cep_valid = new String[]{"69313-035", "69099-096", "77015-387", "97037-174"};
+        array_cep_invalid = new String[]{"148100-055", "999999999", "100000000", "0", "", " ",
                 "gyasdha", "05 6 6 6"};
 
     }
@@ -46,13 +46,19 @@ public class AddressTest {
      */
     @Test
     public void validationCEP() {
-        for (String item : array_cep_valid) {
-            assertTrue(address.validationCEP(item));
-        }
+        assertTrue(address.validationCEP(array_cep_valid[0]));
+        assertTrue(address.validationCEP(array_cep_valid[1]));
+        assertTrue(address.validationCEP(array_cep_valid[2]));
+        assertTrue(address.validationCEP(array_cep_valid[3]));
 
-        for (String item : array_cep_invalid) {
-            assertFalse(address.validationCEP(item));
-        }
+        assertFalse(address.validationCEP(array_cep_invalid[0]));
+        assertFalse(address.validationCEP(array_cep_invalid[1]));
+        assertFalse(address.validationCEP(array_cep_invalid[2]));
+        assertFalse(address.validationCEP(array_cep_invalid[3]));
+        assertFalse(address.validationCEP(array_cep_invalid[4]));
+        assertFalse(address.validationCEP(array_cep_invalid[5]));
+        assertFalse(address.validationCEP(array_cep_invalid[6]));
+        assertFalse(address.validationCEP(array_cep_invalid[7]));
     }
 
     /**
