@@ -1,37 +1,71 @@
 package com.example.goal.views.activities;
 
+import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
+import static com.example.goal.managers.ManagerSharedPreferences.NAME_PREFERENCE;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.goal.R;
+import com.example.goal.managers.ManagerDataBase;
 import com.example.goal.managers.ManagerSharedPreferences;
+import com.example.goal.models.User;
+import com.example.goal.models.api.UserAPI;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * OpenActivity: Activity que sempre controlará a primeira tela app
  */
 public class OpenActivity extends AppCompatActivity {
 
-    // todo: implementar um metodo para validar o Login do Usuario (SQLite + JWT) + validação de Internet
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open);
 
-        // Instancia o Controlador de Preferences para verificar se existe ou não um Login no APP
-        ManagerSharedPreferences preferences = new ManagerSharedPreferences(OpenActivity.this,
-                ManagerSharedPreferences.NAME_PREFERENCE);
+        // Classes que serão utilizadas
+        Context context = OpenActivity.this;
+        ManagerSharedPreferences managerPreferences = new ManagerSharedPreferences(context, NAME_PREFERENCE);
 
-        // Deixa nessa Activity por 2 Segundos
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(() -> {
-            // Inicia a Activity de Produtos ou Login
-            startActivity(new Intent(OpenActivity.this,
-                    preferences.isRememberLogin() ? IndexActivity.class : LoginActivity.class));
-            finish();
-        }, 2000);
+
+        // Tarefa Assincrona de Busca do Usuario na API
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.execute(() -> {
+            if (managerPreferences.isRememberLogin()) {
+                // Obtem o Usuario do Banco de Dados
+                ManagerDataBase dataBase = new ManagerDataBase(context);
+                User user_database = dataBase.getUserDatabase();
+
+                // Obtem p Usuario do Banco de Dados par obter o TOken
+                if (user_database != null) {
+                    UserAPI userAPI = new UserAPI(context);
+                    String token = userAPI.getTokenUser(executorService, user_database.getEmail(),
+                            user_database.getPassword());
+
+                    if (!isNullOrEmpty(token)) {
+                        // Caso o Token Seja Valido, salva e Abre a Activity Principal
+                        //todo: obter os dados do usuario da API
+                        managerPreferences.setJsonWebTokenUser(token);
+                        runOnUiThread(() -> {
+                            startActivity(new Intent(context, IndexActivity.class));
+                            finish();
+                        });
+                        return;
+                    }
+                }
+            }
+
+            // Caso o Usuario não tenha Internet, ou Login, ou a seleção do "Lembrar Login
+            runOnUiThread(() -> {
+                startActivity(new Intent(context, LoginActivity.class));
+                finish();
+            });
+        });
     }
+
 }

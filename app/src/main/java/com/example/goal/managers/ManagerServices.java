@@ -1,5 +1,7 @@
 package com.example.goal.managers;
 
+import static com.example.goal.managers.ManagerResources.EXCEPTION;
+
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -15,9 +17,6 @@ public class ManagerServices {
 
     // Constantes Usadas
     private final String NAME_CLASS = "ManagerServices";
-    private final String NO_SERVICE = "No Service";
-    private final String NO_NETWORK_INFO = "Invalid Network";
-    private final String RUNTIME_EXCEPTION = "Runtime Exception";
     private final Context context;
     private InputMethodManager keyboardManager;
 
@@ -39,20 +38,22 @@ public class ManagerServices {
                     context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
             if (connectivityManager == null) {
-                Log.e(NO_SERVICE, NAME_CLASS + " Erro ao Obter o serviço de Internet");
+                Log.e("Sem Serviço", NAME_CLASS + " - Erro ao Obter o serviço de Internet: " +
+                        "Serviço de Conexão Indisponivel");
                 return false;
             }
 
-            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-            if (networkInfo != null && networkInfo.isConnected()) return true;
-        } catch (RuntimeException ex) {
-            Log.e(RUNTIME_EXCEPTION, NAME_CLASS + " Erro ao Obter o serviço de Internet");
+            NetworkInfo networkInfoWifi = connectivityManager.getActiveNetworkInfo();
+            if (networkInfoWifi != null && networkInfoWifi.isConnected()) return true;
+
+            Log.e("Sem Internet", NAME_CLASS + " - Internet Indisponivel");
+            return false;
+        } catch (Exception ex) {
+            Log.e(EXCEPTION, NAME_CLASS + " Execeção ao Obter o serviço de Internet: " +
+                    ex.getClass().getName());
             ex.printStackTrace();
             return false;
         }
-
-        Log.e(NO_NETWORK_INFO, NAME_CLASS + " Erro ao Obter as Informações de Internet");
-        return false;
     }
 
     /**
