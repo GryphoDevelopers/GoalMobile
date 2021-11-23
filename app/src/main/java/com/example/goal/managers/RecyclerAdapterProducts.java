@@ -33,49 +33,69 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
     public static final int INITIAL_ITEMS_QUANTITY = (3 * DEFAULT_ITEMS_QUANTITY) + 1;
 
     /**
+     * Valor que define a Posição do Titulo
+     */
+    public static final int POSITION_TITLE = 0;
+
+    /**
      * Valor do Item que fica no Layout Grande
      */
-    private static final int POSITION_BIG_ITEM = 0;
+    public static final int POSITION_BIG_ITEM = 1;
 
     /**
      * Valor que define os itens menores
      */
-    private static final int POSITION_SMALL_ITEM = 1;
+    public static final int POSITION_SMALL_ITEM = 2;
 
     /**
      * Valor dos Itens normais
      */
-    private static final int POSITION_NORMAL_ITEM = 2;
+    public static final int POSITION_NORMAL_ITEM = 3;
 
     /**
      * Valor da Posição do Loading ("Carregando")
      */
-    private static final int POSITION_LOADING = 3;
+    public static final int POSITION_LOADING = 4;
 
     /**
      * Valor da Posição da Linhja da Goal
      */
-    private static final int POSITION_LINE = 4;
+    public static final int POSITION_LINE = 5;
 
     /**
      * Lista que contem os Produtos que serão Exibidos
      */
-    private final List<Product> productList;
+    public final List<Product> productList;
 
     /**
-     * Lista com os Valores que definem as Posições dos Itens Menores
+     * Lista com os Valores que definem as Posições dos Itens Menores, mas sem o Titulo
      */
-    private final List<Integer> positions_smallItems = Arrays.asList(1, 2, 3, 7, 8, 9);
+    private final List<Integer> smallItems_withoutTitle = Arrays.asList(1, 2, 3, 7, 8, 9);
 
+    /**
+     * Lista com os Valores que definem as Posições dos Itens Menores, com a presença do Titulo
+     */
+    private final List<Integer> smallItems_withTitle = Arrays.asList(2, 3, 4, 8, 9, 0);
+
+    /**
+     * Define se terá ou não Titulo como Primeiro Elemento
+     */
+    private final boolean hasTitle;
+    private final String title;
     private RecyclerView recyclerView;
 
     /**
      * Construtor da Classe RecyclerAdapterProducts
      *
      * @param productList Lista dos Produtos que serão exibidos
+     * @param hasTitle    Define se haverá o Titulo no RecyclerView
+     * @param title       Titulo do RecyclerView (Caso hasTitle sejá true)
      */
-    public RecyclerAdapterProducts(List<Product> productList) {
+    public RecyclerAdapterProducts(List<Product> productList, boolean hasTitle, String title) {
+        if (hasTitle) productList.add(0, null);
         this.productList = productList;
+        this.hasTitle = hasTitle;
+        this.title = title;
     }
 
     /**
@@ -90,6 +110,9 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Faz o Tratamento da Configuração de Cada tipo de view
         switch (viewType) {
+            case POSITION_TITLE:
+                return new TitleViewHolder(LayoutInflater.from(parent.getContext()).inflate(
+                        R.layout.layout_title, parent, false));
             case POSITION_LOADING:
                 return new EmptyViewHolder(LayoutInflater.from(parent.getContext()).inflate(
                         R.layout.layout_loading, parent, false));
@@ -111,7 +134,9 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         // Verifica de qual classe vem a Instancia do ViewHolder
-        if (holder instanceof ItemsViewHolder) {
+        if (holder instanceof TitleViewHolder) {
+            ((TitleViewHolder) holder).text_tile.setText(title);
+        } else if (holder instanceof ItemsViewHolder) {
             // Obtem os Dados do Produto na Posição especifica do Cursor
             Product productItem = productList.get(position);
 
@@ -156,6 +181,12 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
+    /**
+     * Utilizado apenas para Obter o RecyclerView e manipular possiveis mudanças durante a
+     * Adição/Remoção de Itens
+     *
+     * @see #onBindViewHolder(RecyclerView.ViewHolder, int)
+     */
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
@@ -173,11 +204,15 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
     }
 
     /**
-     * Retorna qual o Tipo da View (Item, Quebra Linha, Loading)
+     * Retorna qual o Tipo da View (Titulo, Item, Quebra Linha, Loading)
+     *
+     * @return int ({@link #POSITION_TITLE}|{@link #POSITION_BIG_ITEM}|{@link #POSITION_LINE}|
+     * {@link #POSITION_LOADING}|{@link #POSITION_SMALL_ITEM }|{@link #POSITION_NORMAL_ITEM}
      */
     @Override
     public int getItemViewType(int position) {
-        if (isBigItem(position)) return POSITION_BIG_ITEM;
+        if (isTitle(position)) return POSITION_TITLE;
+        else if (isBigItem(position)) return POSITION_BIG_ITEM;
         else if (isLineGoal(position)) return POSITION_LINE;
         else if (isLoading(position)) return POSITION_LOADING;
         else if (isSmallItem(position)) return POSITION_SMALL_ITEM;
@@ -185,21 +220,35 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
     }
 
     /**
-     * Caso a Posição seja a Primeira, exibirá o Item no Layout maior (Destaque)
+     * Define se é ou não a posição do Titulo
+     *
+     * @return true|false
+     * @see #hasTitle
+     */
+    public boolean isTitle(int position) {
+        return hasTitle && position == 0;
+    }
+
+    /**
+     * Caso haja o TItulo, a segunda posição será do Item de Layout maior, se não, se for a primeira
+     * posição será o respectivo Layout
      *
      * @return true|false
      */
     public boolean isBigItem(int position) {
-        return position == 0;
+        if (hasTitle && position == 1) return true;
+        else return !hasTitle && position == 0;
     }
 
     /**
-     * Caso a Posição seja divisivel por 10, será adicionado uma quebra linha
+     * Caso a Posição seja divisivel por 10 (ou no caso da existencia do Titulo, caso o resto da
+     * divisão por 10 seja 1), será adicionado uma quebra linha
      *
      * @return true|false
      */
     public boolean isLineGoal(int position) {
-        return position % 10 == 0;
+        if (hasTitle && position % 10 == 1) return true;
+        else return !hasTitle && position % 10 == 0;
     }
 
     /**
@@ -210,7 +259,7 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
      */
     public boolean isLoading(int position) {
         if (position < INITIAL_ITEMS_QUANTITY) return false;
-        return productList.get(position) == null;
+        else return productList.get(position) == null;
     }
 
     /**
@@ -218,14 +267,18 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
      * Itens Menores
      *
      * @return true|false
-     * @see #positions_smallItems
+     * @see #smallItems_withoutTitle
      */
     public boolean isSmallItem(int position) {
-        // Obtem o Resto da Divisão por 10 (Obs: Sempre será um numero entre 0 a 9)
-        int rest_division = position > 10 ? position % 10 : position;
+        // Evita o Erro de Considerar o Titulo (Posição 0) como um Item Pequeno
+        if (isTitle(position)) return false;
 
-        // As possiveis posições dos Itens Menores são 1,2,3,7,8,9
-        return positions_smallItems.contains(rest_division);
+        // Obtem o Resto da Divisão por 10 (Obs: Sempre será um numero entre 0 a 9)
+        int rest_division = position >= 10 ? position % 10 : position;
+
+        // Verifica se o Resto está nas possiveis posições dos Itens menores
+        return hasTitle ? smallItems_withTitle.contains(rest_division)
+                : smallItems_withoutTitle.contains(rest_division);
     }
 
 
@@ -248,6 +301,25 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
             super(itemView);
             txt_nameProduct = itemView.findViewById(R.id.txt_nameProduct);
             image_product = itemView.findViewById(R.id.img_product);
+        }
+    }
+
+    /**
+     * Classe que retorna o valor dos Widgets que define o Titulo
+     */
+    protected static class TitleViewHolder extends RecyclerView.ViewHolder {
+
+        private final TextView text_tile;
+
+        /**
+         * Obtem uma Intancia dos Itens que serão usados
+         *
+         * @param itemView View que contem os elementos que serão exibidos
+         */
+        protected TitleViewHolder(@NonNull View itemView) {
+            super(itemView);
+            text_tile = itemView.findViewById(R.id.txt_title);
+
         }
     }
 

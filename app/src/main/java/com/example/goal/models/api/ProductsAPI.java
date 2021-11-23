@@ -49,7 +49,7 @@ public class ProductsAPI {
      *                        nas Activity
      * @return {@link List < Product >}|null
      */
-    public List<Product> getCatalog(ExecutorService executorService, String url) {
+    public List<Product> getProducts(ExecutorService executorService, String url) {
         try {
             // Configura a Tarefa Assincrona que Retorna uma String
             Set<Callable<String>> callable = new HashSet<>();

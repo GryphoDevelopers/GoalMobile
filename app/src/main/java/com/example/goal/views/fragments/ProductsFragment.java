@@ -1,11 +1,13 @@
 package com.example.goal.views.fragments;
 
+import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
+import static com.example.goal.managers.RecyclerAdapterProducts.POSITION_SMALL_ITEM;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -41,16 +43,13 @@ public class ProductsFragment extends Fragment {
     // Chaves usadas no Bundle
     private static final String TYPE = "type_fragment";
     private static final String CATEGORY = "category_fragment";
+    private final List<Product> productList;
 
     // Variaveis para Manipular os Itens
     private String type_fragment;
     private String category_fragment;
-    private List<Product> productList;
     private Context context_fragment;
-
-    // Construtor Vazio e Obrigatorio
-    public ProductsFragment() {
-    }
+    private RecyclerAdapterProducts recyclerAdapterProducts;
 
     /**
      * Construtor que possui uma {@link List} dos {@link Product} que serão exibidos no RecyclerView
@@ -85,6 +84,9 @@ public class ProductsFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Metodo responsavel por Criar o Fragment
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +96,11 @@ public class ProductsFragment extends Fragment {
         }
     }
 
+    /**
+     * Após ter criado o Fragment, configura os seus Itens
+     *
+     * @return {@link View} (Fragment Configurado)
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Instancia um Fragment (View) para ser configurada e usada
@@ -102,54 +109,46 @@ public class ProductsFragment extends Fragment {
         // Obtem o Context do Fragment p/ evitar dar Erro de Hierarquia de Context/View
         context_fragment = fragment.getContext();
 
-        // Configura o Titulo do Fragment e o RecyclerView
+        // Configura RecyclerView e seu Titulo
         setUpTitleFragment(fragment);
-        setUpRecyclerView(fragment);
 
         // Retorna o Fragment Configurado
         return fragment;
     }
 
+    /**
+     * Configura as diferentes formas de cada Tipo de Fragment
+     */
     private void setUpTitleFragment(View viewConfigured) {
-        // Configura de Formas diferentes para cada Tipo de Fragment
-        TextView text_type = viewConfigured.findViewById(R.id.type_fragment);
-        String text;
+        if (type_fragment.equals(TYPE_HOME) || type_fragment.equals(TYPE_CATEGORY)) {
 
-        switch (type_fragment) {
-            case TYPE_HOME:
-                text = "";
-                text_type.setVisibility(View.GONE);
-                break;
-            case TYPE_CATEGORY:
-                text = "Tipo: Categoria" + " - " + category_fragment;
-                break;
-            case TYPE_OTHERS:
-                text = "Outras Categorias";
-                break;
-            default:
-                text = context_fragment.getString(R.string.error_500);
-                break;
+            // Evita erros de "Esquece" de passar a Categoria do Fragment
+            String title_recyclerView = isNullOrEmpty(category_fragment) ?
+                    context_fragment.getString(R.string.titleMenu_categories): category_fragment;
+
+            // Configura o Adapter do RecyclerView
+            recyclerAdapterProducts = new RecyclerAdapterProducts(productList,
+                    type_fragment.equals(TYPE_CATEGORY), title_recyclerView);
+
+            // Obtem o RecyclerView e Configura o Adapter
+            RecyclerView recyclerView = viewConfigured.findViewById(R.id.recycler_products);
+            recyclerView.setAdapter(recyclerAdapterProducts);
+
+            // Configura o Layout do RecyclerView
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(context_fragment, 3);
+            recyclerView.setLayoutManager(gridLayoutManager);
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    // Apenas deixa ocupando 1 Espaço, se for o Item Pequeno
+                    return recyclerAdapterProducts.getItemViewType(position) == POSITION_SMALL_ITEM ? 1 : 3;
+                }
+            });
+        } else if (type_fragment.equals(TYPE_OTHERS)) {
+            // todo: implementar obtenção das outras categorias
+        } else {
+            // todo: implementar texto de erro
         }
-
-        text_type.setText(text);
     }
 
-    private void setUpRecyclerView(View viewConfigured) {
-        // Configurações do RecyclerView
-        RecyclerView recyclerView = viewConfigured.findViewById(R.id.recycler_products);
-
-        // Configura o Adapter
-        RecyclerAdapterProducts recyclerAdapterProducts = new RecyclerAdapterProducts(productList);
-        recyclerView.setAdapter(recyclerAdapterProducts);
-
-        // Configura o Layout do RecyclerView
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context_fragment, 3);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                return recyclerAdapterProducts.isSmallItem(position) ? 1 : 3;
-            }
-        });
-    }
 }

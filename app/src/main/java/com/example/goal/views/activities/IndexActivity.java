@@ -1,8 +1,12 @@
 package com.example.goal.views.activities;
 
 import static com.example.goal.managers.SearchInternet.URL_PRODUCTS;
+import static com.example.goal.views.fragments.ProductsFragment.TYPE_CATEGORY;
+import static com.example.goal.views.fragments.ProductsFragment.TYPE_HOME;
+import static com.example.goal.views.fragments.ProductsFragment.TYPE_OTHERS;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -75,7 +79,7 @@ public class IndexActivity extends AppCompatActivity {
         setUpLateralMenu();
 
         // Obtem uma Lista com os Produtos
-        getCatalogProducts();
+        getProducts(TYPE_HOME, "");
     }
 
     /**
@@ -105,22 +109,58 @@ public class IndexActivity extends AppCompatActivity {
     }
 
     /**
-     * Configura o Fragment com os Produtos obitidos da API
+     * Obtem os produtos da API e Chama o metodo que configura o Fragment
+     *
+     * @param category Categoria do Produto (Caso seja Catalogo, passar Vazio ("")
+     * @see #setUpProductsFragment(String, String)
      */
-    private void getCatalogProducts() {
+    private void getProducts(String type, String category) {
+        String category_api = "";
+
+        if (type.equals(TYPE_CATEGORY)) {
+            //todo remover/alterar para as categorias existentes
+            switch (category) {
+                case "Equipamentos":
+                    category_api = "Blush";
+                    break;
+                case "Acessorios":
+                    category_api = "Bronzer";
+                    break;
+                case "Vitaminas":
+                    category_api =  "Eyebrow";
+                    break;
+                case "Roupas":
+                    category_api = "Eyeliner";
+                    break;
+                case "Calçados":
+                    category_api = "Eyeshadow";
+                    break;
+                case "Bolsas":
+                    category_api = "Foundation";
+                    break;
+                default:
+                    category_api ="";
+                    break;
+            }
+        }
+
         // Configura o AlertDialog que exibe "Carregando" enquanto busca os Itens
         AlertDialog dialogLoading = alertDialogPersonalized.loadingDialog(
                 getString(R.string.message_loadingDownload, "dos Produtos"), false);
         dialogLoading.show();
 
-        // Cria uma Thread para execução em Segundo Plano
+        // Cria uma Thread para atividade em Segundo Plano e Define um valor Fixo à categoria da API
         ExecutorService executorService = Executors.newCachedThreadPool();
+        final String final_category_api = category_api;
         executorService.execute(() -> {
             runOnUiThread(dialogLoading::show);
 
+            Uri uri_search = Uri.parse(URL_PRODUCTS).buildUpon().appendQueryParameter(
+                    "product_type", final_category_api).build();
+
             // Obtem os Itens que serão Exibidos
             ProductsAPI productAPI = new ProductsAPI(IndexActivity.this);
-            List<Product> listCatalogProducts = productAPI.getCatalog(executorService, URL_PRODUCTS);
+            List<Product> listCatalogProducts = productAPI.getProducts(executorService, uri_search.toString());
 
             // Exibe o Resultado na Tela
             runOnUiThread(() -> {
@@ -128,14 +168,14 @@ public class IndexActivity extends AppCompatActivity {
 
                     // Exibe o Erro do Catalogo para o Usuario
                     alertDialogPersonalized.defaultDialog(
-                            getString(R.string.title_input_invalid, "Catalogo"),
+                            getString(R.string.title_input_invalid, "Produtos"),
                             productAPI.getError_operation()).show();
 
                     //todo adicionar fragment null p/ erros
                 } else {
                     // Configura a Lista dos Produtos Exibe o Fragment da Tela Principal
                     productList = listCatalogProducts;
-                    setUpProductsFragment(ProductsFragment.TYPE_HOME, "");
+                    setUpProductsFragment(type, category);
                 }
                 dialogLoading.dismiss();
             });
@@ -186,7 +226,7 @@ public class IndexActivity extends AppCompatActivity {
         // todo: Terminar Implementação (Contato, Sobre, Privacidade)
         switch (id_item) {
             case HOME:
-                setUpProductsFragment(ProductsFragment.TYPE_HOME, "");
+                setUpProductsFragment(TYPE_HOME, "");
                 break;
             case PROFILE:
                 startActivity(new Intent(IndexActivity.this, ProfileActivity.class));
@@ -198,25 +238,25 @@ public class IndexActivity extends AppCompatActivity {
                 startActivity(new Intent(IndexActivity.this, WishesActivity.class));
                 break;
             case EQUIPMENTS:
-                setUpProductsFragment(ProductsFragment.TYPE_CATEGORY, getString(R.string.option_equipment));
+                getProducts(TYPE_CATEGORY, getString(R.string.option_equipment));
                 break;
             case ACCESSORIES:
-                setUpProductsFragment(ProductsFragment.TYPE_CATEGORY, getString(R.string.option_accessories));
+                getProducts(TYPE_CATEGORY, getString(R.string.option_accessories));
                 break;
             case VITAMINS:
-                setUpProductsFragment(ProductsFragment.TYPE_CATEGORY, getString(R.string.option_vitamins));
+                getProducts(TYPE_CATEGORY, getString(R.string.option_vitamins));
                 break;
             case CLOTHES:
-                setUpProductsFragment(ProductsFragment.TYPE_CATEGORY, getString(R.string.option_clothes));
+                getProducts(TYPE_CATEGORY, getString(R.string.option_clothes));
                 break;
             case SHOES:
-                setUpProductsFragment(ProductsFragment.TYPE_CATEGORY, getString(R.string.option_shoes));
+                getProducts(TYPE_CATEGORY, getString(R.string.option_shoes));
                 break;
             case BAGS:
-                setUpProductsFragment(ProductsFragment.TYPE_CATEGORY, getString(R.string.option_bags));
+                getProducts(TYPE_CATEGORY, getString(R.string.option_bags));
                 break;
             case OTHERS:
-                setUpProductsFragment(ProductsFragment.TYPE_OTHERS, "");
+                getProducts(TYPE_OTHERS, "");
                 break;
             case CONTACT:
                 System.out.println("Item: Contato");

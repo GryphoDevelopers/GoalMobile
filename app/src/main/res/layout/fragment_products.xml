@@ -6,17 +6,6 @@
     android:orientation="vertical"
     tools:context=".views.fragments.ProductsFragment">
 
-    <!-- TODO: rever necessidade do texto -->
-    <TextView
-        android:id="@+id/type_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="Tipo de Fragment"
-        android:textSize="22sp"
-        tools:ignore="HardcodedText" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_products"
         android:layout_width="match_parent"
