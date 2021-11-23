@@ -12,7 +12,6 @@ jobs:
 
   # Executa o Build do Gradle do APP
   build:
-  
     name: Set Up Environment
     runs-on: ubuntu-latest
     
@@ -23,15 +22,21 @@ jobs:
       uses: actions/setup-java@v2
       with:  
         java-version: '11'
+        distribution: 'adopt'
+        cache: gradle
         
     - name: Grant Execute Permission for Gradlew
       run: chmod +x gradlew
       
     - name: Build with Gradle
       run: ./gradlew build
-    
-  # Executa os Testes Unitarios no APP (Desabilitado por Erros)
-  #unit_tests:
+        
+  # Executa o AndroidTest do APP (Após Executar o Build)
+  android_tests:
+    name: Android Tests
+    needs: build
+      
+    # Executa os Testes Unitarios no APP (Desabilitado por Erros)
     #runs-on: [ubuntu-latest]
     #steps:
       #- uses: actions/checkout@v2
@@ -44,10 +49,7 @@ jobs:
         #with:
           #name: Results of Unit Test
           #path: app/build/reports/tests/testDebugUnitTest/index.html
-        
-  # Executa o AndroidTest do APP (Após Executar o Build)
-  android_tests:
-    needs: build
+          
     runs-on: [ macos-latest ]
     steps:
       - uses: actions/checkout@v2
