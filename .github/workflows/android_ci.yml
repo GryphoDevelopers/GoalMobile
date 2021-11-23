@@ -32,9 +32,9 @@ jobs:
       run: ./gradlew build
         
   # Executa o AndroidTest do APP (Após Executar o Build)
-  android_tests:
-    name: Android Test
-    needs: build
+  #android_unit_tests:
+    #name: Android Unit Test
+    #needs: build
       
     # Executa os Testes Unitarios no APP (Desabilitado por Erros)
     #runs-on: [ubuntu-latest]
@@ -49,8 +49,12 @@ jobs:
         #with:
           #name: Results of Unit Test
           #path: app/build/reports/tests/testDebugUnitTest/index.html
-          
+   
+  android_instrument_tests:
+    name: Android Instrumentation Test
+    needs: build
     runs-on: macos-latest
+    
     steps:
       - uses: actions/checkout@v2
 
@@ -59,4 +63,5 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
+          emulator-build: 7425822
           script: ./gradlew connectedCheck
