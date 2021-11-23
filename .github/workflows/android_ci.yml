@@ -65,4 +65,6 @@ jobs:
         with:
           api-level: 29
           arch: x86
-          script: ./gradlew connectedCheck --stacktrace
+          script: |
+            chmod +x gradlew
+            ./gradlew connectedCheck --stacktrace
