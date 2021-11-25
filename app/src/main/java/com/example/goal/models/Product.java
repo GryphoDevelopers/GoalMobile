@@ -116,7 +116,6 @@ public class Product {
      * @return true|false
      */
     public boolean validationStock(String stock) {
-        // todo: verificar erro dos testes
         if (isNullOrEmpty(stock)) {
             error_operation = INPUT_NULL;
             return false;

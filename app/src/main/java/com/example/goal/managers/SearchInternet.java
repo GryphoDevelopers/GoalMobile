@@ -88,11 +88,11 @@ public class SearchInternet {
     public static final String API_GOAL_INSERT_USER = "https://goalwebapi.herokuapp.com/goal/api/v1/auth/add-access";
 
 
-    // todo: alterar para URL correta e colocar na Classe SearchInternet
+    // todo: alterar para URL correta
     /**
      * URL que Obtem os Produtos que serão Exibidos (URL de Teste)
      */
-    public static final String URL_PRODUCTS = "http://makeup-api.herokuapp.com/api/v1/products.json?rating_greater_than=4.5";
+    public static final String URL_PRODUCTS = "http://makeup-api.herokuapp.com/api/v1/products.json?";
 
     // Constantes de Possiveis Exception usadads nos Logs
     private final String NAME_CLASS = "SearchInternet";

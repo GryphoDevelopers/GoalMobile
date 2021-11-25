@@ -1,16 +1,22 @@
 package com.example.goal.views.fragments;
 
 import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
+import static com.example.goal.managers.RecyclerAdapterProducts.DEFAULT_ITEMS_QUANTITY;
+import static com.example.goal.managers.RecyclerAdapterProducts.INITIAL_ITEMS_QUANTITY;
 import static com.example.goal.managers.RecyclerAdapterProducts.POSITION_SMALL_ITEM;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.goal.R;
@@ -43,13 +49,27 @@ public class ProductsFragment extends Fragment {
     // Chaves usadas no Bundle
     private static final String TYPE = "type_fragment";
     private static final String CATEGORY = "category_fragment";
+
+    /**
+     * Lista com Todos os Produtos Carregados. Não ocorrerá modificações nessa lista
+     */
     private final List<Product> productList;
+
+    /**
+     * Lista com os Produtos já Carregados e Exibidos no {@link RecyclerView}
+     *
+     * @see #loadMoreItems(RecyclerView)
+     */
+    private List<Product> productList_loaded;
 
     // Variaveis para Manipular os Itens
     private String type_fragment;
     private String category_fragment;
     private Context context_fragment;
     private RecyclerAdapterProducts recyclerAdapterProducts;
+
+    // Controla se está carregando ou não os Itens
+    private boolean is_loading = false;
 
     /**
      * Construtor que possui uma {@link List} dos {@link Product} que serão exibidos no RecyclerView
@@ -110,7 +130,7 @@ public class ProductsFragment extends Fragment {
         context_fragment = fragment.getContext();
 
         // Configura RecyclerView e seu Titulo
-        setUpTitleFragment(fragment);
+        if (productList != null && !productList.isEmpty()) setUpFragment(fragment);
 
         // Retorna o Fragment Configurado
         return fragment;
@@ -119,15 +139,18 @@ public class ProductsFragment extends Fragment {
     /**
      * Configura as diferentes formas de cada Tipo de Fragment
      */
-    private void setUpTitleFragment(View viewConfigured) {
+    private void setUpFragment(View viewConfigured) {
         if (type_fragment.equals(TYPE_HOME) || type_fragment.equals(TYPE_CATEGORY)) {
 
             // Evita erros de "Esquece" de passar a Categoria do Fragment
             String title_recyclerView = isNullOrEmpty(category_fragment) ?
-                    context_fragment.getString(R.string.titleMenu_categories): category_fragment;
+                    context_fragment.getString(R.string.titleMenu_categories) : category_fragment;
 
-            // Configura o Adapter do RecyclerView
-            recyclerAdapterProducts = new RecyclerAdapterProducts(productList,
+            // Obtem uma Lista com a Quatidade Inicial de Itens no RecyclerView
+            productList_loaded = productList.subList(0, INITIAL_ITEMS_QUANTITY);
+
+            // Configura o Adapter do RecyclerView e Obtem o Tamanho da Lista
+            recyclerAdapterProducts = new RecyclerAdapterProducts(productList_loaded,
                     type_fragment.equals(TYPE_CATEGORY), title_recyclerView);
 
             // Obtem o RecyclerView e Configura o Adapter
@@ -144,11 +167,77 @@ public class ProductsFragment extends Fragment {
                     return recyclerAdapterProducts.getItemViewType(position) == POSITION_SMALL_ITEM ? 1 : 3;
                 }
             });
+
+            // Configura o Scroll do RecyclerView
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                }
+
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    // Está abaixando (dy > 0 = Abaixar da Tela) e não está tendo carregamento na Tela
+                    if (dy > 0 && !is_loading) {
+                        // Obtem o Controlador do Layout e o Tamanho da Lista dos Itens
+                        LinearLayoutManager layoutRecycler = (LinearLayoutManager) recyclerView
+                                .getLayoutManager();
+
+                        // Obtem o Tamanho Final da Lista carregada do RecyclerView
+                        int last_position_loaded = recyclerAdapterProducts.getLastPositionList();
+
+                        if (layoutRecycler != null &&
+                                layoutRecycler.findLastCompletelyVisibleItemPosition() == last_position_loaded) {
+
+                            // Ultimo Item a Mostra = Obtem a Lista Carregada para Adicionar os Itens
+                            is_loading = true;
+                            productList_loaded = recyclerAdapterProducts.productList;
+                            loadMoreItems(recyclerView);
+                        }
+                    }
+                }
+            });
+
         } else if (type_fragment.equals(TYPE_OTHERS)) {
             // todo: implementar obtenção das outras categorias
         } else {
             // todo: implementar texto de erro
         }
+    }
+
+    /**
+     * Adiciona a nova quantidade de Itens ao RecyclerView
+     */
+    private void loadMoreItems(RecyclerView recyclerView) {
+        // Adiciona um Item Nulo (Loading)
+        productList_loaded.add(null);
+        int last_position = recyclerAdapterProducts.getLastPositionList();
+        recyclerView.post(() -> {
+            // Notifica o RecyclerView que foi adicionado um Item Nullo e joga a Tela para baixo
+            recyclerAdapterProducts.notifyItemInserted(last_position);
+            recyclerView.scrollToPosition(last_position);
+        });
+
+        // Realiza as Operações em Background, dando uma pausa de 2 segundos
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            int last_positon_list = recyclerAdapterProducts.getLastPositionList();
+            // Remove o Loading (Ultimo Item) da Lista e Notifica o RecyclerView
+            productList_loaded.remove(last_positon_list);
+            recyclerAdapterProducts.notifyItemRemoved(last_positon_list);
+            last_positon_list = recyclerAdapterProducts.getLastPositionList();
+
+            // Define um novo tamanho da Lista com os novos itens
+            int new_position_list = last_positon_list + DEFAULT_ITEMS_QUANTITY;
+
+            // Insere na Lista e Notifica o RecyclerView das Inserções
+            for (int i = last_positon_list; i <= new_position_list; i++) {
+                // todo Fix: Está sendo adicionado o Item na Lista com todos os Produtos
+                productList_loaded.add(productList.get(i));
+                recyclerAdapterProducts.notifyItemInserted(recyclerAdapterProducts.getLastPositionList());
+            }
+
+            is_loading = false;
+        }, 2000);
     }
 
 }

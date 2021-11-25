@@ -25,12 +25,14 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
     /**
      * Contante com o Valor padrão dos itens que serão Exibidos
      */
-    public static final int DEFAULT_ITEMS_QUANTITY = 9;
+    public static final int DEFAULT_ITEMS_QUANTITY = 17;
 
     /**
      * Constante com o valor da quantidade dos itens que serão carregados inicialmente
+     * <p>
+     * *Já leva em Consideração o {@link  #POSITION_BIG_ITEM Item Grande}
      */
-    public static final int INITIAL_ITEMS_QUANTITY = (3 * DEFAULT_ITEMS_QUANTITY) + 1;
+    public static final int INITIAL_ITEMS_QUANTITY = (2 * (DEFAULT_ITEMS_QUANTITY)) + 3;
 
     /**
      * Valor que define a Posição do Titulo
@@ -155,10 +157,8 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
                     ((ItemsViewHolder) holder).image_product.getLayoutParams().height = dpToPixel(
                             holder.itemView.getContext(), 320);
                     ((ItemsViewHolder) holder).image_product.requestLayout();
-                    ((ItemsViewHolder) holder).txt_nameProduct.setText(productItem.getName_product());
                 }
             }
-
             // Carrega a URL da Imagem na ImageView (se não estiver disponivel, usa uma imagem de erro)
             Picasso.get().load(productItem.getUrl_image())
                     .error(R.drawable.error_image)
@@ -213,8 +213,8 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
     public int getItemViewType(int position) {
         if (isTitle(position)) return POSITION_TITLE;
         else if (isBigItem(position)) return POSITION_BIG_ITEM;
-        else if (isLineGoal(position)) return POSITION_LINE;
         else if (isLoading(position)) return POSITION_LOADING;
+        else if (isLineGoal(position)) return POSITION_LINE;
         else if (isSmallItem(position)) return POSITION_SMALL_ITEM;
         return POSITION_NORMAL_ITEM;
     }
@@ -258,8 +258,8 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
      * @return true|false
      */
     public boolean isLoading(int position) {
-        if (position < INITIAL_ITEMS_QUANTITY) return false;
-        else return productList.get(position) == null;
+        if (position >= INITIAL_ITEMS_QUANTITY) return productList.get(position) == null;
+        return false;
     }
 
     /**
@@ -279,6 +279,17 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
         // Verifica se o Resto está nas possiveis posições dos Itens menores
         return hasTitle ? smallItems_withTitle.contains(rest_division)
                 : smallItems_withoutTitle.contains(rest_division);
+    }
+
+    /**
+     * Obtem a ultima Posição da Lista utilizada no RecyclerView
+     * <p>
+     * *Obs: Ultima Posição da Lista = Tamanho da Lista - 1
+     *
+     * @return int
+     */
+    public int getLastPositionList() {
+        return productList == null || productList.isEmpty() ? 0 : productList.size() - 1;
     }
 
 
@@ -337,4 +348,5 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
             super(itemView);
         }
     }
+
 }
