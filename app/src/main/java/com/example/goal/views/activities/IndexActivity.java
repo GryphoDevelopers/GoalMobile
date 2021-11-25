@@ -25,6 +25,7 @@ import com.example.goal.managers.ManagerDataBase;
 import com.example.goal.managers.ManagerResources;
 import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.Product;
+import com.example.goal.models.User;
 import com.example.goal.models.api.ProductsAPI;
 import com.example.goal.views.fragments.ProductsFragment;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
@@ -127,7 +128,7 @@ public class IndexActivity extends AppCompatActivity {
                     category_api = "Bronzer";
                     break;
                 case "Vitaminas":
-                    category_api =  "Eyebrow";
+                    category_api = "Eyebrow";
                     break;
                 case "Roupas":
                     category_api = "Eyeliner";
@@ -139,7 +140,7 @@ public class IndexActivity extends AppCompatActivity {
                     category_api = "Foundation";
                     break;
                 default:
-                    category_api ="";
+                    category_api = "";
                     break;
             }
         }
@@ -203,6 +204,12 @@ public class IndexActivity extends AppCompatActivity {
         // Deixa o Botão ativo e Sincronizado com o Estado definido
         actionToggle.setDrawerIndicatorEnabled(true);
         actionToggle.syncState();
+
+        // Exibe ou não as Opções do Vendedor
+        User user = new ManagerDataBase(IndexActivity.this).getUserDatabase();
+        if (user != null && user.isSeller()) {
+            navigationView.getMenu().findItem(R.id.menu_seller).setVisible(true);
+        }
 
         // Listener do Botão do Drawer e dos Cliques no Menu
         drawerLayout.addDrawerListener(actionToggle);

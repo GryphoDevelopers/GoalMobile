@@ -24,6 +24,24 @@
             android:title="@string/option_search" />
     </group>
 
+    <!-- Parte do Menu Disponivel apenas aos Vendedores -->
+    <item
+        android:id="@+id/menu_seller"
+        android:title="@string/title_seller"
+        android:visible="false">
+        <menu>
+            <item
+                android:id="@+id/option_registerProduct"
+                android:title="@string/option_registerProduct" />
+            <item
+                android:id="@+id/option_updateProduct"
+                android:title="@string/option_updateProduct" />
+            <item
+                android:id="@+id/option_deleteProduct"
+                android:title="@string/option_deleteProduct" />
+        </menu>
+    </item>
+
     <item android:title="@string/titleMenu_categories">
         <menu>
             <item
@@ -47,20 +65,6 @@
             <item
                 android:id="@+id/option_others"
                 android:title="@string/option_others" />
-        </menu>
-    </item>
-
-    <item android:title="@string/title_seller">
-        <menu>
-            <item
-                android:id="@+id/option_registerProduct"
-                android:title="@string/option_registerProduct" />
-            <item
-                android:id="@+id/option_updateProduct"
-                android:title="@string/option_updateProduct" />
-            <item
-                android:id="@+id/option_deleteProduct"
-                android:title="@string/option_deleteProduct" />
         </menu>
     </item>
 

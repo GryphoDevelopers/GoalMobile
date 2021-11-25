@@ -48,14 +48,19 @@ public class OpenActivity extends AppCompatActivity {
                             user_database.getPassword());
 
                     if (!isNullOrEmpty(token)) {
-                        // Caso o Token Seja Valido, salva e Abre a Activity Principal
-                        //todo: obter os dados do usuario da API
-                        managerPreferences.setJsonWebTokenUser(token);
-                        runOnUiThread(() -> {
-                            startActivity(new Intent(context, IndexActivity.class));
-                            finish();
-                        });
-                        return;
+                        // Caso o Token Seja Valido, obtem os dados do Usuario
+                        User user_recovered = userAPI.getInfoUserAPI(executorService,
+                                user_database.getEmail(), user_database.getPassword(), token);
+
+                        // Após Obter os Dados do Usuario, tenta salvar o Usuario no Banco de Dados
+                        if (user_recovered != null && dataBase.insertUser(user_recovered)) {
+                            managerPreferences.setJsonWebTokenUser(token);
+                            runOnUiThread(() -> {
+                                startActivity(new Intent(context, IndexActivity.class));
+                                finish();
+                            });
+                            return;
+                        }
                     }
                 }
             }
