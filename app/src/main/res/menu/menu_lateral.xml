@@ -31,14 +31,11 @@
         android:visible="false">
         <menu>
             <item
+                android:id="@+id/option_myProducts"
+                android:title="@string/option_myProducts" />
+            <item
                 android:id="@+id/option_registerProduct"
                 android:title="@string/option_registerProduct" />
-            <item
-                android:id="@+id/option_updateProduct"
-                android:title="@string/option_updateProduct" />
-            <item
-                android:id="@+id/option_deleteProduct"
-                android:title="@string/option_deleteProduct" />
         </menu>
     </item>
 

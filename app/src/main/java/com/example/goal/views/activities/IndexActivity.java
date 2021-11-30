@@ -1,9 +1,10 @@
 package com.example.goal.views.activities;
 
 import static com.example.goal.managers.SearchInternet.URL_PRODUCTS;
-import static com.example.goal.views.fragments.ProductsFragment.TYPE_CATEGORY;
-import static com.example.goal.views.fragments.ProductsFragment.TYPE_HOME;
-import static com.example.goal.views.fragments.ProductsFragment.TYPE_OTHERS;
+import static com.example.goal.views.fragments.CatalogFragment.TYPE_CATEGORY;
+import static com.example.goal.views.fragments.CatalogFragment.TYPE_HOME;
+import static com.example.goal.views.fragments.CatalogFragment.TYPE_OTHERS;
+import static com.example.goal.views.fragments.ProductFragment.TYPE_CREATE;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -27,7 +28,8 @@ import com.example.goal.managers.ManagerSharedPreferences;
 import com.example.goal.models.Product;
 import com.example.goal.models.User;
 import com.example.goal.models.api.ProductsAPI;
-import com.example.goal.views.fragments.ProductsFragment;
+import com.example.goal.views.fragments.CatalogFragment;
+import com.example.goal.views.fragments.ProductFragment;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
 import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.navigation.NavigationView;
@@ -55,8 +57,7 @@ public class IndexActivity extends AppCompatActivity {
     private static final int BAGS = R.id.option_bags;
     private static final int OTHERS = R.id.option_others;
     private static final int REGISTER_PRODUCT = R.id.option_registerProduct;
-    private static final int UPDATE_PRODUCT = R.id.option_updateProduct;
-    private static final int DELETE_PRODUCT = R.id.option_deleteProduct;
+    private static final int MY_PRODUCTS = R.id.option_myProducts;
     private static final int CONTACT = R.id.option_contact;
     private static final int ABOUT = R.id.option_about;
     private static final int PRIVACY = R.id.option_privacy;
@@ -224,7 +225,8 @@ public class IndexActivity extends AppCompatActivity {
      */
     private boolean itemSelect(MenuItem menuItem) {
         int id_item = menuItem.getItemId();
-        if (id_item != PROFILE && id_item != SEARCH && id_item != WISHES && id_item != EXIT) {
+        if (id_item != PROFILE && id_item != SEARCH && id_item != WISHES && id_item != EXIT
+                && id_item != MY_PRODUCTS) {
             unselectedItemsMenu();
             menuItem.setChecked(true);
             menuItem.setCheckable(true);
@@ -275,14 +277,12 @@ public class IndexActivity extends AppCompatActivity {
                 System.out.println("Item: Privacidade");
                 break;
             case REGISTER_PRODUCT:
-                // todo: adicionar fragment de cadastro/atualização de produtos
-                System.out.println("Item: Adicionar Produto");
+                // Instancia a Classe do Fragment e Insere no Local de Exibição do Fragment
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragments,
+                        ProductFragment.newInstance(TYPE_CREATE, null)).commit();
                 break;
-            case UPDATE_PRODUCT:
-                System.out.println("Item: Atualizar Produto");
-                break;
-            case DELETE_PRODUCT:
-                System.out.println("Item: Excluir Produto");
+            case MY_PRODUCTS:
+                startActivity(new Intent(IndexActivity.this, SellerProductsActivity.class));
                 break;
             case EXIT:
                 new ManagerDataBase(IndexActivity.this).clearTables();
@@ -310,9 +310,8 @@ public class IndexActivity extends AppCompatActivity {
      */
     private void setUpProductsFragment(String type, String category) {
         // Instancia a Classe do Fragment e Insere no Local de Exibição do Fragment
-        ProductsFragment productsFragment = ProductsFragment.newInstance(type, category, productList);
-        getSupportFragmentManager().beginTransaction().replace(
-                R.id.frame_fragments, productsFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragments,
+                CatalogFragment.newInstance(type, category, productList)).commit();
     }
 
     /**

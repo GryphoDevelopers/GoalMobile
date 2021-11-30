@@ -29,7 +29,7 @@ import java.util.List;
  * {@link Fragment Fragment} ProductsFragment: Fragment usado para Exibir os Produtos na Tela Index
  * (Catalogo) ou exibir os produtos por categoria.
  */
-public class ProductsFragment extends Fragment {
+public class CatalogFragment extends Fragment {
 
     /**
      * Variavel que define o Fragment Inicio/Catalogo
@@ -74,7 +74,7 @@ public class ProductsFragment extends Fragment {
     /**
      * Construtor que possui uma {@link List} dos {@link Product} que serão exibidos no RecyclerView
      */
-    public ProductsFragment(List<Product> productList) {
+    public CatalogFragment(List<Product> productList) {
         this.productList = productList;
     }
 
@@ -90,9 +90,9 @@ public class ProductsFragment extends Fragment {
      *                    for "TYPE_CATEGORY", caso contrario será ignorado
      * @return Nova instanceia de um {@link Fragment}
      */
-    public static ProductsFragment newInstance(String type, String category, List<Product> productList) {
+    public static CatalogFragment newInstance(String type, String category, List<Product> productList) {
         // Instancia o Fragment
-        ProductsFragment fragment = new ProductsFragment(productList);
+        CatalogFragment fragment = new CatalogFragment(productList);
 
         // Define os Itens
         Bundle args = new Bundle();
@@ -124,7 +124,7 @@ public class ProductsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Instancia um Fragment (View) para ser configurada e usada
-        View fragment = inflater.inflate(R.layout.fragment_products, container, false);
+        View fragment = inflater.inflate(R.layout.fragment_catalog, container, false);
 
         // Obtem o Context do Fragment p/ evitar dar Erro de Hierarquia de Context/View
         context_fragment = fragment.getContext();
