@@ -84,6 +84,7 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
      */
     private final boolean hasTitle;
     private final String title;
+    private final ClickProducts clickProducts;
     private RecyclerView recyclerView;
 
     /**
@@ -93,11 +94,13 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
      * @param hasTitle    Define se haverá o Titulo no RecyclerView
      * @param title       Titulo do RecyclerView (Caso hasTitle sejá true)
      */
-    public RecyclerAdapterProducts(List<Product> productList, boolean hasTitle, String title) {
+    public RecyclerAdapterProducts(List<Product> productList, boolean hasTitle, String title,
+                                   ClickProducts clickProducts) {
         if (hasTitle) productList.add(0, null);
         this.productList = productList;
         this.hasTitle = hasTitle;
         this.title = title;
+        this.clickProducts = clickProducts;
     }
 
     /**
@@ -163,6 +166,13 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
             Picasso.get().load(productItem.getUrl_image())
                     .error(R.drawable.error_image)
                     .into(((ItemsViewHolder) holder).image_product);
+
+            ((ItemsViewHolder) holder).image_product.setOnClickListener(v ->
+                    clickProducts.clickProduct(productItem));
+            ((ItemsViewHolder) holder).txt_nameProduct.setOnClickListener(v ->
+                    clickProducts.clickProduct(productItem));
+
+            // todo adicionar customização quando o tipo da view for dos produtos do vendedor
 
         } else if (holder instanceof EmptyViewHolder && getItemViewType(position) == POSITION_LINE) {
             // Obtem os parametros do Layout

@@ -67,6 +67,7 @@
         Realize o Login !</string>
     <string name="error_singup">Dados Incorretos. Por favor, confirme os dados das
         Etapas Anteriores</string>
+    <string name="text_noProducts">O Vendedor não Possui Produtos Cadastrados</string>
 
     <!-- LoginActivity - Tela de Login  -->
     <string name="title_options">Olá, Bem Vindo à GOAL</string>
@@ -233,6 +234,7 @@
 
     <!-- Layout do Fragment dos Produtos (Cadastro/Alteração) -->
     <string name="title_product">%s seu Produto</string>
+    <string name="title_sellerProducts">%s seu Produto</string>
     <string name="subtext_photo">Insira aqui a Imagem do Produto</string>
     <string name="text_register">Cadastre</string>
     <string name="text_update">Atualize</string>

@@ -92,7 +92,7 @@ public class SearchInternet {
     /**
      * URL que Obtem os Produtos que serão Exibidos (URL de Teste)
      */
-    public static final String URL_PRODUCTS = "http://makeup-api.herokuapp.com/api/v1/products.json?";
+    public static final String URL_PRODUCTS = "https://makeup-api.herokuapp.com/api/v1/products.json?";
 
     // Constantes de Possiveis Exception usadads nos Logs
     private final String NAME_CLASS = "SearchInternet";

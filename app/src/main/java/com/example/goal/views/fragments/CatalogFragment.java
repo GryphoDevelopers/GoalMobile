@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.goal.R;
+import com.example.goal.managers.ClickProducts;
 import com.example.goal.managers.RecyclerAdapterProducts;
 import com.example.goal.models.Product;
 
@@ -29,12 +30,17 @@ import java.util.List;
  * {@link Fragment Fragment} ProductsFragment: Fragment usado para Exibir os Produtos na Tela Index
  * (Catalogo) ou exibir os produtos por categoria.
  */
-public class CatalogFragment extends Fragment {
+public class CatalogFragment extends Fragment implements ClickProducts {
 
     /**
      * Variavel que define o Fragment Inicio/Catalogo
      */
     public static final String TYPE_HOME = "type_home";
+
+    /**
+     * Variavel que define o Fragment dos Produtos do Vendedor
+     */
+    public static final String TYPE_SELLER_PRODUCTS = "type_seller_product";
 
     /**
      * Variavel que define o Fragment Categoria
@@ -140,18 +146,26 @@ public class CatalogFragment extends Fragment {
      * Configura as diferentes formas de cada Tipo de Fragment
      */
     private void setUpFragment(View viewConfigured) {
-        if (type_fragment.equals(TYPE_HOME) || type_fragment.equals(TYPE_CATEGORY)) {
-
-            // Evita erros de "Esquece" de passar a Categoria do Fragment
-            String title_recyclerView = isNullOrEmpty(category_fragment) ?
-                    context_fragment.getString(R.string.titleMenu_categories) : category_fragment;
+        if (type_fragment.equals(TYPE_HOME) || type_fragment.equals(TYPE_CATEGORY)
+                || type_fragment.equals(TYPE_SELLER_PRODUCTS)) {
 
             // Obtem uma Lista com a Quatidade Inicial de Itens no RecyclerView
             productList_loaded = productList.subList(0, INITIAL_ITEMS_QUANTITY);
 
+            boolean hasTitle = type_fragment.equals(TYPE_CATEGORY) ||
+                    type_fragment.equals(TYPE_SELLER_PRODUCTS);
+
+            // Evita erros de "Esquece" de passar a Categoria do Fragment
+            String title_recyclerView = getString(R.string.titleMenu_categories);
+            if (hasTitle) {
+                title_recyclerView = type_fragment.equals(TYPE_SELLER_PRODUCTS)
+                        ? getString(R.string.title_sellerProducts)
+                        : !isNullOrEmpty(category_fragment) ? category_fragment : title_recyclerView;
+            }
+
             // Configura o Adapter do RecyclerView e Obtem o Tamanho da Lista
-            recyclerAdapterProducts = new RecyclerAdapterProducts(productList_loaded,
-                    type_fragment.equals(TYPE_CATEGORY), title_recyclerView);
+            recyclerAdapterProducts = new RecyclerAdapterProducts(productList_loaded, hasTitle,
+                    title_recyclerView, this);
 
             // Obtem o RecyclerView e Configura o Adapter
             RecyclerView recyclerView = viewConfigured.findViewById(R.id.recycler_products);
@@ -240,4 +254,20 @@ public class CatalogFragment extends Fragment {
         }, 2000);
     }
 
+    // Metodos Implementados do Clique nos Produtos do RecyclerView
+    // todo implementar documentação e metodos
+    @Override
+    public void clickProduct(Product product) {
+
+    }
+
+    @Override
+    public void deleteProduct(Product product) {
+
+    }
+
+    @Override
+    public void updateProduct(Product product) {
+
+    }
 }

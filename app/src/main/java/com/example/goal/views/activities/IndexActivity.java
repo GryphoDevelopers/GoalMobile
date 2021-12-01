@@ -4,6 +4,7 @@ import static com.example.goal.managers.SearchInternet.URL_PRODUCTS;
 import static com.example.goal.views.fragments.CatalogFragment.TYPE_CATEGORY;
 import static com.example.goal.views.fragments.CatalogFragment.TYPE_HOME;
 import static com.example.goal.views.fragments.CatalogFragment.TYPE_OTHERS;
+import static com.example.goal.views.fragments.CatalogFragment.TYPE_SELLER_PRODUCTS;
 import static com.example.goal.views.fragments.ProductFragment.TYPE_CREATE;
 
 import android.content.Intent;
@@ -114,10 +115,10 @@ public class IndexActivity extends AppCompatActivity {
      * Obtem os produtos da API e Chama o metodo que configura o Fragment
      *
      * @param category Categoria do Produto (Caso seja Catalogo, passar Vazio ("")
-     * @see #setUpProductsFragment(String, String)
      */
     private void getProducts(String type, String category) {
-        String category_api = "";
+        String category_api;
+        Uri uri_search;
 
         if (type.equals(TYPE_CATEGORY)) {
             //todo remover/alterar para as categorias existentes
@@ -144,40 +145,52 @@ public class IndexActivity extends AppCompatActivity {
                     category_api = "";
                     break;
             }
-        }
+            uri_search = Uri.parse(URL_PRODUCTS).buildUpon().appendQueryParameter(
+                    "product_type", category_api).build();
+        } else if (type.equals(TYPE_SELLER_PRODUCTS)) {
+            // todo alterar para api goal
+            uri_search = Uri.parse(URL_PRODUCTS).buildUpon().appendQueryParameter(
+                    "rating_greater_than", "4.8").build();
+        } else uri_search = Uri.parse(URL_PRODUCTS).buildUpon().build();
 
         // Configura o AlertDialog que exibe "Carregando" enquanto busca os Itens
         AlertDialog dialogLoading = alertDialogPersonalized.loadingDialog(
                 getString(R.string.message_loadingDownload, "dos Produtos"), false);
-        dialogLoading.show();
 
         // Cria uma Thread para atividade em Segundo Plano e Define um valor Fixo à categoria da API
         ExecutorService executorService = Executors.newCachedThreadPool();
-        final String final_category_api = category_api;
+        Uri finalUri_search = uri_search;
         executorService.execute(() -> {
             runOnUiThread(dialogLoading::show);
 
-            Uri uri_search = Uri.parse(URL_PRODUCTS).buildUpon().appendQueryParameter(
-                    "product_type", final_category_api).build();
-
             // Obtem os Itens que serão Exibidos
             ProductsAPI productAPI = new ProductsAPI(IndexActivity.this);
-            List<Product> listCatalogProducts = productAPI.getProducts(executorService, uri_search.toString());
+            List<Product> listCatalogProducts = productAPI.getProducts(executorService,
+                    finalUri_search.toString());
 
             // Exibe o Resultado na Tela
             runOnUiThread(() -> {
                 if (listCatalogProducts == null || listCatalogProducts.size() == 0) {
 
-                    // Exibe o Erro do Catalogo para o Usuario
-                    alertDialogPersonalized.defaultDialog(
-                            getString(R.string.title_input_invalid, "Produtos"),
-                            productAPI.getError_operation()).show();
+                    if(type.equals(TYPE_SELLER_PRODUCTS)){
+                        alertDialogPersonalized.defaultDialog(
+                                getString(R.string.title_input_invalid, "Produtos"),
+                                productAPI.getError_operation()).show();
+                    } else{
+                        // Exibe o Erro do Catalogo para o Usuario
+                        alertDialogPersonalized.defaultDialog(
+                                getString(R.string.title_input_invalid, "Produtos"),
+                                getString(R.string.text_noProducts)).show();
+                    }
+                    // todo adicionar fragment null p/ erros
 
-                    //todo adicionar fragment null p/ erros
                 } else {
                     // Configura a Lista dos Produtos Exibe o Fragment da Tela Principal
                     productList = listCatalogProducts;
-                    setUpProductsFragment(type, category);
+
+                    // Instancia a Classe do Fragment e Insere no Local de Exibição do Fragment
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragments,
+                            CatalogFragment.newInstance(type, category, productList)).commit();
                 }
                 dialogLoading.dismiss();
             });
@@ -235,7 +248,7 @@ public class IndexActivity extends AppCompatActivity {
         // todo: Terminar Implementação (Contato, Sobre, Privacidade)
         switch (id_item) {
             case HOME:
-                setUpProductsFragment(TYPE_HOME, "");
+                getProducts(TYPE_HOME, "");
                 break;
             case PROFILE:
                 startActivity(new Intent(IndexActivity.this, ProfileActivity.class));
@@ -282,7 +295,7 @@ public class IndexActivity extends AppCompatActivity {
                         ProductFragment.newInstance(TYPE_CREATE, null)).commit();
                 break;
             case MY_PRODUCTS:
-                startActivity(new Intent(IndexActivity.this, SellerProductsActivity.class));
+                getProducts(TYPE_SELLER_PRODUCTS, "");
                 break;
             case EXIT:
                 new ManagerDataBase(IndexActivity.this).clearTables();
@@ -300,18 +313,6 @@ public class IndexActivity extends AppCompatActivity {
         // Fecha o Menu Lateral
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    /**
-     * Configura a Exibição de Fragments dos Produtos
-     *
-     * @param type     Tipo do Fragment
-     * @param category Categoria do Fragment (Somente é utilizada no "type" "CATEGORY_PRODUCTS")
-     */
-    private void setUpProductsFragment(String type, String category) {
-        // Instancia a Classe do Fragment e Insere no Local de Exibição do Fragment
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragments,
-                CatalogFragment.newInstance(type, category, productList)).commit();
     }
 
     /**
