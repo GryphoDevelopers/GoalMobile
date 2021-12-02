@@ -13,6 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Goal">
         <activity
+            android:name=".views.activities.ProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.activities.CommentsActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.activities.SellerProductsActivity"
             android:exported="false" />
         <activity android:name=".views.activities.SearchActivity" />

@@ -6,6 +6,7 @@ import static com.example.goal.managers.RecyclerAdapterProducts.INITIAL_ITEMS_QU
 import static com.example.goal.managers.RecyclerAdapterProducts.POSITION_SMALL_ITEM;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,6 +24,8 @@ import com.example.goal.R;
 import com.example.goal.managers.ClickProducts;
 import com.example.goal.managers.RecyclerAdapterProducts;
 import com.example.goal.models.Product;
+import com.example.goal.views.activities.ProductActivity;
+import com.example.goal.views.widgets.AlertDialogPersonalized;
 
 import java.util.List;
 
@@ -258,7 +261,20 @@ public class CatalogFragment extends Fragment implements ClickProducts {
     // todo implementar documentação e metodos
     @Override
     public void clickProduct(Product product) {
-
+        if (product != null) {
+            Intent intentProduct = new Intent(context_fragment, ProductActivity.class);
+            intentProduct.putExtra(ProductActivity.PARAM_IMAGE, product.getUrl_image());
+            intentProduct.putExtra(ProductActivity.PARAM_NAME, product.getName_product());
+            intentProduct.putExtra(ProductActivity.PARAM_PRICE, product.getPrice());
+            intentProduct.putExtra(ProductActivity.PARAM_IS_SELLER, type_fragment.equals(TYPE_SELLER_PRODUCTS));
+            /*intentProduct.putExtra(ProductActivity.PARAM_COLOR);
+            intentProduct.putExtra(ProductActivity.PARAM_SIZE);*/
+            startActivity(intentProduct);
+        } else {
+            String title = context_fragment.getString(R.string.title_input_invalid, "Produto");
+            new AlertDialogPersonalized(context_fragment).defaultDialog(title,
+                    context_fragment.getString(R.string.error_product)).show();
+        }
     }
 
     @Override

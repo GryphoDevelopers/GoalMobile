@@ -68,6 +68,7 @@
     <string name="error_singup">Dados Incorretos. Por favor, confirme os dados das
         Etapas Anteriores</string>
     <string name="text_noProducts">O Vendedor não Possui Produtos Cadastrados</string>
+    <string name="error_product">Não foi possivel obter o Produto Selecionado</string>
 
     <!-- LoginActivity - Tela de Login  -->
     <string name="title_options">Olá, Bem Vindo à GOAL</string>
@@ -242,4 +243,14 @@
     <string name="text_confirmDelete">Tem Certeza que deseja excluir o Produto: &lt;br /> &lt;b>%s&lt;/b></string>
     <string name="text_warmingDelete">Após Clicar no Botão, não é possivel Reverter a Exclusão</string>
 
+
+    <!-- Layout da Activity Product (Descrição Inicial do Produto) -->
+    <string name="text_color">Cores</string>
+    <string name="text_size">Tamanhos</string>
+    <string name="button_details">Ver Detalhes do Produto</string>
+    <string name="available_stock">Disponivel no Estoque</string>
+    <string name="text_comment">Comentarios</string>
+    <string name="text_review">Mais Avaliações</string>
+    <string name="btn_buy">Comprar</string>
+    <string name="btn_addWishes">Adicionar a Lista de Desejos</string>
 </resources>
