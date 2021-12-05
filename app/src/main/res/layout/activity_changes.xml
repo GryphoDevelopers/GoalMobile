@@ -7,31 +7,63 @@
     tools:context=".views.activities.ChangesActivity">
 
     <!-- Todo: Remover texto e botão abaixo, apenas usado como indicativo -->
-    <TextView
-        android:id="@+id/test1_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:text="Tela de Atualizações da Informação do Usuario"
-        android:textSize="18sp"
+
+    <ScrollView
+        android:id="@+id/scrollView_changes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintVertical_bias="1.0">
+
+        <LinearLayout
+            android:id="@+id/layout_changes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/txt_changesTitle"
+                style="@style/title_activities"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_changes"
+                android:textSize="34sp" />
+
+            <view
+                android:id="@+id/view2"
+                style="@style/style_cardView"
+                class="com.google.android.material.card.MaterialCardView"
+                android:layout_width="match_parent"
+                android:layout_height="289dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/button_test1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:text="Voltar ao Inicio"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test1_textView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.91"
         tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

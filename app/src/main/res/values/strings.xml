@@ -253,4 +253,21 @@
     <string name="text_review">Mais Avaliações</string>
     <string name="btn_buy">Comprar</string>
     <string name="btn_addWishes">Adicionar a Lista de Desejos</string>
+
+
+    <!-- Layout da Activity Changes -->
+    <string name="title_changes">Alteração *E-mail</string>
+
+
+    <!-- Layout da Activity Detalhes -->
+    <string name="text_details">Detalhes</string>
+    <string name="text_type">Tipo: ...</string>
+    <string name="text_collor">Cor: ...</string>
+    <string name="text_size2">Tamanho: ...</string>
+    <string name="text_material">Material: ...</string>
+    <string name="text_local">Local de Fabricação: ...</string>
+    <string name="text_brand">Marca: ...</string>
+    <string name="text_warranty">Garantia: ...</string>
+    <string name="text_SAC">SAC do fornecedor: ...</string>
+    <string name="text_info">Informações do Produto</string>
 </resources>
