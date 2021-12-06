@@ -3,6 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/3 ETIM/GoalMobile/app/src/main/res/layout/activity_address.xml" value="0.18614130434782608" />
+        <entry key="..\:/3 ETIM/GoalMobile/app/src/main/res/layout/activity_changes.xml" value="0.25" />
+        <entry key="..\:/3 ETIM/GoalMobile/app/src/main/res/layout/activity_index.xml" value="0.18614130434782608" />
+        <entry key="..\:/3 ETIM/GoalMobile/app/src/main/res/layout/activity_profile.xml" value="0.18" />
+        <entry key="..\:/3 ETIM/GoalMobile/app/src/main/res/layout/fragment_catalog.xml" value="0.18614130434782608" />
+        <entry key="..\:/3 ETIM/GoalMobile/app/src/main/res/layout/layout_recycler_products.xml" value="0.18614130434782608" />
+        <entry key="..\:/3 ETIM/GoalMobile/app/src/main/res/layout/line_gol.xml" value="0.18614130434782608" />
+        <entry key="..\:/3 ETIM/GoalMobile/app/src/main/res/layout/tool_bar.xml" value="0.18614130434782608" />
         <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/layout/activity_address.xml" value="0.25" />
         <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/layout/activity_index.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/Guilherme/OneDrive - Etec Centro Paula Souza/Programação/1 - TCC/APP/app/src/main/res/layout/activity_profile.xml" value="0.14130434782608695" />

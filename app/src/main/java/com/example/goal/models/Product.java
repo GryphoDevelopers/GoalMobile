@@ -24,6 +24,7 @@ public class Product {
 
     // Atributos da Classe Produto
     private final Context context;
+    //todo alterar o id para GUID
     private int id_product = 0;
     private String name_product = "";
     private String description_product = "";

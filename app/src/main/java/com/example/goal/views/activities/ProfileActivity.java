@@ -19,13 +19,13 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         // todo: remover. Apenas para testes
-        Button button_home = findViewById(R.id.button_test3);
+        Button button_home = findViewById(R.id.button_test03);
         button_home.setOnClickListener(v -> {
             startActivity(new Intent(ProfileActivity.this, IndexActivity.class));
             finish();
         });
 
-        Button button_details = findViewById(R.id.button_test3_details);
+        Button button_details = findViewById(R.id.button_test3);
         button_details.setOnClickListener(v -> {
             startActivity(new Intent(ProfileActivity.this, DetailsActivity.class));
             finish();

@@ -256,18 +256,19 @@
 
 
     <!-- Layout da Activity Changes -->
-    <string name="title_changes">Alteração *E-mail</string>
+    <string name="title_changes">Alteração %s</string>
 
 
     <!-- Layout da Activity Detalhes -->
     <string name="text_details">Detalhes</string>
-    <string name="text_type">Tipo: ...</string>
-    <string name="text_collor">Cor: ...</string>
-    <string name="text_size2">Tamanho: ...</string>
-    <string name="text_material">Material: ...</string>
-    <string name="text_local">Local de Fabricação: ...</string>
-    <string name="text_brand">Marca: ...</string>
-    <string name="text_warranty">Garantia: ...</string>
-    <string name="text_SAC">SAC do fornecedor: ...</string>
+    <string name="text_type">Tipo: …</string>
+    <string name="text_collor">Cor: …</string>
+    <string name="text_size2">Tamanho: …</string>
+    <string name="text_material">Material: …</string>
+    <string name="text_local">Local de Fabricação: …</string>
+    <string name="text_brand">Marca: …</string>
+    <string name="text_warranty">Garantia: …</string>
+    <string name="text_SAC">SAC do fornecedor: …</string>
     <string name="text_info">Informações do Produto</string>
+    <string name="btn_home">Voltar ao Inicio</string>
 </resources>
