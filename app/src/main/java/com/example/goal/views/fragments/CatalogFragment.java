@@ -264,6 +264,7 @@ public class CatalogFragment extends Fragment implements ClickProducts {
         if (product != null) {
             Intent intentProduct = new Intent(context_fragment, ProductActivity.class);
             intentProduct.putExtra(ProductActivity.PARAM_IMAGE, product.getUrl_image());
+            intentProduct.putExtra(ProductActivity.PARAM_ID, String.valueOf(product.getId_product()));
             intentProduct.putExtra(ProductActivity.PARAM_NAME, product.getName_product());
             intentProduct.putExtra(ProductActivity.PARAM_PRICE, product.getPrice());
             intentProduct.putExtra(ProductActivity.PARAM_IS_SELLER, type_fragment.equals(TYPE_SELLER_PRODUCTS));

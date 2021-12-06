@@ -68,7 +68,7 @@ public class ProductsAPI {
                 // Obtem uma List com Arrays Strings dos dados do Produto
                 SerializationInfo serializationInfo = new SerializationInfo(context);
                 List<String[]> list_makeups = new SerializationInfo(context)
-                        .jsonArrayToArray(json_products, new String[]{"name", "image_link", "price"});
+                        .jsonArrayToArray(json_products, new String[]{"name", "image_link", "price", "id"});
 
                 // Instancia uma Lista com instancias da Classe Produto
                 if (list_makeups != null) {

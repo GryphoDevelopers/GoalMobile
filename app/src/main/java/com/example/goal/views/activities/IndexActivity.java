@@ -36,6 +36,7 @@ import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -99,6 +100,8 @@ public class IndexActivity extends AppCompatActivity {
      */
     private void setUpToolBar() {
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // Configura a Logo no Centro da ToolBar
         ImageView logo_goal = toolbar.findViewById(R.id.image_logo_goal);
@@ -172,11 +175,11 @@ public class IndexActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 if (listCatalogProducts == null || listCatalogProducts.size() == 0) {
 
-                    if(type.equals(TYPE_SELLER_PRODUCTS)){
+                    if (type.equals(TYPE_SELLER_PRODUCTS)) {
                         alertDialogPersonalized.defaultDialog(
                                 getString(R.string.title_input_invalid, "Produtos"),
                                 productAPI.getError_operation()).show();
-                    } else{
+                    } else {
                         // Exibe o Erro do Catalogo para o Usuario
                         alertDialogPersonalized.defaultDialog(
                                 getString(R.string.title_input_invalid, "Produtos"),

@@ -235,7 +235,7 @@
 
     <!-- Layout do Fragment dos Produtos (Cadastro/Alteração) -->
     <string name="title_product">%s seu Produto</string>
-    <string name="title_sellerProducts">%s seu Produto</string>
+    <string name="title_sellerProducts">Seus Produtos</string>
     <string name="subtext_photo">Insira aqui a Imagem do Produto</string>
     <string name="text_register">Cadastre</string>
     <string name="text_update">Atualize</string>
@@ -252,7 +252,8 @@
     <string name="text_comment">Comentarios</string>
     <string name="text_review">Mais Avaliações</string>
     <string name="btn_buy">Comprar</string>
-    <string name="btn_addWishes">Adicionar a Lista de Desejos</string>
+    <string name="btn_addWishes">Adicionar na Lista de Desejos</string>
+    <string name="btn_removeWishes">Remover da Lista de Desejos</string>
 
 
     <!-- Layout da Activity Changes -->

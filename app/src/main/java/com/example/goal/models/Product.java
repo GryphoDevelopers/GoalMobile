@@ -25,7 +25,7 @@ public class Product {
     // Atributos da Classe Produto
     private final Context context;
     //todo alterar o id para GUID
-    private int id_product = 0;
+    private String id_product = "";
     private String name_product = "";
     private String description_product = "";
     private String url_image = "";
@@ -147,11 +147,11 @@ public class Product {
 
 
     // Getters e Setters
-    public int getId_product() {
+    public String getId_product() {
         return id_product;
     }
 
-    public void setId_product(int id_product) {
+    public void setId_product(String id_product) {
         this.id_product = id_product;
     }
 

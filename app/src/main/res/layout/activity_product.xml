@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <include
-            android:id="@+id/toolbar_category"
+            android:id="@+id/toolbar_product"
             layout="@layout/tool_bar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize" />
@@ -164,6 +164,14 @@
                 android:text="@string/btn_addWishes"
                 tools:ignore="TouchTargetSizeCheck" />
 
+            <Button
+                android:id="@+id/btn_removeWishes"
+                style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:text="@string/btn_addWishes"
+                tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
 
         <TextView

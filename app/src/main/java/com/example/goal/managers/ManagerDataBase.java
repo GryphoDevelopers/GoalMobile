@@ -104,7 +104,7 @@ public class ManagerDataBase extends SQLiteOpenHelper {
         );
         db.execSQL(
                 "create table " + TABLE_WISHES + " (" +
-                        ID_PRODUCT + " INTEGER)"
+                        ID_PRODUCT + " TEXT)"
         );
         db.execSQL(
                 "create table " + TABLE_ADDRESS + " (" +
@@ -173,11 +173,11 @@ public class ManagerDataBase extends SQLiteOpenHelper {
      * @param product Instancia da Classe de Produto que será inserida no Banco Local Mobile
      * @return true/false
      */
-    public boolean insertWishes(Product product) {
+    public boolean insertWishes(String id_product) {
         SQLiteDatabase database = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(ID_PRODUCT, product.getId_product());
+        values.put(ID_PRODUCT, String.valueOf(id_product));
 
         return database.insert(TABLE_ADDRESS, null, values) > NOT_INSERT;
     }
@@ -306,7 +306,7 @@ public class ManagerDataBase extends SQLiteOpenHelper {
      * @param id_product ID do Produto que será removido
      * @return true|false
      */
-    public boolean removeWishe(int id_product) {
+    public boolean removeWishes(String id_product) {
         return this.getWritableDatabase().delete(
                 TABLE_WISHES, ID_PRODUCT + "=?",
                 new String[]{String.valueOf(id_product)}) > NOT_CHANGED;
