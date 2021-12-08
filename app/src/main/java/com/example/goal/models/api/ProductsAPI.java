@@ -84,6 +84,7 @@ public class ProductsAPI {
                         Product productItem = new Product(context);
                         productItem.setName_product(name);
                         productItem.setUrl_image(isNullOrEmpty(url_image) ? "" : url_image);
+                        productItem.setId_product(list_makeups.get(i)[3]);
 
                         listProduct.add(productItem);
                     }

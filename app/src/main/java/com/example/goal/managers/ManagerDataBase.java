@@ -170,7 +170,7 @@ public class ManagerDataBase extends SQLiteOpenHelper {
     /**
      * Insere um {@link Product} no Banco de Dados Local
      *
-     * @param product Instancia da Classe de Produto que será inserida no Banco Local Mobile
+     * @param id_product ID do Produto que será salva Localmente
      * @return true/false
      */
     public boolean insertWishes(String id_product) {
@@ -179,7 +179,7 @@ public class ManagerDataBase extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(ID_PRODUCT, String.valueOf(id_product));
 
-        return database.insert(TABLE_ADDRESS, null, values) > NOT_INSERT;
+        return database.insert(TABLE_WISHES, null, values) > NOT_INSERT;
     }
 
     /* todo: criar classe de pagamento
@@ -262,6 +262,24 @@ public class ManagerDataBase extends SQLiteOpenHelper {
         if (userSerialized == null) error_operation = serializationInfo.getError_operation();
 
         return userSerialized;
+    }
+
+    /**
+     * Verifica se um {@link Product} é um Produto da Lista de Desejos do Usuario
+     *
+     * @return true/false
+     */
+    public boolean isWhishes(String id_product) {
+        // Seleciona um Produto da Lista de Desejo no Banco de Dados
+        Cursor cursor = this.getReadableDatabase().query(TABLE_WISHES, new String[]{ID_PRODUCT},
+                ID_PRODUCT + "=?", new String[]{id_product}, null, null, null);
+
+        // Serializa e Retorna se o Produto é ou não um Produto favoritado
+        if (cursor != null && cursor.moveToFirst()) {
+            String id_database = cursor.getString(cursor.getColumnIndex(ID_PRODUCT));
+            cursor.close();
+            return !isNullOrEmpty(id_database);
+        } else return false;
     }
 
     /**

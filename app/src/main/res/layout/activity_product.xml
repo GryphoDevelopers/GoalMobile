@@ -20,7 +20,6 @@
 
         <LinearLayout
             android:id="@+id/layout_productSeller"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
@@ -33,21 +32,23 @@
 
             <Button
                 android:id="@+id/btn_updateProduct"
+                style="@style/Widget.AppCompat.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:text="Atualizar" />
+                android:text="@string/option_updateProduct" />
 
             <Button
                 android:id="@+id/btn_deleteProduct"
+                style="@style/Widget.AppCompat.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
-                android:text="Excluir" />
+                android:text="@string/option_deleteProduct" />
 
         </LinearLayout>
 
@@ -81,6 +82,12 @@
             android:text="@string/text_color"
             android:textSize="24sp" />
         <!-- Todo: Adicionar Custom View das Views/Caixas com as Cores-->
+
+        <LinearLayout
+            android:id="@+id/linear_teste"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
 
         <TextView
             android:id="@+id/txt_size"
@@ -133,10 +140,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="26dp"
-            android:drawableTint="@color/grey"
             android:text="@string/available_stock"
             android:textSize="28sp"
-            app:drawableLeftCompat="@drawable/ic_email" />
+            app:drawableLeftCompat="@drawable/ic_email"
+            app:drawableTint="@color/grey" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -153,7 +160,6 @@
                 android:insetBottom="0dp"
                 android:text="@string/btn_buy" />
 
-
             <!-- minHeight = 0 para que o botão não possua espaço dentro -->
             <Button
                 android:id="@+id/btn_listWishes"
@@ -161,8 +167,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="0dp"
-                android:text="@string/btn_addWishes"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:text="@string/btn_addWishes" />
 
             <Button
                 android:id="@+id/btn_removeWishes"
@@ -170,8 +175,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="0dp"
-                android:text="@string/btn_addWishes"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:text="@string/btn_removeWishes"
+                android:visibility="gone" />
         </LinearLayout>
 
         <TextView

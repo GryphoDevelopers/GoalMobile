@@ -274,7 +274,8 @@ public class SingUpActivity extends AppCompatActivity {
      * @return String[]|null
      */
     private String[] validationAPI(ExecutorService executorService) {
-        if (!userSingUp.validationNumberCnpj(executorService, userSingUp.getUnmaskCnpj())) {
+        if (switch_documents.isChecked() && !userSingUp.validationNumberCnpj(executorService,
+                userSingUp.getUnmaskCnpj())) {
             // Obtem os Possiveis erros de Validação CNPJ (API Externa)
             return new String[]{getString(R.string.title_input_invalid, "CNPJ"),
                     userSingUp.getError_validation()};

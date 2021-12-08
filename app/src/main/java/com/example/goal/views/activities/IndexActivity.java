@@ -212,7 +212,7 @@ public class IndexActivity extends AppCompatActivity {
 
         // Cria o Botão do Menu Lateral
         actionToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-                R.string.nav_app_bar_open_drawer_description, R.string.navigation_drawer_close);
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
         // Personaliza a cor do Botão
         arrowDrawable = actionToggle.getDrawerArrowDrawable();
