@@ -257,7 +257,14 @@
 
 
     <!-- Layout da Activity Changes -->
-    <string name="title_changes">Alteração %s</string>
+    <string name="title_changes">Alterar dados da conta</string>
+    <string name="hint_nome">Nome</string>
+    <string name="hint_usu">Nome do usuário</string>
+    <string name="option_account">Vendedor</string>
+    <string name="hint_email2">Email</string>
+    <string name="hint_pass">Senha</string>
+    <string name="btn_save">Salvar alterações</string>
+    <string name="btn_cancel">Cancelar</string>
 
 
     <!-- Layout da Activity Detalhes -->
@@ -271,5 +278,4 @@
     <string name="text_warranty">Garantia: …</string>
     <string name="text_SAC">SAC do fornecedor: …</string>
     <string name="text_info">Informações do Produto</string>
-    <string name="btn_home">Voltar ao Inicio</string>
 </resources>
