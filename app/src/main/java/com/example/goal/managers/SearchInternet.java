@@ -74,18 +74,25 @@ public class SearchInternet {
     public static final String API_EMAIL_DISPOSABLE = "https://open.kickbox.com/v1/disposable/";
 
     /**
+     * Verifica se a API GOAL está Online
+     *
+     * @see <a href="https://goalwebapi.herokuapp.com/swagger/index.html">API Goal</a>
+     */
+    public static final String API_GOAL_HOME = "https://restapigoals.herokuapp.com/swagger/v1/swagger.json";
+
+    /**
      * URL da Geração de Token na API Goal (API do Projeto)
      *
      * @see <a href="https://goalwebapi.herokuapp.com/swagger/index.html">API Goal</a>
      */
-    public static final String API_GOAL_TOKEN = "https://goalwebapi.herokuapp.com/goal/api/v1/auth";
+    public static final String API_GOAL_TOKEN = "https://restapigoals.herokuapp.com/goal/api/v1/auth";
 
     /**
      * URL de Cadastro de Usuarios na API Goal (API do Projeto)
      *
      * @see <a href="https://goalwebapi.herokuapp.com/swagger/index.html">API Goal</a>
      */
-    public static final String API_GOAL_INSERT_USER = "https://goalwebapi.herokuapp.com/goal/api/v1/auth/add-access";
+    public static final String API_GOAL_INSERT_USER = "https://restapigoals.herokuapp.com/goal/api/v1/auth/add-access";
 
 
     // todo: alterar para URL correta

@@ -451,6 +451,7 @@
             android:clickable="false"
             android:focusable="auto"
             android:text="@string/btn_createAcount"
+            android:background="@color/grey"
             android:textColor="@color/white_light"
             android:textSize="18sp" />
 

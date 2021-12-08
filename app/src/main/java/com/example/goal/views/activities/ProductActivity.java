@@ -1,8 +1,5 @@
 package com.example.goal.views.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,14 +9,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.goal.R;
 import com.example.goal.managers.ManagerDataBase;
 import com.example.goal.managers.ManagerResources;
 import com.example.goal.models.Product;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
 import com.squareup.picasso.Picasso;
-
-import java.io.Console;
 
 public class ProductActivity extends AppCompatActivity {
 
@@ -31,6 +29,7 @@ public class ProductActivity extends AppCompatActivity {
     public static final String PARAM_SIZE = "size";
     public static final String PARAM_PRICE = "price";
 
+    private ManagerDataBase database;
     private boolean isSellerProduct = false;
     private Product product;
     private Button remove_wishes;
@@ -60,12 +59,29 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     /**
+     * Instancia os Itens que serão utilizados na Activity
+     */
+    private void instanceItems() {
+        remove_wishes = findViewById(R.id.btn_removeWishes);
+        add_wishes = findViewById(R.id.btn_listWishes);
+        update_product = findViewById(R.id.btn_updateProduct);
+        remove_product = findViewById(R.id.btn_deleteProduct);
+        database = new ManagerDataBase(ProductActivity.this);
+    }
+
+    /**
      * Configura a ToolBar Centralizando a Logo no Centro
      */
     private void setUpToolBar() {
         Toolbar toolbar = findViewById(R.id.toolbar_product);
         setSupportActionBar(toolbar);
 
+        // Adiciona o Icone de "Voltar"
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         // Configura a Logo no Centro da ToolBar
         ImageView logo_goal = toolbar.findViewById(R.id.image_logo_goal);
@@ -76,16 +92,6 @@ public class ProductActivity extends AppCompatActivity {
         layoutParams.setMargins(0, 0, margin_for_center, 0);
 
         logo_goal.setLayoutParams(layoutParams);
-    }
-
-    /**
-     * Instancia os Itens que serão utilizados na Activity
-     */
-    private void instanceItems() {
-        remove_wishes = findViewById(R.id.btn_removeWishes);
-        add_wishes = findViewById(R.id.btn_listWishes);
-        update_product = findViewById(R.id.btn_updateProduct);
-        remove_product = findViewById(R.id.btn_deleteProduct);
     }
 
     /**
@@ -116,6 +122,9 @@ public class ProductActivity extends AppCompatActivity {
                 finish();
             });
         }
+
+        // Configura caso o Produto já seja um da Lista de Desejos
+        if (database.isWhishes(product.getId_product())) visibleAddWishes(false);
     }
 
     /**
@@ -130,18 +139,17 @@ public class ProductActivity extends AppCompatActivity {
         comments_product.setOnClickListener(view ->
                 startActivity(new Intent(ProductActivity.this, CommentsActivity.class)));
 
-        ManagerDataBase dataBase = new ManagerDataBase(ProductActivity.this);
         AlertDialogPersonalized alertPersonalized = new AlertDialogPersonalized(ProductActivity.this);
 
         remove_wishes.setOnClickListener(v -> {
-            if (!dataBase.removeWishes(product.getId_product())) {
+            if (!database.removeWishes(product.getId_product())) {
                 alertPersonalized.defaultDialog(getString(R.string.title_input_invalid, "Produto"),
                         getString(R.string.error_generic)).show();
             } else visibleAddWishes(true);
         });
 
         add_wishes.setOnClickListener(v -> {
-            if (!dataBase.insertWishes(product.getId_product())) {
+            if (!database.insertWishes(product.getId_product())) {
                 alertPersonalized.defaultDialog(getString(R.string.title_input_invalid, "Produto"),
                         getString(R.string.error_generic)).show();
             } else visibleAddWishes(false);

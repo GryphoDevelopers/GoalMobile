@@ -12,15 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Goal">
+
         <activity
             android:name=".views.activities.ProductActivity"
-            android:exported="false" />
-        <activity
-            android:name=".views.activities.CommentsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".views.activities.SellerProductsActivity"
-            android:exported="false" />
+            android:parentActivityName=".views.activities.IndexActivity" />
+        <activity android:name=".views.activities.CommentsActivity" />
         <activity android:name=".views.activities.SearchActivity" />
         <activity android:name=".views.activities.WishesActivity" />
         <activity android:name=".views.activities.ChangesActivity" />

@@ -39,11 +39,37 @@ public class ManagerResources {
         return check_string == null || check_string.equals("");
     }
 
+    /**
+     * A partir das Dimensões do Dispositivo, converte DP para Pixel
+     *
+     * @param context  {@link Context} utilizado para obter as Dimensões
+     * @param value_dp Tamanho do DP que será convertido
+     * @return int
+     */
     public static int dpToPixel(Context context, int value_dp) {
         try {
             // Obtem unidade de Conversão e Converte o dp para Pixels
             float dpRatio = context.getResources().getDisplayMetrics().density;
             return (int) (value_dp * dpRatio);
+        } catch (Exception ex) {
+            Log.e(EXCEPTION, "ManagerResources - Exceção ao Converter DP em Pixel: " + ex.getClass().getName());
+            ex.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * A partir das Dimensões do Dispositivo, converte SP para Pixel
+     *
+     * @param context  {@link Context} utilizado para obter as Dimensões
+     * @param value_sp Tamanho do SP que será convertido
+     * @return float
+     */
+    public static float spToPixel(Context context, int value_sp) {
+        try {
+            // Obtem unidade de Conversão e Converte o dp para Pixels
+            float dpRatio = context.getResources().getDisplayMetrics().scaledDensity;
+            return value_sp * dpRatio;
         } catch (Exception ex) {
             Log.e(EXCEPTION, "ManagerResources - Exceção ao Converter DP em Pixel: " + ex.getClass().getName());
             ex.printStackTrace();
