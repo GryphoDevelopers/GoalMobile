@@ -25,9 +25,9 @@ public class ProfileActivity extends AppCompatActivity {
             finish();
         });
 
-        Button button_details = findViewById(R.id.button_test3);
+        Button button_details = findViewById(R.id.button_change);
         button_details.setOnClickListener(v -> {
-            startActivity(new Intent(ProfileActivity.this, DetailsActivity.class));
+            startActivity(new Intent(ProfileActivity.this, ChangesActivity.class));
             finish();
         });
     }

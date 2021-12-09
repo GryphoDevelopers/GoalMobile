@@ -258,7 +258,14 @@
     <string name="btn_removeWishes">Remover da Lista de Desejos</string>
 
     <!-- Layout da Activity Changes -->
-    <string name="title_changes">Alteração %s</string>
+    <string name="title_changes">Alterar dados da conta</string>
+    <string name="hint_nome">Nome</string>
+    <string name="hint_usu">Nome do usuário</string>
+    <string name="option_account">Vendedor</string>
+    <string name="hint_email2">Email</string>
+    <string name="hint_pass">Senha</string>
+    <string name="btn_save">Salvar alterações</string>
+    <string name="btn_cancel">Cancelar</string>
 
     <!-- Layout da Activity Detalhes -->
     <string name="text_details">Detalhes</string>
@@ -271,5 +278,19 @@
     <string name="text_warranty">Garantia: …</string>
     <string name="text_SAC">SAC do fornecedor: …</string>
     <string name="text_info">Informações do Produto</string>
-    <string name="btn_home">Voltar ao Inicio</string>
+
+    <!-- Layout da Activity Profile -->
+    <string name="txt_nome">Nome</string>
+    <string name="txt_usu">Nome do usuário</string>
+    <string name="txt_email">Email</string>
+    <string name="txt_pass">Senha</string>
+    <string name="txt_date">28/11/2000</string>
+    <string name="btn_change">Alterar dados</string>
+    <string name="btn_home">Voltar</string>
+    <string name="btn_addres">Endereço</string>
+    <string name="btn_payment">Formas de Pagamento</string>
+    <string name="btn_extract">Extrato de Compras</string>
+    <string name="txt_configs">Configurações do Aplicativo</string>
+    <string name="btn_data">Apagar dados salvos</string>
+    <string name="btn_theme">Tema</string>
 </resources>
