@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="16sp"
+    android:layout_marginLeft="16sp"
+    tools:context=".views.activities.DetailsActivity">
+
+    <!-- Todo: Remover texto e botão abaixo, apenas usado como indicativo -->
+
+    <Button
+        android:id="@+id/button_test2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Voltar ao Inicio"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976"
+        tools:ignore="HardcodedText" />
+
+    <LinearLayout
+        android:id="@+id/layout_details"
+        android:layout_width="match_parent"
+        android:layout_height="730dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/txt_Details"
+            style="@style/label_fields"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_details"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_Details2"
+            style="@style/label_fields"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_type"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/txt_Details3"
+            style="@style/label_fields"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_collor"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/txt_Details4"
+            style="@style/label_fields"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_size2"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/txt_Details5"
+            style="@style/label_fields"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_material"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/txt_Details6"
+            style="@style/label_fields"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_local"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/txt_Details7"
+            style="@style/label_fields"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_brand"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/txt_Details8"
+            style="@style/label_fields"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_warranty"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/txt_Details9"
+            style="@style/label_fields"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_SAC"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/txt_Details10"
+            style="@style/label_fields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_details"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

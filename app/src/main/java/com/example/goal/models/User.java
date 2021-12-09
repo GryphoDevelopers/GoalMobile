@@ -1,14 +1,22 @@
 package com.example.goal.models;
 
+import static com.example.goal.managers.ManagerResources.EXCEPTION;
+import static com.example.goal.managers.ManagerResources.LOCALE_BR;
+import static com.example.goal.managers.ManagerResources.PATTERN_DATE;
+import static com.example.goal.managers.ManagerResources.TIME_ZONE;
+import static com.example.goal.managers.SearchInternet.GET;
+
 import android.content.Context;
 import android.net.Uri;
 import android.text.Html;
 import android.util.Log;
 
 import com.example.goal.R;
+import com.example.goal.managers.ManagerResources;
 import com.example.goal.managers.SearchInternet;
 import com.example.goal.views.widgets.MaskInputPersonalized;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
@@ -20,31 +28,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
  * Classe User: Classe Usada para manipular as informações dos Usuario (Clientes e Vendedores)
  */
 public class User {
-
-    // Constantes Usadas na manipulação da Data
-    public static final String TIME_ZONE = "America/Sao_Paulo";
-    public static final Locale LOCALE_BR = new Locale("pt", "BR");
     // Constantes da Força da Senha
     private static final int LOW_STRENGTH = 1;
     private static final int OK_STRENGTH = 2;
     // Constantes de Possiveis Exception usadads nos Logs
     private final String NAME_CLASS = "User";
-    private final String EXECUTION_EXCEPTION = "Exception Execution";
-    private final String INTERRUPTED_EXCEPTION = "Exception Interrupted";
-    private final String EXCEPTION_GLOBAL = "Exception General";
     // Constantes Usadas nos Erros
     private final String INPUT_NULL;
     private final String INPUT_MIN_LENGTH;
@@ -57,19 +55,22 @@ public class User {
     private final String INVALID_DDD;
     private final String INPUT_INVALID_AGE;
     private final String INPUT_INVALID;
+    // Variavies Usadas já inicializadas
     private final Context context;
-    private Date date_birth;
-    private String name;
-    private String email;
-    private String nickname;
-    private String cpf;
-    private String password;
-    private String confirmPassword;
-    private String phone;
-    private String cnpj;
-    private boolean isSeller;
-    private boolean checkedTermsUse;
     private String error_validation = "";
+    private Date date_birth = null;
+    private String name = "";
+    private String last_name = "";
+    private String email = "";
+    private String nickname = "";
+    private String cpf = "";
+    private String password = "";
+    private String confirmPassword = "";
+    private String phone = "";
+    private String cnpj = "";
+    // todo: alterar o tipo String para GUID (Id_user)
+    private String id_user = "";
+    private boolean isSeller = false;
 
     /**
      * Construtor da Classe User
@@ -94,6 +95,32 @@ public class User {
     }
 
     /**
+     * Compara as Informações entre dois Usuarios. Essa comparação, será armazenada no novo Usuario
+     * que conterá as novas informações em comparação com o Antigo Usuario
+     */
+    public static User compareUser(User oldUser, User newUser) {
+
+        // Verifica para cada Propriedade do Usuario se foi preenchida
+        if (ManagerResources.isNullOrEmpty(newUser.getId_user()))
+            newUser.setId_user(oldUser.getId_user());
+        if (ManagerResources.isNullOrEmpty(newUser.getName())) newUser.setName(oldUser.getName());
+        if (ManagerResources.isNullOrEmpty(newUser.getNickname()))
+            newUser.setNickname(oldUser.getNickname());
+        if (ManagerResources.isNullOrEmpty(newUser.getEmail()))
+            newUser.setEmail(oldUser.getEmail());
+        if (ManagerResources.isNullOrEmpty(newUser.getString_dateBirth()))
+            newUser.setDate_birth(oldUser.getString_dateBirth());
+        if (ManagerResources.isNullOrEmpty(newUser.getUnmaskPhone()))
+            newUser.setPhone(oldUser.getUnmaskPhone());
+        if (ManagerResources.isNullOrEmpty(newUser.getUnmaskCnpj()))
+            newUser.setCnpj(oldUser.getUnmaskCnpj());
+        if (ManagerResources.isNullOrEmpty(newUser.getUnmaskCpf()))
+            newUser.setCpf(oldUser.getUnmaskCpf());
+
+        return newUser;
+    }
+
+    /**
      * Valida o Nome Baseando nos Parametros:
      * <p>
      * Tamanho de 3 a 80 Letras, com acentuação e espaços em branco
@@ -102,7 +129,7 @@ public class User {
      * @return true/false
      */
     public boolean validationName(String name) {
-        if (name == null || name.equals("")) {
+        if (ManagerResources.isNullOrEmpty(name)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (name.length() < 3) {
@@ -126,7 +153,7 @@ public class User {
      * @return true/false
      */
     public boolean validationEmail(String email) {
-        if (email == null || email.equals("")) {
+        if (ManagerResources.isNullOrEmpty(email)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (email.length() < 10) {
@@ -144,23 +171,25 @@ public class User {
     /**
      * Valida o email a partir de uma API. Esse é um metodo Independente da Validação do Email
      *
-     * @param email Email utilizado na Validação
+     * @param email           Email utilizado na Validação
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
      * @return true/false
      */
-    public boolean validationEmailAPI(String email) {
+    public boolean validationEmailAPI(ExecutorService executorService, String email) {
         try {
             // URI de Pesquisa
-            Uri build_uri = Uri.parse(SearchInternet.API_EMAIL_DISPONABLE)
+            Uri build_uri = Uri.parse(SearchInternet.API_EMAIL_DISPOSABLE)
                     .buildUpon().appendPath(email).build();
 
             // Criação da Tarefa Assincrona e do Metodo que busca na Internet
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
             SearchInternet searchInternet = new SearchInternet(context);
 
             // Configura a Tarefa Assincrona que Retorna uma String
             Set<Callable<String>> callable = new HashSet<>();
             callable.add(() -> {
-                String json_email = searchInternet.SearchInAPI(build_uri.toString(), "GET");
+                String json_email = searchInternet.SearchInAPI(build_uri.toString(), GET, null);
 
                 if (json_email == null) error_validation = searchInternet.getError_search();
                 return json_email;
@@ -171,25 +200,23 @@ public class User {
             String json_email = futureTasksList.get(0).get();
 
             if (json_email != null) {
-                SerializationInfos serializationInfos = new SerializationInfos(context);
-                String[] infos_email = serializationInfos.jsonToArray(json_email, new String[]{"disposable"});
+                SerializationInfo serializationInfo = new SerializationInfo(context);
+                String[] infos_email = serializationInfo.jsonStringToArray(json_email, new String[]{"disposable"});
 
                 if (infos_email != null) {
                     if (infos_email[0].equals("false")) return true;
                     error_validation = EMAIL_DISPOSABLE;
-                } else error_validation = serializationInfos.getError_operation();
+                } else error_validation = serializationInfo.getError_operation();
 
             }
 
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(INTERRUPTED_EXCEPTION, NAME_CLASS + " - Tarefa Assincrona Interrompida");
-            ex.printStackTrace();
-        } catch (ExecutionException ex) {
-            error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXECUTION_EXCEPTION, NAME_CLASS + " - Falha na Execução da Tarefa Assincrona");
+            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro na Consulta do Email: " +
+                    ex.getClass().getName());
             ex.printStackTrace();
         }
+
         // Alguma etapa não foi bem sucedida
         return false;
     }
@@ -203,7 +230,7 @@ public class User {
      * @return true/false
      */
     public boolean validationNickname(String nickname) {
-        if (nickname == null || nickname.equals("")) {
+        if (ManagerResources.isNullOrEmpty(nickname)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (nickname.length() < 5) {
@@ -226,14 +253,14 @@ public class User {
      * @return true/false
      */
     public boolean validationCpf(String cpf) {
-        if (cpf != null && !cpf.equals("")) {
+        if (!ManagerResources.isNullOrEmpty(cpf)) {
             if (cpf.length() != 14) {
                 error_validation = String.format(INPUT_NOT_FORMAT, "CPF", "000.000.000-00");
                 return false;
             }
 
             String cfp_unmask = MaskInputPersonalized.remove_mask(cpf, MaskInputPersonalized.DEFAULT_REGEX);
-            if (cfp_unmask != null && !cfp_unmask.equals("")) {
+            if (!ManagerResources.isNullOrEmpty(cfp_unmask)) {
                 if (cfp_unmask.length() != 11) {
                     error_validation = String.format(INPUT_MIN_LENGTH, "CPF", "11 Numeros");
                     return false;
@@ -268,14 +295,14 @@ public class User {
      * @return true/false
      */
     public boolean validationCnpj(String cnpj) {
-        if (cnpj != null && !cnpj.equals("")) {
+        if (!ManagerResources.isNullOrEmpty(cnpj)) {
             if (cnpj.length() != 18) {
                 error_validation = String.format(INPUT_NOT_FORMAT, "CNPJ", "00.000.000/000X-YY");
                 return false;
             }
 
             String cnpj_unmask = MaskInputPersonalized.remove_mask(cnpj, MaskInputPersonalized.DEFAULT_REGEX);
-            if (cnpj_unmask != null && !cnpj_unmask.equals("")) {
+            if (!ManagerResources.isNullOrEmpty(cnpj_unmask)) {
                 if (cnpj_unmask.length() != 14) {
                     error_validation = String.format(INPUT_MIN_LENGTH, "CNPJ", "14 Numeros");
                     return false;
@@ -296,17 +323,20 @@ public class User {
      * Valida o CNPJ na API BRASIL, Verificando se possui um cadastro na Receita Federal e tambem se
      * está ativo o CNPJ. Este é um metodo Independente da Validação do CNPJ
      *
-     * @param cnpj CNPJ informado pelo Usuario
+     * @param cnpj            CNPJ informado pelo Usuario
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
      * @return true/false
      */
-    public boolean validationNumberCnpj(String cnpj) {
+    public boolean validationNumberCnpj(ExecutorService executorService, String cnpj) {
         try {
             String unmask_cnpj = "";
-            if (cnpj != null && !cnpj.equals("")) {
+            if (!ManagerResources.isNullOrEmpty(cnpj)) {
                 unmask_cnpj = MaskInputPersonalized.remove_mask(cnpj, MaskInputPersonalized.DEFAULT_REGEX);
             }
 
-            if (unmask_cnpj == null || unmask_cnpj.equals("")) {
+            if (ManagerResources.isNullOrEmpty(unmask_cnpj)) {
                 // CNPJ com ou sem Mascara é invalido
                 error_validation = INPUT_NULL;
                 return false;
@@ -316,14 +346,11 @@ public class User {
             Uri build_uri = Uri.parse(SearchInternet.API_BRAZIL_CNPJ)
                     .buildUpon().appendPath(unmask_cnpj).build();
 
-            // Criação da Tarefa Assincrona e do Metodo que busca na Internet
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-
             // Configura a Tarefa Assincrona que Retorna uma String
             Set<Callable<String>> callable = new HashSet<>();
             callable.add(() -> {
                 SearchInternet searchInternet = new SearchInternet(context);
-                String json_cnpj = searchInternet.SearchInAPI(build_uri.toString(), "GET");
+                String json_cnpj = searchInternet.SearchInAPI(build_uri.toString(), GET, null);
 
                 if (json_cnpj == null) error_validation = searchInternet.getError_search();
                 return json_cnpj;
@@ -334,29 +361,27 @@ public class User {
             String json_cnpj = futureTasksList.get(0).get();
 
             if (json_cnpj != null) {
-                SerializationInfos serializationInfos = new SerializationInfos(context);
-                String[] cnpj_reciver = serializationInfos.jsonToArray(json_cnpj,
+                SerializationInfo serializationInfo = new SerializationInfo(context);
+                String[] cnpj_reciver = serializationInfo.jsonStringToArray(json_cnpj,
                         new String[]{"cnpj", "descricao_situacao_cadastral"});
 
                 if (cnpj_reciver != null) {
                     if (cnpj_reciver[0].equals(unmask_cnpj) && cnpj_reciver[1].equals("Ativa")) {
                         return true;
                     } else error_validation = CNPJ_INVALID;
-                } else error_validation = serializationInfos.getError_operation();
+                } else error_validation = serializationInfo.getError_operation();
 
             } else if (error_validation.equals(context.getString(R.string.error_generic))) {
                 error_validation = CNPJ_INVALID;
             }
 
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(INTERRUPTED_EXCEPTION, NAME_CLASS + " - Tarefa Assincrona Interrompida");
-            ex.printStackTrace();
-        } catch (ExecutionException ex) {
-            error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXECUTION_EXCEPTION, NAME_CLASS + " - Falha na Execução da Tarefa Assincrona");
+            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro na Consulta do CNPJ: " +
+                    ex.getClass().getName());
             ex.printStackTrace();
         }
+
         // Alguma etapa não foi bem sucedida
         return false;
     }
@@ -371,7 +396,7 @@ public class User {
      * @return true/false
      */
     public boolean validationPassword(String password) {
-        if (password == null || password.equals("")) {
+        if (ManagerResources.isNullOrEmpty(password)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (password.length() < 5) {
@@ -415,7 +440,7 @@ public class User {
         String confirmPassword = user.getConfirmPassword();
         String password = user.getPassword();
 
-        if (confirmPassword == null || confirmPassword.equals("")) {
+        if (ManagerResources.isNullOrEmpty(confirmPassword)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (validationPassword(confirmPassword)) {
@@ -435,14 +460,14 @@ public class User {
      * @return true/false
      */
     public boolean validationBrazilianPhone(String phone) {
-        if (phone != null && !phone.equals("")) {
+        if (!ManagerResources.isNullOrEmpty(phone)) {
             if (phone.length() != 15) {
-                error_validation = String.format(INPUT_NOT_FORMAT, "Telefone", "(0XX) 90000-0000");
+                error_validation = String.format(INPUT_NOT_FORMAT, "Telefone", "(0XX)90000-0000");
                 return false;
             }
 
             String unmask_phone = MaskInputPersonalized.remove_mask(phone, MaskInputPersonalized.DEFAULT_REGEX);
-            if (unmask_phone != null && !unmask_phone.equals("")) {
+            if (!ManagerResources.isNullOrEmpty(unmask_phone)) {
                 if (unmask_phone.length() != 12) {
                     error_validation = String.format(INPUT_MIN_LENGTH,
                             "Telefone", "12 Digitos (DDD + Numero)");
@@ -477,7 +502,7 @@ public class User {
      * @return true/false
      */
     public boolean validationInternationPhone(String internation_phone) {
-        if (internation_phone == null || internation_phone.equals("")) {
+        if (ManagerResources.isNullOrEmpty(internation_phone)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (!internation_phone.matches("^[0-9+]*")) {
@@ -498,7 +523,7 @@ public class User {
      */
     public boolean validationDateBirth(String date_birth) {
         try {
-            if (date_birth == null || date_birth.equals("")) {
+            if (ManagerResources.isNullOrEmpty(date_birth)) {
                 error_validation = INPUT_NULL;
                 return false;
             } else if (!date_birth.matches("[0-9]{2}/[0-9]{2}/[0-9]{4}")) {
@@ -536,7 +561,7 @@ public class User {
 
             // Alternativas para Diferentes Versões
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                LocalDate localDate = LocalDate.parse(date_birth, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                LocalDate localDate = LocalDate.parse(date_birth, DateTimeFormatter.ofPattern(PATTERN_DATE));
                 LocalDate localDate_now = LocalDate.now(ZoneId.of(TIME_ZONE));
 
                 if (localDate != null && localDate_now != null) {
@@ -554,7 +579,7 @@ public class User {
             } else {
                 // Formata a Data Recebida e a Data Atual do Brasil
                 setDate_birth(date_birth);
-                Date date_birth_formatted = getDate_birth();
+                Date date_birth_formatted = getDate_dateBirth();
                 Date date_now_formatted = getDate_now();
 
                 if (date_birth_formatted != null && date_now_formatted != null) {
@@ -587,7 +612,7 @@ public class User {
             return false;
         } catch (Exception ex) {
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXCEPTION_GLOBAL, NAME_CLASS + " - Falha na Manipulação da Data");
+            Log.e(EXCEPTION, NAME_CLASS + " - Falha na Manipulação da Data");
             ex.printStackTrace();
             return false;
         }
@@ -610,12 +635,28 @@ public class User {
     }
 
     // Getters e Setters da Classe User
+    public String getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(String id_user) {
+        this.id_user = id_user;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getNickname() {
@@ -626,7 +667,21 @@ public class User {
         this.nickname = nickname;
     }
 
-    public String getCpf() {
+    /**
+     * Retorna o CPF no formato XXX.XXX.XXX-XX
+     *
+     * @return {@link String}
+     */
+    public String getUnmaskCpf() {
+        return MaskInputPersonalized.remove_mask(cpf, MaskInputPersonalized.DEFAULT_REGEX);
+    }
+
+    /**
+     * Retorna o CPF sem Mascara (XXXXXXXXXXX)
+     *
+     * @return {@link String}
+     */
+    public String getMaskedCpf() {
         return cpf;
     }
 
@@ -650,7 +705,7 @@ public class User {
         isSeller = seller;
     }
 
-    public String getConfirmPassword() {
+    private String getConfirmPassword() {
         return confirmPassword;
     }
 
@@ -666,24 +721,54 @@ public class User {
         this.email = email;
     }
 
-    public boolean isCheckedTermsUse() {
-        return checkedTermsUse;
-    }
-
-    public void setCheckedTermsUse(boolean checkedTermsUse) {
-        this.checkedTermsUse = checkedTermsUse;
-    }
-
-    public String getPhone() {
+    /**
+     * Retorna o Telefone + DDD no formato (0XX)XXXXX-XXXX
+     *
+     * @return {@link String}
+     */
+    public String getMaskedPhone() {
         return phone;
+    }
+
+    /**
+     * Retorna o Telefone no formato XXXXXXXXX
+     *
+     * @return {@link String}
+     */
+    public String getUnmaskPhone() {
+        return MaskInputPersonalized.remove_mask(phone, MaskInputPersonalized.DEFAULT_REGEX);
+    }
+
+    /**
+     * Retorna apenas o DDD do Usuario
+     *
+     * @return {@link String}
+     */
+    public String getDDD() {
+        return validationBrazilianPhone(phone) && getUnmaskCpf() != null
+                ? getUnmaskPhone().substring(1, 3) : "";
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public String getCnpj() {
+    /**
+     * Obtem o CNPJ no seguinte formato: XX.XXX.XXX/XXXX-XX
+     *
+     * @return {@link String}
+     */
+    public String getMaskedCnpj() {
         return cnpj;
+    }
+
+    /**
+     * Retorna o CNPJ sem Mascara (XXXXXXXXXXXXXX)
+     *
+     * @return {@link String}
+     */
+    public String getUnmaskCnpj() {
+        return MaskInputPersonalized.remove_mask(cnpj, MaskInputPersonalized.DEFAULT_REGEX);
     }
 
     public void setCnpj(String cnpj) {
@@ -694,7 +779,23 @@ public class User {
         return error_validation;
     }
 
-    public Date getDate_birth() {
+    /**
+     * Retorna a Data de Nascimento em uma String no Formato dd/MM/aaaa
+     *
+     * @return {@link String}|""
+     */
+    public String getString_dateBirth() {
+        DateFormat dateFormat = new SimpleDateFormat(PATTERN_DATE, LOCALE_BR);
+        if (date_birth == null) return "";
+        else return dateFormat.format(date_birth);
+    }
+
+    /**
+     * Retorna a Data de Nascimento no Formato {@link Date}
+     *
+     * @return {@link Date}
+     */
+    private Date getDate_dateBirth() {
         return date_birth;
     }
 
@@ -708,7 +809,7 @@ public class User {
     public void setDate_birth(String date_birth) {
         try {
             // Configura o Formato e Fuso Horario da Data
-            SimpleDateFormat dateFormatDefault = new SimpleDateFormat("dd/MM/yyyy", LOCALE_BR);
+            SimpleDateFormat dateFormatDefault = new SimpleDateFormat(PATTERN_DATE, LOCALE_BR);
             dateFormatDefault.setTimeZone(TimeZone.getTimeZone(TIME_ZONE));
 
             // Formata a Data Recebida
@@ -716,7 +817,7 @@ public class User {
         } catch (Exception ex) {
             this.date_birth = null;
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXCEPTION_GLOBAL, NAME_CLASS + " - Falha na Conversão da Data");
+            Log.e(EXCEPTION, NAME_CLASS + " - Falha na Conversão da Data");
             ex.printStackTrace();
         }
     }
@@ -731,12 +832,12 @@ public class User {
     public Date getDate_now() {
         try {
             // Formata a Data Atual com a Localização e Fuso Horario Brasileiro
-            SimpleDateFormat dateFormatDefault = new SimpleDateFormat("dd/MM/yyyy", LOCALE_BR);
+            SimpleDateFormat dateFormatDefault = new SimpleDateFormat(PATTERN_DATE, LOCALE_BR);
             dateFormatDefault.setTimeZone(TimeZone.getTimeZone(TIME_ZONE));
             return dateFormatDefault.parse(dateFormatDefault.format(new Date()));
         } catch (Exception ex) {
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXCEPTION_GLOBAL, NAME_CLASS + " - Falha na Conversão da Data");
+            Log.e(EXCEPTION, NAME_CLASS + " - Falha na Conversão da Data");
             ex.printStackTrace();
             return null;
         }

@@ -1,11 +1,16 @@
 package com.example.goal.models;
 
+import static com.example.goal.managers.ManagerResources.EXCEPTION;
+import static com.example.goal.managers.ManagerResources.LOCALE_BR;
+import static com.example.goal.managers.SearchInternet.GET;
+
 import android.content.Context;
 import android.net.Uri;
 import android.text.Html;
 import android.util.Log;
 
 import com.example.goal.R;
+import com.example.goal.managers.ManagerResources;
 import com.example.goal.managers.SearchInternet;
 import com.example.goal.views.widgets.MaskInputPersonalized;
 
@@ -14,9 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
@@ -26,9 +29,6 @@ public class Address {
 
     // Constantes de Possiveis Exception usadads nos Logs
     private final String NAME_CLASS = "Address";
-    private final String EXECUTION_EXCEPTION = "Exception Execution";
-    private final String INTERRUPTED_EXCEPTION = "Exception Interrupted";
-    private final String EXCEPTION = "Exception";
 
     // Constantes Usadas nos Erros
     private final String INPUT_NULL;
@@ -42,14 +42,14 @@ public class Address {
 
     // Atributos da Classe
     private final Context context;
-    private String country;
-    private String state;
-    private String city;
-    private String address;
-    private String district;
-    private String complement;
-    private int number;
-    private String cep;
+    private String country = "";
+    private String state = "";
+    private String city = "";
+    private String address = "";
+    private String district = "";
+    private String complement = "";
+    private int number = 0;
+    private String cep = "";
 
     private String error_validation;
 
@@ -73,29 +73,6 @@ public class Address {
     }
 
     /**
-     * Valida o País Informado
-     *
-     * @param country País informado pelo Usuario
-     * @return true/false
-     */
-    public boolean validationCountry(String country) {
-        String[] countries = context.getResources().getStringArray(R.array.pays);
-
-        if (country == null || country.equals("")) {
-            error_validation = INPUT_NULL;
-            return false;
-        }
-
-        // Busca no Array se Existe a Opção Passada
-        for (String itemCountry : countries) {
-            if (itemCountry.equals(country)) return true;
-        }
-
-        error_validation = INPUT_NULL;
-        return false;
-    }
-
-    /**
      * Valida o Estado passado pelo Usuario
      *
      * @param address Instancia da Classe Addres, onde será usado o Country e State
@@ -107,7 +84,7 @@ public class Address {
 
         String state = address.getState();
 
-        if (state == null || state.equals("")) {
+        if (ManagerResources.isNullOrEmpty(state)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (address.getCountry().equals("Estrangeiro")) {
@@ -133,7 +110,7 @@ public class Address {
      */
     public boolean validationCity(Address address) {
         String city = address.getCity();
-        if (city == null || city.equals("")) {
+        if (ManagerResources.isNullOrEmpty(city)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (address.getCountry().equals("Estrangeiro")) {
@@ -155,7 +132,7 @@ public class Address {
      * @return true/false
      */
     public boolean validationAddress(String address) {
-        if (address == null || address.equals("")) {
+        if (ManagerResources.isNullOrEmpty(address)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (address.length() < 3) {
@@ -177,7 +154,7 @@ public class Address {
      * @return true/false
      */
     public boolean validationDistrict(String district) {
-        if (district == null || district.equals("")) {
+        if (ManagerResources.isNullOrEmpty(district)) {
             error_validation = INPUT_NULL;
             return false;
         } else if (district.length() < 3) {
@@ -218,7 +195,7 @@ public class Address {
      * @return true/false
      */
     public boolean validationComplement(String complement) {
-        if (complement == null || complement.equals("")) {
+        if (ManagerResources.isNullOrEmpty(complement)) {
             return true;
         } else {
             // Caso Preenchido, tem que ser validado
@@ -244,14 +221,14 @@ public class Address {
      */
     public boolean validationCEP(String cep) {
         try {
-            if (cep != null && !cep.equals("")) {
+            if (!ManagerResources.isNullOrEmpty(cep)) {
                 if (cep.length() != 9) {
                     error_validation = String.format(INPUT_NOT_FORMAT, "CEP", "00000-000");
                     return false;
                 }
 
                 String cep_unmask = MaskInputPersonalized.remove_mask(cep, MaskInputPersonalized.DEFAULT_REGEX);
-                if (cep_unmask != null && !cep_unmask.equals("")) {
+                if (!ManagerResources.isNullOrEmpty(cep_unmask)) {
                     if (cep_unmask.matches("[0-9]*")) {
                         int cep_convert = Integer.parseInt(cep_unmask);
 
@@ -278,8 +255,9 @@ public class Address {
             return false;
         } catch (Exception ex) {
             error_validation = String.format(INPUT_INVALID, "CEP");
-            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro na Conversão do CEP");
             ex.printStackTrace();
+            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro na Conversão do CEP: " +
+                    ex.getClass().getName());
             return false;
         }
     }
@@ -288,24 +266,26 @@ public class Address {
      * Verifica o CEP com o Endereço Informado. Esse é um metodo Independente da Validação do CEP.
      * Ele precisa do Endereço (Avenida/Rua), Bairro e Estado
      *
-     * @param address Instancia da Classe Address, que será usado para Comparar os Dados do CEP com
-     *                o endereço Informado
+     * @param address         Instancia da Classe Address, que será usado para Comparar os Dados do CEP com
+     *                        o endereço Informado
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
      * @return true/false
      */
-    public boolean checkCEP(Address address) {
+    public boolean checkCEP(ExecutorService executorService, Address address) {
         try {
             // URI de Pesquisa
             Uri build_uri = Uri.parse(SearchInternet.API_BRAZIL_CEP)
-                    .buildUpon().appendPath(address.getCep()).build();
+                    .buildUpon().appendPath(address.getUnmaskCep()).build();
 
             // Criação da Tarefa Assincrona e do Metodo que busca na Internet
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
             SearchInternet searchInternet = new SearchInternet(context);
 
             // Configura a Tarefa Assincrona que Retorna uma String
             Set<Callable<String>> callable = new HashSet<>();
             callable.add(() -> {
-                String json_cep = searchInternet.SearchInAPI(build_uri.toString(), "GET");
+                String json_cep = searchInternet.SearchInAPI(build_uri.toString(), GET, null);
                 if (json_cep == null) error_validation = searchInternet.getError_search();
                 return json_cep;
             });
@@ -316,32 +296,28 @@ public class Address {
 
             if (json_cep != null) {
                 // Obtem o JSON da API
-                SerializationInfos serializationInfos = new SerializationInfos(context);
-                String[] infos_cep = serializationInfos.jsonToArray(json_cep,
+                SerializationInfo serializationInfo = new SerializationInfo(context);
+                String[] infos_cep = serializationInfo.jsonStringToArray(json_cep,
                         new String[]{"street", "neighborhood", "state"});
 
                 // Obtem uma String[] serializada
                 if (infos_cep != null) {
                     // Deixa em Letras minusculas a Serialização
                     for (int i = 0; i < infos_cep.length; i++) {
-                        infos_cep[i] = infos_cep[i].toLowerCase();
+                        infos_cep[i] = getNormalizedString(infos_cep[i]);
                     }
                     // Valida os Dados
-                    if (infos_cep[0].equals(address.getAddress().toLowerCase()) &&
-                            infos_cep[1].equals(address.getDistrict().toLowerCase()) &&
-                            infos_cep[2].equals(address.getState().toLowerCase())) {
+                    if (infos_cep[0].equals(getNormalizedString(address.getAddress())) &&
+                            infos_cep[1].equals(getNormalizedString(address.getDistrict())) &&
+                            infos_cep[2].equals(getNormalizedString(address.getState()))) {
                         return true;
                     } else error_validation = String.format(CEP_INVALID, infos_cep);
-                } else error_validation = serializationInfos.getError_operation();
+                } else error_validation = serializationInfo.getError_operation();
             }
 
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(INTERRUPTED_EXCEPTION, NAME_CLASS + " - Tarefa Assincrona Interrompida");
-            ex.printStackTrace();
-        } catch (ExecutionException ex) {
-            error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXECUTION_EXCEPTION, NAME_CLASS + " - Falha na Execução da Tarefa Assincrona");
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro na Validação do CEP: " + ex.getClass().getName());
             ex.printStackTrace();
         }
         return false;
@@ -360,8 +336,8 @@ public class Address {
             return context.getResources().getStringArray(R.array.uf)[positionOfArray];
         } catch (Exception ex) {
             error_validation = String.format(INPUT_INVALID, "Estado");
+            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro ao Obter a UF: " + ex.getClass().getName());
             ex.printStackTrace();
-            Log.e(EXCEPTION, NAME_CLASS + " - Houve um erro ao Obter a UF");
             return null;
         }
     }
@@ -369,12 +345,15 @@ public class Address {
     /**
      * Obtem uma Lista (em Ordem Alfabetica) de Municipios a partir do Estado esppecificado
      *
-     * @param uf Unidade Federativa do Estado das Cidades que serão obtidas
+     * @param uf              Unidade Federativa do Estado das Cidades que serão obtidas
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
      * @return String[]|null
      */
-    public String[] getCities(String uf) {
+    public String[] getCities(ExecutorService executorService, String uf) {
         try {
-            if (uf == null || uf.equals("") || uf.length() != 2) {
+            if (ManagerResources.isNullOrEmpty(uf) || uf.length() != 2) {
                 error_validation = String.format(INPUT_INVALID, "Estado/UF");
                 return null;
             }
@@ -383,14 +362,12 @@ public class Address {
             Uri build_uri_cities = Uri.parse(SearchInternet.API_BRAZIL_CITY)
                     .buildUpon().appendPath(uf).build();
 
-            // Criação da Tarefa Assincrona e do Metodo que busca na Internet
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-
             // Configura a Tarefa Assincrona que Retorna uma String (JSON)
             Set<Callable<String>> callable = new HashSet<>();
             callable.add(() -> {
                 SearchInternet searchInternet = new SearchInternet(context);
-                String json_cities = searchInternet.SearchInAPI(build_uri_cities.toString(), "GET");
+                String json_cities = searchInternet.SearchInAPI(build_uri_cities.toString(),
+                        GET, null);
                 if (json_cities == null) error_validation = searchInternet.getError_search();
                 return json_cities;
             });
@@ -401,23 +378,29 @@ public class Address {
 
             // Valida o JSON da API
             if (json_cities != null) {
-                SerializationInfos serializationInfos = new SerializationInfos(context);
-                String[] array_cities = serializationInfos.serializationCities(json_cities);
+                SerializationInfo serializationInfo = new SerializationInfo(context);
+                List<String[]> array_cities = serializationInfo.jsonArrayToArray(json_cities,
+                        new String[]{"nome"});
 
                 // Obtem o array serializado e Ordena por ordem alfabetica
                 if (array_cities != null) {
-                    Arrays.sort(array_cities);
-                    return array_cities;
-                } else error_validation = serializationInfos.getError_operation();
+                    // Obtem o Tamanho do Array e Cria uma variavel que armazenará os resultados
+                    int size_cities = array_cities.size();
+                    String[] result_cities = new String[size_cities];
+
+                    // Obtem os Items e Oganiza por Ordem alfabetica
+                    for (int i = 0; i < size_cities; i++) {
+                        result_cities[i] = array_cities.get(i)[0];
+                    }
+                    Arrays.sort(result_cities);
+
+                    return result_cities;
+                } else error_validation = serializationInfo.getError_operation();
             }
 
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             error_validation = MESSAGE_EXCEPTION;
-            Log.e(INTERRUPTED_EXCEPTION, NAME_CLASS + " - Tarefa Assincrona Interrompida");
-            ex.printStackTrace();
-        } catch (ExecutionException ex) {
-            error_validation = MESSAGE_EXCEPTION;
-            Log.e(EXECUTION_EXCEPTION, NAME_CLASS + " - Falha na Execução da Tarefa Assincrona");
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro na Obtenção das Cidades: " + ex.getClass().getName());
             ex.printStackTrace();
         }
         return null;
@@ -472,7 +455,22 @@ public class Address {
         this.number = number;
     }
 
-    public String getCep() {
+
+    /**
+     * Retorna o CEP sem a mascara: XXXXXXXX
+     *
+     * @return {@link String}
+     */
+    public String getUnmaskCep() {
+        return MaskInputPersonalized.remove_mask(cep, MaskInputPersonalized.DEFAULT_REGEX);
+    }
+
+    /**
+     * Retorna o CEP no formato XXXXX-XXX
+     *
+     * @return {@link String}
+     */
+    public String getMaskedCep() {
         return cep;
     }
 
@@ -486,6 +484,60 @@ public class Address {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    /**
+     * Obtem a Nacionalidade a partir de um valor booleano
+     *
+     * @param isForeign Variavel boelana que define se o Usuario é Brasileiro ou Estrangeiro
+     * @return {@link String}|null
+     */
+    public String getCountryForBoolean(boolean isForeign) {
+        try {
+            String[] array_countries = context.getResources().getStringArray(R.array.pays);
+            return isForeign ? array_countries[1] : array_countries[0];
+        } catch (Exception ex) {
+            error_validation = MESSAGE_EXCEPTION;
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro na Obtenção do String Array: " + ex.getClass().getName());
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Normaliza uma String Passada. Irá retornar um String em Letras Minusculas e Sem espaço no Fim
+     *
+     * @return {@link String}|""
+     */
+    public String getNormalizedString(String old_string) {
+        try {
+            if (ManagerResources.isNullOrEmpty(old_string)) return "";
+
+            String normalized = old_string.toLowerCase(LOCALE_BR);
+
+            // Inverte a String
+            StringBuilder reverse_string = new StringBuilder();
+            reverse_string.append(normalized);
+
+            // Obtem uma lista das letras das Strings
+            char[] reverse_char = reverse_string.reverse().toString().toCharArray();
+            int split_length = normalized.length();
+
+            // Contabiliza quantos espaços em branco tem no fim da String
+            for (int i = 0; i < split_length; i++) {
+                if (reverse_char[i] == ' ') split_length--;
+                else i = split_length;
+            }
+
+            // Corta a String Retirando os Espaços em Branco
+            normalized = normalized.substring(0, split_length);
+
+            return normalized;
+        } catch (Exception ex) {
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro na Normalização da String: " + ex.getClass().getName());
+            ex.printStackTrace();
+            return "";
+        }
     }
 
     // Obtem os Erros das Etapas de Validação

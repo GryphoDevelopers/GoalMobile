@@ -13,13 +13,13 @@
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     tools:targetApi="lollipop">
 
-    <!-- TODO: Arrumar a imagem centralizada com o menu Lateral -->
     <ImageView
+        android:id="@+id/image_logo_goal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foregroundGravity="center_vertical"
         android:scaleType="center"
-        android:src="@drawable/vector_goal"
+        app:srcCompat="@drawable/vector_goal"
         tools:ignore="ContentDescription" />
 
 

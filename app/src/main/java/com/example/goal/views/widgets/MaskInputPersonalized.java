@@ -1,5 +1,8 @@
 package com.example.goal.views.widgets;
 
+import static com.example.goal.managers.ManagerResources.EXCEPTION;
+import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -24,7 +27,6 @@ public abstract class MaskInputPersonalized {
     public static final char DEFAULT_WHITE_SPACE = '_';
     public static final String DEFAULT_REGEX = "[().\\-/#_\\s]*";
 
-    private static final String EXCEPTION = "Exception General";
     private static final String NAME_CLASS = "MaskInputPersonalized";
 
     /**
@@ -46,7 +48,7 @@ public abstract class MaskInputPersonalized {
                 try {
                     // Obtem a String do Texto do EditText e remove a Mascara (substitui os caracteres)
                     String string_receiver = remove_mask(s.toString(), DEFAULT_REGEX);
-                    if (string_receiver == null) string_receiver = "";
+                    if (isNullOrEmpty(string_receiver)) string_receiver = "";
 
                     // Evita que o Metodo fique em um Loop Infinito
                     if (isUpdate) {
@@ -61,7 +63,7 @@ public abstract class MaskInputPersonalized {
                     if (string_receiver.length() > old_string.length()) {
                         // Obtem o TEXTO INSERIDO e Define o Texto Formatado
                         String formatted_text = add_mask(mask, string_receiver, DEFAULT_WHITE_SPACE);
-                        if (formatted_text == null) formatted_text = "";
+                        if (isNullOrEmpty(formatted_text)) formatted_text = "";
                         editText.setText(formatted_text);
 
                         // Obtem a Posição que o Cursor
@@ -79,7 +81,7 @@ public abstract class MaskInputPersonalized {
                         } else string_removed = string_receiver;
 
                         String formatted_text = add_mask(mask, string_removed, DEFAULT_WHITE_SPACE);
-                        if (formatted_text == null) formatted_text = " ";
+                        if (isNullOrEmpty(formatted_text)) formatted_text = " ";
                         editText.setText(formatted_text);
 
                         // Define a Posição do Cursor
@@ -113,7 +115,7 @@ public abstract class MaskInputPersonalized {
      * @return int/0
      */
     public static int positionCursor(String text, char white_space, String regex_format) {
-        if (text == null || text.equals("")) return 0;
+        if (isNullOrEmpty(text)) return 0;
 
         // Obtem o Tamanho e um Array Letra por Letra
         int length_text = text.length();

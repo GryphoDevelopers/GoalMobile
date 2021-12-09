@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">Goal</string>
 
-    <!-- Main - 1° Tela -->
+    <!-- OpenActivity - 1° Tela -->
     <string name="title_index">Aguarde enquanto recuperamos seus Dados…</string>
     <string name="description_goal">Logo GOAL</string>
     <string name="description_app">O seu E-Commerce</string>
+    <string name="error_offlineAPI">Não foi possivel iniciar o Aplicativo GOAL.&lt;br />&lt;br /> Aguarde
+        enquanto nossa equipe está resolvendo esse Problema.</string>
 
     <!-- Mensagem de Erro na Validação do User/Address -->
     <string name="validation_empty">Campo Obrigatorio</string>
@@ -14,6 +16,8 @@
     <string name="validation_format">%1$s deve ter estar no Seguinte Formato: "%2$s"</string>
     <string name="validation_unavailable">%s Invalido. Tente Novamente</string>
     <string name="validation_password">A senha deve conter %s</string>
+    <string name="validation_stock">O Estoque deve conter %s Item</string>
+    <string name="validation_price">O Preço deve conter %s</string>
     <string name="validation_age">Idade %1$s de <b>%2$s Anos</b></string>
     <string name="validation_equal_password">As Senhas não são Iguais</string>
     <string name="validation_invalid_ddd">DDD Invalido. Tente novamente
@@ -33,6 +37,7 @@
     </string>
 
     <!-- Mensagens de Erro da API -->
+    <string name="error_400">Dados Inseridos Incorretos ! Tente Novamente</string>
     <string name="error_404">Os dados Inseridos não Existe ! Tente Novamente</string>
     <string name="error_500">Dados não Encontrados ! Tente Novamente</string>
     <string name="error_generic">Houve um Erro ao executar a Solicitação ! Tente Novamente</string>
@@ -46,6 +51,10 @@
     <string name="title_no_register_api">Falha no Cadastro</string>
     <string name="title_no_internet">Internet Indisponivel</string>
     <string name="title_loading">Carregando …</string>
+    <string name="title_systemOffline">Sistema Indiponivel</string>
+    <string name="message_loadingDownload">Obtendo Dados %s no Sistema</string>
+    <string name="message_loadingSingUp">Realizando Cadastro do %s no Sistema</string>
+    <string name="message_loadingSingIn">Realizando Login no Sistema</string>
     <string name="button_close">Fechar</string>
 
     <string name="notice_city">Algumas cidades podem não estar aparecendo por conta da divisão
@@ -57,8 +66,12 @@
     <string name="error_exception">Ocorreu uma Falha ao Executar a Solicitação</string>
     <string name="error_register_api">Não conseguimos Cadastrar o Usuario no Sistema. Por favor,
         Tente Novamente !</string>
+    <string name="error_login_api">Usuario não Cadastrado no Sistema.&lt;br />Tente Novamente ou
+        Realize o Login !</string>
     <string name="error_singup">Dados Incorretos. Por favor, confirme os dados das
         Etapas Anteriores</string>
+    <string name="text_noProducts">O Vendedor não Possui Produtos Cadastrados</string>
+    <string name="error_product">Não foi possivel obter o Produto Selecionado</string>
 
     <!-- LoginActivity - Tela de Login  -->
     <string name="title_options">Olá, Bem Vindo à GOAL</string>
@@ -72,13 +85,15 @@
     <!-- Cadastro (SingUp) -->
     <string name="title_singUp">Nos fale um pouco sobre você !</string>
     <string name="title_personal">Dados Pessoais</string>
+    <string name="title_documents">Documentos Pessoais</string>
     <string name="title_login">Dados de Login</string>
     <string name="title_termsUse">Termos de Uso</string>
     <string-array name="options_peopleType">
         <item>Vendedor</item>
         <item>Cliente</item>
     </string-array>
-    <string name="label_name">Nome e Sobrenome</string>
+    <string name="label_name">Nome</string>
+    <string name="label_lastName">Sobrenome</string>
     <string name="label_date_birth">Data de Nascimento</string>
     <string name="label_nickname">Nome de Usuario</string>
     <string name="label_peopleType">Você é um <b>Vendedor</b> ou <b>Cliente</b> ?</string>
@@ -86,6 +101,7 @@
     <string name="label_password">Senha</string>
     <string name="label_confirmPassword">Confirmar Senha</string>
     <string name="hint_name">Qual é o seu <b>Nome</b> ?</string>
+    <string name="hint_lastName">Qual é o seu <b>Sobrenome</b> ?</string>
     <string name="hint_date_birth">Ex: 20/12/2005</string>
     <string name="hint_nickname">Ex: "gabriel_souza"</string>
     <string name="hint_email">Digite seu endereço de <b>E-mail</b></string>
@@ -101,10 +117,6 @@
     <string name="title_country">Dados do País</string>
     <string name="title_address">Dados do Endereço</string>
     <string name="label_typeDocument">Usar <b>CPF</b> ou <b>CNPJ</b> ?</string>
-    <string-array name="cpf_cnpj">
-        <item>CPF</item>
-        <item>CNPJ</item>
-    </string-array>
     <string name="label_cpf">CPF</string>
     <string name="label_cnpj">CNPJ</string>
     <string name="label_telephone">Telefone</string>
@@ -132,6 +144,7 @@
         <item>Brasil</item>
         <item>Estrangeiro</item>
     </string-array>
+    <string name="option_foreign">Estrangeiro</string>
     <string-array name="state">
         <item>Acre</item>
         <item>Alagoas</item>
@@ -197,6 +210,10 @@
     <string name="navigation_drawer_close">Fechar Menu Lateral</string>
 
     <!-- Menu Categorias -->
+    <string name="option_home">Inicio</string>
+    <string name="option_profile">Seu Perfil</string>
+    <string name="option_search">Pesquisar Produto</string>
+    <string name="option_wishes">Lista de Desejos</string>
     <string name="titleMenu_categories">Categorias</string>
     <string name="option_equipment">Equipamentos</string>
     <string name="option_accessories">Acessorios</string>
@@ -205,10 +222,75 @@
     <string name="option_shoes">Calçados</string>
     <string name="option_bags">Bolsas</string>
     <string name="option_others">Outros</string>
+    <string name="title_seller">Vendedor</string>
+    <string name="option_myProducts">Meus Produtos</string>
+    <string name="option_registerProduct">Cadastrar Produto</string>
+    <string name="option_updateProduct">Atualizar Produto</string>
+    <string name="option_deleteProduct">Excluir Produto</string>
     <string name="title_otherOptions">Empresa</string>
     <string name="option_contact">Contato GOAL</string>
     <string name="option_about">Sobre a GOAL</string>
     <string name="option_privacy">Politicas de Privacidade</string>
-    <!-- TODO IMPLEMENTAR CAMPO 'MEUS PEDIDOS', 'CONFIGURAÇÕES', 'SAIR'  -->
+    <string name="option_exit">Sair</string>
 
+    <!-- Layout do RecyclerView de Produtos -->
+    <string name="description_image_product">Imagem do Produto</string>
+
+    <!-- Layout do Fragment dos Produtos (Cadastro/Alteração) -->
+    <string name="title_product">%s seu Produto</string>
+    <string name="title_sellerProducts">Seus Produtos</string>
+    <string name="subtext_photo">Insira aqui a Imagem do Produto</string>
+    <string name="text_register">Cadastre</string>
+    <string name="text_update">Atualize</string>
+    <string name="text_delete">Exclua</string>
+    <string name="text_confirmDelete">Tem Certeza que deseja excluir o Produto: &lt;br /> &lt;b>%s&lt;/b></string>
+    <string name="text_warmingDelete">Após Clicar no Botão, não é possivel Reverter a Exclusão</string>
+
+    <!-- Layout da Activity Product (Descrição Inicial do Produto) -->
+    <string name="text_color">Cores</string>
+    <string name="text_size">Tamanhos</string>
+    <string name="button_details">Ver Detalhes do Produto</string>
+    <string name="available_stock">Disponivel no Estoque</string>
+    <string name="text_comment">Comentarios</string>
+    <string name="text_review">Mais Avaliações</string>
+    <string name="btn_buy">Comprar</string>
+    <string name="btn_addWishes">Adicionar na Lista de Desejos</string>
+    <string name="btn_removeWishes">Remover da Lista de Desejos</string>
+
+    <!-- Layout da Activity Changes -->
+    <string name="title_changes">Alterar dados da conta</string>
+    <string name="hint_nome">Nome</string>
+    <string name="hint_usu">Nome do usuário</string>
+    <string name="option_account">Vendedor</string>
+    <string name="hint_email2">Email</string>
+    <string name="hint_pass">Senha</string>
+    <string name="btn_save">Salvar alterações</string>
+    <string name="btn_cancel">Cancelar</string>
+
+    <!-- Layout da Activity Detalhes -->
+    <string name="text_details">Detalhes</string>
+    <string name="text_type">Tipo: …</string>
+    <string name="text_collor">Cor: …</string>
+    <string name="text_size2">Tamanho: …</string>
+    <string name="text_material">Material: …</string>
+    <string name="text_local">Local de Fabricação: …</string>
+    <string name="text_brand">Marca: …</string>
+    <string name="text_warranty">Garantia: …</string>
+    <string name="text_SAC">SAC do fornecedor: …</string>
+    <string name="text_info">Informações do Produto</string>
+
+    <!-- Layout da Activity Profile -->
+    <string name="txt_nome">Nome</string>
+    <string name="txt_usu">Nome do usuário</string>
+    <string name="txt_email">Email</string>
+    <string name="txt_pass">Senha</string>
+    <string name="txt_date">28/11/2000</string>
+    <string name="btn_change">Alterar dados</string>
+    <string name="btn_home">Voltar</string>
+    <string name="btn_addres">Endereço</string>
+    <string name="btn_payment">Formas de Pagamento</string>
+    <string name="btn_extract">Extrato de Compras</string>
+    <string name="txt_configs">Configurações do Aplicativo</string>
+    <string name="btn_data">Apagar dados salvos</string>
+    <string name="btn_theme">Tema</string>
 </resources>
