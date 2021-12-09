@@ -20,7 +20,7 @@ public class ChangesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_changes);
 
         // todo: remover. Apenas para testes
-        Button button_home = findViewById(R.id.btn_home);
+        Button button_home = findViewById(R.id.btn_save);
         button_home.setOnClickListener(v -> {
             startActivity(new Intent(ChangesActivity.this, IndexActivity.class));
             finish();
