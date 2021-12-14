@@ -70,6 +70,8 @@ public class User {
     private String cnpj = "";
     // todo: alterar o tipo String para GUID (Id_user)
     private String id_user = "";
+    private String id_seller = "";
+    private String token_user = "";
     private boolean isSeller = false;
 
     /**
@@ -843,4 +845,19 @@ public class User {
         }
     }
 
+    public String getId_seller() {
+        return id_seller;
+    }
+
+    public void setId_seller(String id_seller) {
+        this.id_seller = id_seller;
+    }
+
+    public String getToken_user() {
+        return token_user;
+    }
+
+    public void setToken_user(String token_user) {
+        this.token_user = token_user;
+    }
 }

@@ -1,10 +1,15 @@
 package com.example.goal.models.api;
 
+import static com.example.goal.managers.SearchInternet.API_ATTR_CHANGE_LEVEL;
 import static com.example.goal.managers.SearchInternet.API_GOAL_INSERT_USER;
 import static com.example.goal.managers.SearchInternet.API_GOAL_TOKEN;
+import static com.example.goal.managers.SearchInternet.API_GOAL_USER;
+import static com.example.goal.managers.SearchInternet.GET;
+import static com.example.goal.managers.SearchInternet.PATCH;
 import static com.example.goal.managers.SearchInternet.POST;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.Html;
 import android.util.Log;
 
@@ -117,9 +122,9 @@ public class UserAPI {
      *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
      *                        nas Activity
      * @return {@link String}|""
-     * @see #registerInAPI(ExecutorService, User) 
+     * @see #registerInAPI(ExecutorService, User)
      */
-    public String getTokenUser(ExecutorService executorService, String email, String password) {
+    public User getTokenUser(ExecutorService executorService, String email, String password) {
         try {
             // Criação da Tarefa Assincrona e do Metodo que busca na Internet
             SearchInternet searchInternet = new SearchInternet(context);
@@ -141,16 +146,25 @@ public class UserAPI {
             // Obtem o Resultado da Busca na API
             List<Future<String>> futureTasksList;
             futureTasksList = executorService.invokeAll(callable);
-            String json_email = futureTasksList.get(0).get();
+            String json_token = futureTasksList.get(0).get();
 
             // Valida o Resultado e Serializa
-            if (json_email != null) {
+            if (json_token != null) {
                 SerializationInfo serializationInfo = new SerializationInfo(context);
-                String[] return_user = serializationInfo.jsonStringToArray(json_email,
-                        new String[]{"token"});
+                String[] return_user = serializationInfo.jsonStringToArray(json_token,
+                        new String[]{"id", "name", "surname", "sellerId", "token"});
 
                 // Caso esteja disponivel, retorna o JWT (TOken) do Usuario
-                if (return_user != null && return_user[0] != null) return return_user[0];
+                if (return_user != null) {
+                    User user = new User(context);
+                    user.setId_user(return_user[0]);
+                    user.setName(return_user[1]);
+                    user.setLast_name(return_user[2]);
+                    user.setId_seller(return_user[3]);
+                    user.setSeller(return_user[3].equals(BLANK_GUID));
+                    user.setToken_user(return_user[4]);
+                    return user;
+                }
             }
 
         } catch (Exception ex) {
@@ -161,35 +175,126 @@ public class UserAPI {
 
         // Caso ocorra alguma Exception, API retornou algum erro ou Serialização retornou null
         error_operation = Html.fromHtml(context.getString(R.string.error_login_api)).toString();
-        return "";
+        return null;
     }
 
     /**
      * Obtem os dados do Usuario da API
      *
-     * @param email           Email do Usuario que será obtido na API
-     * @param password        Senha do Usuario que será obtida na API
+     * @param id              ID do Usuario que será obtido da API
      * @param token           Token do Usuario que será obtido
      * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
      *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
      *                        nas Activity
      * @return {@link User}|null
      */
-    public User getInfoUserAPI(ExecutorService executorService, String email, String password, String token) {
-        // todo: Remover e Implementar Obtenção do usuario da API
-        User userAPI = new User(context);
-        userAPI.setId_user("56");
-        userAPI.setName("gasgas asfas");
-        userAPI.setCpf("45123632511");
-        userAPI.setPhone("011997774466");
-        userAPI.setNickname("generic_test_nickname");
-        userAPI.setDate_birth("01/04/2000");
-        userAPI.setSeller(true);
+    public User getInfoUserAPI(ExecutorService executorService, String id, String token) {
+        try {
+            // Criação da Tarefa Assincrona e do Metodo que busca na Internet
+            SearchInternet searchInternet = new SearchInternet(context);
 
-        userAPI.setEmail(email);
-        userAPI.setPassword(password);
-        return userAPI;
+            // Configura a Tarefa Assincrona que Retorna uma String
+            Set<Callable<String>> callable = new HashSet<>();
+            callable.add(() -> {
+                // Realiza uma Requisição GET na API
+                String uri_user = Uri.parse(API_GOAL_USER).buildUpon().appendPath(id).build().toString();
+                String json_api = searchInternet.SearchInAPI(uri_user, GET, token);
+
+                if (json_api == null) error_operation = searchInternet.getError_search();
+                return json_api;
+            });
+
+            List<Future<String>> futureTasksList;
+            futureTasksList = executorService.invokeAll(callable);
+            String json_user = futureTasksList.get(0).get();
+
+            if (json_user == null) return null;
+
+            SerializationInfo serializationInfo = new SerializationInfo(context);
+            String[] return_user = serializationInfo.jsonStringToArray(json_user,
+                    new String[]{"id", "name", "surname", "email", "sellerId"});
+
+            if (return_user != null) {
+                User user = new User(context);
+                user.setId_user(return_user[0]);
+                user.setName(return_user[1]);
+                user.setLast_name(return_user[2]);
+                user.setEmail(return_user[3]);
+                user.setId_seller(return_user[4]);
+                user.setSeller(return_user[4].equals(BLANK_GUID));
+                return user;
+            }
+
+        } catch (Exception ex) {
+            Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Execução ao Executar a Inserção na API: "
+                    + ex.getClass().getName());
+            ex.printStackTrace();
+        }
+
+        // Ocorreu alguma Exception ou o Usuario não foi possivel de ser Cadastrado na API
+        error_operation = context.getString(R.string.error_register_api);
+        return null;
     }
+
+    /**
+     * Atualiza o Usuario para Vendedor
+     *
+     * @param token           Token do Usuario obtido da API
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
+     * @return {@link User}|null
+     */
+    public User changeLevelUser(ExecutorService executorService, String id_user, String token) {
+        try {
+            // Criação da Tarefa Assincrona e do Metodo que busca na Internet
+            SearchInternet searchInternet = new SearchInternet(context);
+
+            // Configura a Tarefa Assincrona que Retorna uma String
+            Set<Callable<String>> callable = new HashSet<>();
+            callable.add(() -> {
+                // Realiza uma Requisição GET na API
+                String uri_user = Uri.parse(API_GOAL_USER).buildUpon()
+                        .appendPath(id_user)
+                        .appendPath(API_ATTR_CHANGE_LEVEL).build().toString();
+                String json_api = searchInternet.SearchInAPI(uri_user, PATCH, token);
+
+                if (json_api == null) error_operation = searchInternet.getError_search();
+                return json_api;
+            });
+
+            List<Future<String>> futureTasksList;
+            futureTasksList = executorService.invokeAll(callable);
+            String json_user = futureTasksList.get(0).get();
+
+            if (json_user == null) return null;
+
+            SerializationInfo serializationInfo = new SerializationInfo(context);
+            String[] return_user = serializationInfo.jsonStringToArray(json_user,
+                    new String[]{"id", "name", "surname", "email", "sellerId"});
+
+            if (return_user != null) {
+                User user = new User(context);
+                user.setId_user(return_user[0]);
+                user.setName(return_user[1]);
+                user.setLast_name(return_user[2]);
+                user.setEmail(return_user[3]);
+                user.setId_seller(return_user[4]);
+                user.setSeller(return_user[4].equals(BLANK_GUID));
+                return user;
+            }
+
+        } catch (Exception ex) {
+            Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Execução ao Executar a Inserção na API: "
+                    + ex.getClass().getName());
+            ex.printStackTrace();
+        }
+
+        // Ocorreu alguma Exception ou o Usuario não foi possivel de ser Cadastrado na API
+        error_operation = context.getString(R.string.error_register_api);
+        return null;
+    }
+
 
     // Getters e Setters
     public String getError_operation() {

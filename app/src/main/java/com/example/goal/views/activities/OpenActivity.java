@@ -41,6 +41,7 @@ public class OpenActivity extends AppCompatActivity {
         ExecutorService executorService = Executors.newCachedThreadPool();
         executorService.execute(() -> {
             SearchInternet searchInternet = new SearchInternet(OpenActivity.this);
+            // Verifica se a API está Online
             if (isNullOrEmpty(searchInternet.SearchInAPI(API_GOAL_HOME, GET, null))) {
                 runOnUiThread(() -> new AlertDialogPersonalized(OpenActivity.this)
                         .messageWithCloseWindow(this, getString(R.string.title_systemOffline),
@@ -54,17 +55,17 @@ public class OpenActivity extends AppCompatActivity {
                 // Obtem p Usuario do Banco de Dados par obter o TOken
                 if (user_database != null) {
                     UserAPI userAPI = new UserAPI(context);
-                    String token = userAPI.getTokenUser(executorService, user_database.getEmail(),
+                    User user_token = userAPI.getTokenUser(executorService, user_database.getEmail(),
                             user_database.getPassword());
 
-                    if (!isNullOrEmpty(token)) {
+                    if (user_token != null && !isNullOrEmpty(user_token.getToken_user())) {
                         // Caso o Token Seja Valido, obtem os dados do Usuario
                         User user_recovered = userAPI.getInfoUserAPI(executorService,
-                                user_database.getEmail(), user_database.getPassword(), token);
+                                user_token.getId_user(), user_token.getToken_user());
 
                         // Após Obter os Dados do Usuario, tenta salvar o Usuario no Banco de Dados
                         if (user_recovered != null && dataBase.insertUser(user_recovered)) {
-                            managerPreferences.setJsonWebTokenUser(token);
+                            managerPreferences.setJsonWebTokenUser(user_token.getToken_user());
                             runOnUiThread(() -> {
                                 startActivity(new Intent(context, IndexActivity.class));
                                 finish();

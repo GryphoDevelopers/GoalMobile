@@ -142,9 +142,9 @@ public class LoginActivity extends AppCompatActivity {
 
                 // Obtem o Token do Usuario (Caso o Usuario não exista, o Token será "")
                 UserAPI userAPI = new UserAPI(context);
-                String token = userAPI.getTokenUser(executorService, userLogin.getEmail(),
+                User user_token = userAPI.getTokenUser(executorService, userLogin.getEmail(),
                         userLogin.getPassword());
-                if (isNullOrEmpty(token)) {
+                if (user_token == null || isNullOrEmpty(user_token.getToken_user())) {
                     handlerMain.post(() -> {
                         dialogLoading.dismiss();
                         dialogPersonalized.defaultDialog(
@@ -154,9 +154,9 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                // todo obter informações do Usuario (Cadastro, Endereço, Metodos de Pagamento e Lista de Desejo)
-                User user_receivedAPI = userAPI.getInfoUserAPI(executorService, userLogin.getEmail(),
-                        userLogin.getPassword(), token);
+                // todo obter informações do Usuario (Extrato)
+                User user_receivedAPI = userAPI.getInfoUserAPI(executorService,
+                        user_token.getId_user(), user_token.getToken_user());
                 if (user_receivedAPI == null) {
                     handlerMain.post(() -> {
                         dialogLoading.dismiss();
@@ -169,7 +169,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Armazena os Valores Simples que serão utilizados depois no APP
                 ManagerSharedPreferences preferences = new ManagerSharedPreferences(
                         context, ManagerSharedPreferences.NAME_PREFERENCE);
-                preferences.setJsonWebTokenUser(token);
+                preferences.setJsonWebTokenUser(user_token.getToken_user());
 
                 // Define o Valor do "Lembrar Usuario
                 MaterialCheckBox checkBox_remember = findViewById(R.id.checkbox_remember);
@@ -177,6 +177,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 // Salva o Usuario no Banco de Dados
                 ManagerDataBase managerDataBase = new ManagerDataBase(context);
+                user_receivedAPI.setPassword(userLogin.getPassword());
                 if (!managerDataBase.insertUser(user_receivedAPI)) {
                     // Erro ao salvar o Usuario no Banco de Dados Local (SQLite)
                     handlerMain.post(() -> {

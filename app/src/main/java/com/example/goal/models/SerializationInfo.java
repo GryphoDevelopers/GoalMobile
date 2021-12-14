@@ -3,8 +3,10 @@ package com.example.goal.models;
 import static com.example.goal.managers.ManagerDataBase.DATE_BIRTH;
 import static com.example.goal.managers.ManagerDataBase.DOCUMENT_USER;
 import static com.example.goal.managers.ManagerDataBase.EMAIL_USER;
+import static com.example.goal.managers.ManagerDataBase.ID_SELLER;
 import static com.example.goal.managers.ManagerDataBase.ID_USER;
 import static com.example.goal.managers.ManagerDataBase.IS_USER_SELLER;
+import static com.example.goal.managers.ManagerDataBase.LAST_NAME_USER;
 import static com.example.goal.managers.ManagerDataBase.NAME_USER;
 import static com.example.goal.managers.ManagerDataBase.NICKNAME_USER;
 import static com.example.goal.managers.ManagerDataBase.PASSWORD_USER;
@@ -207,8 +209,12 @@ public class SerializationInfo {
             // Define um valor fixo caso sejam nulos ou obtem os valores
             user.setId_user(cursor.isNull(cursor.getColumnIndex(ID_USER)) ? ""
                     : cursor.getString(cursor.getColumnIndex(ID_USER)));
+            user.setId_seller(cursor.isNull(cursor.getColumnIndex(ID_SELLER)) ? ""
+                    : cursor.getString(cursor.getColumnIndex(ID_SELLER)));
             user.setName(cursor.isNull(cursor.getColumnIndex(NAME_USER)) ? ""
                     : cursor.getString(cursor.getColumnIndex(NAME_USER)));
+            user.setLast_name(cursor.isNull(cursor.getColumnIndex(LAST_NAME_USER)) ? ""
+                    : cursor.getString(cursor.getColumnIndex(LAST_NAME_USER)));
             user.setNickname(cursor.isNull(cursor.getColumnIndex(NICKNAME_USER)) ? ""
                     : cursor.getString(cursor.getColumnIndex(NICKNAME_USER)));
             user.setEmail(cursor.isNull(cursor.getColumnIndex(EMAIL_USER)) ? ""

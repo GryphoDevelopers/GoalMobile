@@ -1,6 +1,7 @@
 package com.example.goal.views.activities;
 
 import static com.example.goal.managers.ManagerResources.EXCEPTION;
+import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
 import static com.example.goal.views.widgets.MaskInputPersonalized.MASK_CNPJ;
 import static com.example.goal.views.widgets.MaskInputPersonalized.MASK_CPF;
 import static com.example.goal.views.widgets.MaskInputPersonalized.MASK_DATE;
@@ -393,8 +394,8 @@ public class SingUpActivity extends AppCompatActivity {
 
                     // Registra o User na API e obtem a Instancia do User com ID da API
                     UserAPI userAPI = new UserAPI(context);
-                    User userReturnedAPI = userAPI.registerInAPI(executorService, userSingUp);
-                    if (userReturnedAPI == null) {
+                    User user_returnedAPI = userAPI.registerInAPI(executorService, userSingUp);
+                    if (user_returnedAPI == null) {
                         handlerMain.post(() -> {
                             // Erro no Cadastro da API Invalida. Tira o Loading e Exibe o Erro
                             dialogLoading.dismiss();
@@ -409,9 +410,9 @@ public class SingUpActivity extends AppCompatActivity {
                             ManagerSharedPreferences.NAME_PREFERENCE);
 
                     // Obtem e Valida o Token gerado pela API
-                    String token_user = userAPI.getTokenUser(executorService, userReturnedAPI.getEmail(),
-                            userReturnedAPI.getPassword());
-                    if (token_user.equals("")) {
+                    String token_user = userAPI.getTokenUser(executorService, user_returnedAPI.getEmail(),
+                            user_returnedAPI.getPassword()).getToken_user();
+                    if (isNullOrEmpty(token_user)) {
                         handlerMain.post(() -> {
                             // Erro no Cadastro da API Invalida. Tira o Loading e Exibe o Erro
                             dialogLoading.dismiss();
@@ -426,9 +427,24 @@ public class SingUpActivity extends AppCompatActivity {
                     preferences.setJsonWebTokenUser(token_user);
                     preferences.setRememberLogin(true);
 
+                    if (userSingUp.isSeller()) {
+                        user_returnedAPI = userAPI.changeLevelUser(executorService,
+                                user_returnedAPI.getId_user(), token_user);
+                        if (user_returnedAPI == null) {
+                            handlerMain.post(() -> {
+                                dialogLoading.dismiss();
+                                dialogPersonalized.defaultDialog(
+                                        getString(R.string.title_input_invalid, "Usuario"),
+                                        userAPI.getError_operation()).show();
+                            });
+                            return;
+                        }
+                    }
+
                     // Salva o Usuario no Banco de Dados
                     ManagerDataBase managerDataBase = new ManagerDataBase(context);
-                    if (!managerDataBase.insertUser(userReturnedAPI)) {
+                    user_returnedAPI.setPassword(userSingUp.getPassword());
+                    if (!managerDataBase.insertUser(user_returnedAPI)) {
                         handlerMain.post(() -> {
                             // Erro no Salavar o Usuario no Banco de DAdos Local (SQLite)
                             dialogLoading.dismiss();

@@ -36,6 +36,11 @@ public class SearchInternet {
     public static final String POST = "POST";
 
     /**
+     * Verbo HTTPs (Metodo) PATCH (Abrange algumas Atualizações): Não há necessidade de Body
+     */
+    public static final String PATCH = "PATCH";
+
+    /**
      * Verbo HTTPs (Metodo) PUT (Envio de Atualizações de Dados): Há necessidade de Body
      */
     public static final String PUT = "PUT";
@@ -76,23 +81,39 @@ public class SearchInternet {
     /**
      * Verifica se a API GOAL está Online
      *
-     * @see <a href="https://goalwebapi.herokuapp.com/swagger/index.html">API Goal</a>
+     * @see <a href="https://igla-goal-api.herokuapp.com/swagger/index.html">API Goal</a>
      */
-    public static final String API_GOAL_HOME = "https://restapigoals.herokuapp.com/swagger/v1/swagger.json";
+    public static final String API_GOAL_HOME = "https://igla-goal-api.herokuapp.com/swagger/v1/swagger.json";
 
     /**
      * URL da Geração de Token na API Goal (API do Projeto)
      *
-     * @see <a href="https://goalwebapi.herokuapp.com/swagger/index.html">API Goal</a>
+     * @see <a href="https://igla-goal-api.herokuapp.com/swagger/index.html">API Goal</a>
      */
-    public static final String API_GOAL_TOKEN = "https://restapigoals.herokuapp.com/goal/api/auth";
+    public static final String API_GOAL_TOKEN = "https://igla-goal-api.herokuapp.com/goal/api/auth";
+
+    /**
+     * URL da Obtenção do Usuario na API Goal (API do Projeto)
+     *
+     * @see <a href="https://igla-goal-api.herokuapp.com/swagger/index.html">API Goal</a>
+     */
+    public static final String API_GOAL_USER = "https://igla-goal-api.herokuapp.com/goal/api/users/";
+
+    /**
+     * Segmento Final da URL que complementa a {@link #API_GOAL_USER} para alterar o Usuario para
+     * Vendedor
+     *
+     * @see <a href="https://igla-goal-api.herokuapp.com/swagger/index.html">API Goal</a>
+     * @see #API_GOAL_USER
+     */
+    public static final String API_ATTR_CHANGE_LEVEL = "change-level";
 
     /**
      * URL de Cadastro de Usuarios na API Goal (API do Projeto)
      *
-     * @see <a href="https://goalwebapi.herokuapp.com/swagger/index.html">API Goal</a>
+     * @see <a href="https://igla-goal-api.herokuapp.com/swagger/index.html">API Goal</a>
      */
-    public static final String API_GOAL_INSERT_USER = "https://restapigoals.herokuapp.com/goal/api/auth/add-access";
+    public static final String API_GOAL_INSERT_USER = "https://igla-goal-api.herokuapp.com/goal/api/auth/add-access";
 
     // todo: alterar para URL correta
     /**

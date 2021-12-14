@@ -34,7 +34,9 @@ public class ManagerDataBase extends SQLiteOpenHelper {
     // Constantes das Colunas da Tabela "User"
     public static final String TABLE_USER = "user";
     public static final String ID_USER = "id_user";
+    public static final String ID_SELLER = "id_seller";
     public static final String NAME_USER = "name";
+    public static final String LAST_NAME_USER = "last_name";
     public static final String NICKNAME_USER = "nickname";
     public static final String DOCUMENT_USER = "document";
     public static final String EMAIL_USER = "email";
@@ -93,11 +95,13 @@ public class ManagerDataBase extends SQLiteOpenHelper {
         db.execSQL(
                 "create table " + TABLE_USER + " (" +
                         ID_USER + " TEXT PRIMARY KEY, " +
+                        ID_SELLER + " TEXT, " +
                         DOCUMENT_USER + " TEXT, " +
                         NICKNAME_USER + " TEXT, " +
                         EMAIL_USER + " TEXT, " +
                         PASSWORD_USER + " TEXT, " +
                         NAME_USER + " TEXT, " +
+                        LAST_NAME_USER + " TEXT, " +
                         PHONE_USER + " TEXT, " +
                         DATE_BIRTH + " TEXT, " +
                         IS_USER_SELLER + " INTEGER)"
@@ -328,8 +332,10 @@ public class ManagerDataBase extends SQLiteOpenHelper {
         try {
             ContentValues values = new ContentValues();
             values.put(ID_USER, user.getId_user());
+            values.put(ID_SELLER, user.getId_seller());
             values.put(IS_USER_SELLER, user.isSeller());
             values.put(NAME_USER, user.getName());
+            values.put(LAST_NAME_USER, user.getLast_name());
             values.put(NICKNAME_USER, user.getNickname());
             values.put(EMAIL_USER, user.getEmail());
             values.put(PASSWORD_USER, user.getPassword());
