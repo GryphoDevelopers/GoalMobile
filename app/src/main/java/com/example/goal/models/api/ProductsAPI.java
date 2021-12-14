@@ -1,8 +1,6 @@
 package com.example.goal.models.api;
 
 import static com.example.goal.managers.ManagerResources.EXCEPTION;
-import static com.example.goal.managers.ManagerResources.getSlideText;
-import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
 import static com.example.goal.managers.SearchInternet.GET;
 import static com.example.goal.managers.SearchInternet.URL_PRODUCTS;
 
@@ -16,7 +14,6 @@ import com.example.goal.models.Product;
 import com.example.goal.models.SerializationInfo;
 import com.example.goal.models.User;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,32 +62,13 @@ public class ProductsAPI {
             String json_products = futureTasksList.get(0).get();
 
             if (json_products != null) {
-                // Obtem uma List com Arrays Strings dos dados do Produto
+                // Obtem uma List com os Produtos Serializados
                 SerializationInfo serializationInfo = new SerializationInfo(context);
-                List<String[]> list_makeups = new SerializationInfo(context)
-                        .jsonArrayToArray(json_products, new String[]{"name", "image_link", "price", "id"});
+                List<Product> productList = new SerializationInfo(context).serializationProduct(json_products);
 
                 // Instancia uma Lista com instancias da Classe Produto
-                if (list_makeups != null) {
-                    List<Product> listProduct = new ArrayList<>();
-                    for (int i = 0; i < list_makeups.size(); i++) {
-                        // Obtem o Nome do Produto
-                        String name = list_makeups.get(i)[0];
-                        name = isNullOrEmpty(name) ? "Sem Nome" : getSlideText(name, 40, true);
-
-                        // Obtem a URL da Imagem
-                        String url_image = list_makeups.get(i)[1];
-
-                        Product productItem = new Product(context);
-                        productItem.setName_product(name);
-                        productItem.setUrl_image(isNullOrEmpty(url_image) ? "" : url_image);
-                        productItem.setId_product(list_makeups.get(i)[3]);
-
-                        listProduct.add(productItem);
-                    }
-
-                    return listProduct;
-                } else error_operation = serializationInfo.getError_operation();
+                if (productList != null) return productList;
+                else error_operation = serializationInfo.getError_operation();
             } else error_operation = searchInternet.getError_search();
 
         } catch (Exception ex) {
@@ -115,8 +93,8 @@ public class ProductsAPI {
     public List<Product> getSellerProducts(ExecutorService executorService, String token, User user) {
         try {
             // todo: obter dados da api goal
-            Uri uri = Uri.parse(URL_PRODUCTS).buildUpon()
-                    .appendQueryParameter("rating_greater_than", "4.0").build();
+            Uri uri = Uri.parse(URL_PRODUCTS).buildUpon().build();
+            //          .appendQueryParameter("rating_greater_than", "4.0").build();
             return getProducts(executorService, uri.toString());
 
         } catch (Exception ex) {

@@ -3,6 +3,7 @@ package com.example.goal.views.fragments;
 import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
 import static com.example.goal.managers.RecyclerAdapterProducts.DEFAULT_ITEMS_QUANTITY;
 import static com.example.goal.managers.RecyclerAdapterProducts.INITIAL_ITEMS_QUANTITY;
+import static com.example.goal.managers.RecyclerAdapterProducts.POSITION_LOADING;
 import static com.example.goal.managers.RecyclerAdapterProducts.POSITION_SMALL_ITEM;
 
 import android.content.Context;
@@ -153,7 +154,8 @@ public class CatalogFragment extends Fragment implements ClickProducts {
                 || type_fragment.equals(TYPE_SELLER_PRODUCTS)) {
 
             // Obtem uma Lista com a Quatidade Inicial de Itens no RecyclerView
-            productList_loaded = productList.subList(0, INITIAL_ITEMS_QUANTITY);
+            if(productList.size() > INITIAL_ITEMS_QUANTITY) productList_loaded = productList.subList(0, INITIAL_ITEMS_QUANTITY);
+            else productList_loaded = productList;
 
             boolean hasTitle = type_fragment.equals(TYPE_CATEGORY) ||
                     type_fragment.equals(TYPE_SELLER_PRODUCTS);
@@ -226,39 +228,43 @@ public class CatalogFragment extends Fragment implements ClickProducts {
      * Adiciona a nova quantidade de Itens ao RecyclerView
      */
     private void loadMoreItems(RecyclerView recyclerView) {
-        // Adiciona um Item Nulo (Loading)
-        productList_loaded.add(null);
         int last_position = recyclerAdapterProducts.getLastPositionList();
-        recyclerView.post(() -> {
-            // Notifica o RecyclerView que foi adicionado um Item Nullo e joga a Tela para baixo
-            recyclerAdapterProducts.notifyItemInserted(last_position);
-            recyclerView.scrollToPosition(last_position);
-        });
 
-        // Realiza as Operações em Background, dando uma pausa de 2 segundos
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            int last_positon_list = recyclerAdapterProducts.getLastPositionList();
-            // Remove o Loading (Ultimo Item) da Lista e Notifica o RecyclerView
-            productList_loaded.remove(last_positon_list);
-            recyclerAdapterProducts.notifyItemRemoved(last_positon_list);
-            last_positon_list = recyclerAdapterProducts.getLastPositionList();
+        if(recyclerAdapterProducts.getItemViewType(last_position +1) == POSITION_LOADING ){
+            // Adiciona um Item Nulo (Loading)
+            productList_loaded.add(null);
+            recyclerView.post(() -> {
+                // Notifica o RecyclerView que foi adicionado um Item Nullo e joga a Tela para baixo
+                recyclerAdapterProducts.notifyItemInserted(last_position);
+                recyclerView.scrollToPosition(last_position);
+            });
 
-            // Define um novo tamanho da Lista com os novos itens
-            int new_position_list = last_positon_list + DEFAULT_ITEMS_QUANTITY;
+            // Realiza as Operações em Background, dando uma pausa de 2 segundos
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                int lastPositionList = recyclerAdapterProducts.getLastPositionList();
+                // Remove o Loading (Ultimo Item) da Lista e Notifica o RecyclerView
+                productList_loaded.remove(lastPositionList);
+                recyclerAdapterProducts.notifyItemRemoved(lastPositionList);
+                lastPositionList = recyclerAdapterProducts.getLastPositionList();
 
-            // Insere na Lista e Notifica o RecyclerView das Inserções
-            for (int i = last_positon_list; i <= new_position_list; i++) {
-                // todo Fix: Está sendo adicionado o Item na Lista com todos os Produtos
-                productList_loaded.add(productList.get(i));
-                recyclerAdapterProducts.notifyItemInserted(recyclerAdapterProducts.getLastPositionList());
-            }
+                // Define um novo tamanho da Lista com os novos itens
+                int new_position_list = lastPositionList + DEFAULT_ITEMS_QUANTITY;
 
-            is_loading = false;
-        }, 2000);
+                // Insere na Lista e Notifica o RecyclerView das Inserções
+                for (int i = lastPositionList; i <= new_position_list; i++) {
+                    // todo Fix: Está sendo adicionado o Item na Lista com todos os Produtos
+                    productList_loaded.add(productList.get(i));
+                    recyclerAdapterProducts.notifyItemInserted(recyclerAdapterProducts.getLastPositionList());
+                }
+
+                is_loading = false;
+            }, 2000);
+        } else new AlertDialogPersonalized(context_fragment).defaultDialog(
+                getString(R.string.title_input_invalid, "Produtos"),
+                getString(R.string.error_noMoreProducts)).show();
     }
 
     // Metodos Implementados do Clique nos Produtos do RecyclerView
-    // todo implementar documentação e metodos
     @Override
     public void clickProduct(Product product) {
         if (product != null) {
@@ -268,7 +274,7 @@ public class CatalogFragment extends Fragment implements ClickProducts {
             intentProduct.putExtra(ProductActivity.PARAM_NAME, product.getName_product());
             intentProduct.putExtra(ProductActivity.PARAM_PRICE, product.getPrice());
             intentProduct.putExtra(ProductActivity.PARAM_IS_SELLER, type_fragment.equals(TYPE_SELLER_PRODUCTS));
-            intentProduct.putExtra(ProductActivity.PARAM_COLOR, new String[]{"Amarelo", "Azul", "Verde"});
+            intentProduct.putExtra(ProductActivity.PARAM_COLOR, product.getColors());
             intentProduct.putExtra(ProductActivity.PARAM_SIZE, new String[]{"P", "G", "GG", "XGG"});
             startActivity(intentProduct);
         } else {
@@ -278,6 +284,7 @@ public class CatalogFragment extends Fragment implements ClickProducts {
         }
     }
 
+    // todo implementar documentação e metodos
     @Override
     public void deleteProduct(Product product) {
 

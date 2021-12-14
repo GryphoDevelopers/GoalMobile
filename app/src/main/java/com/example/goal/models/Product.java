@@ -14,7 +14,6 @@ import com.example.goal.R;
 public class Product {
 
     // Mensagens de Erro
-    private final String MESSAGE_EXCEPTION;
     private final String INPUT_NULL;
     private final String INPUT_NOT_CHARS_ACCEPT;
     private final String INPUT_MIN_LENGTH;
@@ -22,15 +21,13 @@ public class Product {
     private final String INPUT_WRONG_STOCK;
     private final String INPUT_UNAVAILABLE;
 
-    // Atributos da Classe Produto
-    private final Context context;
     //todo alterar o id para GUID
     private String id_product = "";
     private String name_product = "";
-    private String description_product = "";
     private String url_image = "";
     private int stock_product = 0;
     private double price = 0;
+    private String[] colors;
 
     /**
      * Variavel que armazenará a Mensagem de Erro
@@ -43,8 +40,7 @@ public class Product {
      * @param context {@link Context} usado na manipulação e obtenção de dados nos metodos
      */
     public Product(Context context) {
-        this.context = context;
-        MESSAGE_EXCEPTION = context.getString(R.string.error_exception);
+        // Atributos da Classe Produto
         INPUT_NULL = context.getString(R.string.validation_empty);
         INPUT_NOT_CHARS_ACCEPT = context.getString(R.string.validation_format_char);
         INPUT_MIN_LENGTH = context.getString(R.string.validation_min_length);
@@ -163,14 +159,6 @@ public class Product {
         this.name_product = name_product;
     }
 
-    public String getDescription_product() {
-        return description_product;
-    }
-
-    public void setDescription_product(String description_product) {
-        this.description_product = description_product;
-    }
-
     public int getStock_product() {
         return stock_product;
     }
@@ -193,6 +181,14 @@ public class Product {
 
     public void setUrl_image(String url_image) {
         this.url_image = url_image;
+    }
+
+    public String[] getColors() {
+        return colors;
+    }
+
+    public void setColors(String[] colors) {
+        this.colors = colors;
     }
 
     /**

@@ -94,7 +94,6 @@ public class SearchInternet {
      */
     public static final String API_GOAL_INSERT_USER = "https://restapigoals.herokuapp.com/goal/api/auth/add-access";
 
-
     // todo: alterar para URL correta
     /**
      * URL que Obtem os Produtos que serão Exibidos (URL de Teste)

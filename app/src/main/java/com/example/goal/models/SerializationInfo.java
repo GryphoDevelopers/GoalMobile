@@ -93,6 +93,74 @@ public class SerializationInfo {
     }
 
     /**
+     * Serializa um JSON (recebido pela busca da {@link SearchInternet}) que possui informações
+     * dos Produtos em Arrays.
+     *
+     * @param raw_json JSON resultante da Pesquisa na API (Resultande da {@link SearchInternet})
+     * @return String[]|null
+     * @see SearchInternet
+     * @see Product
+     */
+    public List<Product> serializationProduct(String raw_json) {
+        try {
+            // A partir da String, obtem um Array JSON e seu tamanho
+            JSONArray jsonArray = new JSONArray(raw_json);
+            int length_array = jsonArray.length();
+
+            // Variavel que armazenará os resultados e laço de repetição para obte-los
+            List<Product> result_search = new ArrayList<>();
+            for (int i = 0; i < length_array; i++) {
+
+                // Obtem as Informações do Array
+                JSONObject jsonObject = new JSONObject(jsonArray.getString(i));
+                Product product = new Product(context);
+
+                product.setId_product(jsonObject.isNull("id") ? "0"
+                        : jsonObject.getString("id"));
+                product.setName_product(jsonObject.isNull("name") ? ""
+                        : jsonObject.getString("name"));
+                product.setUrl_image(jsonObject.isNull("image_link") ? ""
+                        : jsonObject.getString("image_link"));
+
+                if (!jsonObject.isNull("price")) {
+                    String price = String.valueOf(jsonObject.get("price"));
+                    product.setPrice(product.validationPrice(price) ? Double.parseDouble(price) : 0);
+                }
+
+                if (!jsonObject.isNull("product_colors") &&
+                        jsonObject.get("product_colors") instanceof JSONArray) {
+
+                    JSONArray array_colors = (JSONArray) jsonObject.get("product_colors");
+                    String[] values_colors = new String[array_colors.length()];
+
+                    for (int u = 0; u < array_colors.length(); u++) {
+                        JSONObject json_color = new JSONObject(array_colors.getString(u));
+
+                        if (!json_color.isNull("colour_name"))
+                            values_colors[u] = json_color.getString("colour_name");
+                    }
+
+                    product.setColors(values_colors);
+                }
+
+                // Adiciona ao Array os Itens do Produto
+                result_search.add(product);
+            }
+
+            // Retorna o Resultado do Array
+            if (!result_search.isEmpty()) return result_search;
+
+        } catch (Exception ex) {
+            Log.e(EXCEPTION, NAME_CLASS + " - Erro na Serialização do JSON Array - "
+                    + ex.getClass().getName());
+            ex.printStackTrace();
+        }
+
+        error_operation = context.getString(R.string.error_serialization);
+        return null;
+    }
+
+    /**
      * Serializa um JSON (recebido pela busca da {@link SearchInternet}) que possui uma unica String
      *
      * @param raw_json   JSON resultante da Pesquisa na API
@@ -123,6 +191,7 @@ public class SerializationInfo {
         error_operation = context.getString(R.string.error_serialization);
         return null;
     }
+
 
     /**
      * Obtem dados de um {@link Cursor} e retorna uma Instancia de um Usuario

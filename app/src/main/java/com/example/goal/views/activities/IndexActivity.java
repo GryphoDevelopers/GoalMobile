@@ -177,13 +177,11 @@ public class IndexActivity extends AppCompatActivity {
 
                     if (type.equals(TYPE_SELLER_PRODUCTS)) {
                         alertDialogPersonalized.defaultDialog(
-                                getString(R.string.title_input_invalid, "Produtos"),
-                                productAPI.getError_operation()).show();
+                                getString(R.string.title_input_invalid, "Produtos"),getString(R.string.text_noProducts)).show();
                     } else {
                         // Exibe o Erro do Catalogo para o Usuario
                         alertDialogPersonalized.defaultDialog(
-                                getString(R.string.title_input_invalid, "Produtos"),
-                                getString(R.string.text_noProducts)).show();
+                                getString(R.string.title_input_invalid, "Produtos"),productAPI.getError_operation()).show();
                     }
                     // todo adicionar fragment null p/ erros
 

@@ -72,6 +72,7 @@
         Etapas Anteriores</string>
     <string name="text_noProducts">O Vendedor não Possui Produtos Cadastrados</string>
     <string name="error_product">Não foi possivel obter o Produto Selecionado</string>
+    <string name="error_noMoreProducts">Não há novos dados para Mostrar.</string>
 
     <!-- LoginActivity - Tela de Login  -->
     <string name="title_options">Olá, Bem Vindo à GOAL</string>
