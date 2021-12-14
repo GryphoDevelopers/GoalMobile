@@ -1,9 +1,12 @@
 package com.example.goal.models.api;
 
+import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
 import static com.example.goal.managers.SearchInternet.API_ATTR_CHANGE_LEVEL;
+import static com.example.goal.managers.SearchInternet.API_ATTR_DELETE_USER;
 import static com.example.goal.managers.SearchInternet.API_GOAL_INSERT_USER;
 import static com.example.goal.managers.SearchInternet.API_GOAL_TOKEN;
 import static com.example.goal.managers.SearchInternet.API_GOAL_USER;
+import static com.example.goal.managers.SearchInternet.DELETE;
 import static com.example.goal.managers.SearchInternet.GET;
 import static com.example.goal.managers.SearchInternet.PATCH;
 import static com.example.goal.managers.SearchInternet.POST;
@@ -47,9 +50,55 @@ public class UserAPI {
      * @param userRegister    {@link User} que será registrado na API
      * @return true|false
      */
-    public static boolean updateUserAPI(ExecutorService executorService, User userRegister) {
+    public boolean updateUserAPI(ExecutorService executorService, User userRegister) {
         //todo: implementação futura
         return true;
+    }
+
+    /**
+     * Exclui o Usaurio da API
+     *
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
+     * @param userDelete      {@link User} que será excluido na API
+     * @return true|false
+     */
+    public boolean deleteUserAPI(ExecutorService executorService, User userDelete) {
+            try {
+                // Criação da Tarefa Assincrona e do Metodo que busca na Internet
+                SearchInternet searchInternet = new SearchInternet(context);
+
+                // Configura a Tarefa Assincrona que Retorna uma String
+                Set<Callable<String>> callable = new HashSet<>();
+                callable.add(() -> {
+                    String uri = Uri.parse(API_GOAL_USER).buildUpon()
+                            .appendPath(userDelete.getId_user())
+                            .appendPath(API_ATTR_DELETE_USER).build().toString();
+                    String json_api = searchInternet.SearchInAPI(uri, DELETE, null);
+
+                    if (json_api == null) Log.e(ERROR_SEARCH, NAME_CLASS +
+                            " - Erro na Excluir da API: " + searchInternet.getError_search() + uri);
+                    return json_api;
+                });
+
+                // Obtem o Resultado da Busca na API
+                List<Future<String>> futureTasksList;
+                futureTasksList = executorService.invokeAll(callable);
+                String json_token = futureTasksList.get(0).get();
+
+                // Valida o Resultado e Serializa
+                if (!isNullOrEmpty(json_token)) return json_token.equals("Autorizado");
+
+            } catch (Exception ex) {
+                Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Execução ao Executar a Inserção na API: "
+                        + ex.getClass().getName());
+                ex.printStackTrace();
+            }
+
+            // Caso ocorra alguma Exception, API retornou algum erro ou Serialização retornou null
+            error_operation = Html.fromHtml(context.getString(R.string.error_login_api)).toString();
+            return false;
     }
 
     /**
@@ -294,7 +343,6 @@ public class UserAPI {
         error_operation = context.getString(R.string.error_register_api);
         return null;
     }
-
 
     // Getters e Setters
     public String getError_operation() {

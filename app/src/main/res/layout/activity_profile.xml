@@ -1,200 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollview_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.activities.ProfileActivity">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <include
+            android:id="@+id/toolbar_profile"
+            layout="@layout/tool_bar" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:contentDescription="@string/description_image_user"
+            tools:srcCompat="@drawable/user_image" />
+
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="16dp"
+            android:gravity="center"
+            android:text="Nome e Sobrenome do Usuario"
+            android:textSize="24sp"
+            tools:ignore="HardcodedText" />
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="50dp"
-                android:contentDescription="@string/description_image_user"
-                tools:srcCompat="@tools:sample/avatars" />
+        <com.google.android.material.card.MaterialCardView
+            style="@style/style_cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp">
 
-            <TextView
-                android:id="@+id/textView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:text="Pedro Paulo Fernandes"
-                android:textSize="24sp" />
+                android:orientation="vertical"
+                android:padding="24dp">
 
-            <com.google.android.material.card.MaterialCardView
-                style="@style/style_cardView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp">
-
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutedit_nameProfile"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="24dp">
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/label_name">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:editable="false"
-                            android:inputType="none"
-                            android:text="Pedro" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittext_nameProfile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp">
+                        android:enabled="false"
+                        android:inputType="none"
+                        android:text="@string/label_name" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:editable="false"
-                            android:inputType="none"
-                            android:text="pedro.paulo@gmail.com" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutedit_lastNameProfile"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/label_lastName">
 
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittext_lastNameProfile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp">
+                        android:enabled="false"
+                        android:inputType="none"
+                        android:text="@string/label_lastName" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:editable="false"
-                            android:inputType="none"
-                            android:text="*****" />
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutedit_emailProfile"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/label_email">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittext_emailProfile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp">
+                        android:enabled="false"
+                        android:inputType="none"
+                        android:text="@string/label_email" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:editable="false"
-                            android:inputType="none"
-                            android:text="@string/txt_date" />
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutedit_passwordProfile"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/label_password">
 
-                    <Button
-                        android:id="@+id/button_change"
-                        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittext_passwordProfile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/btn_change"
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:enabled="false"
+                        android:inputType="textPassword"
+                        android:text="@string/label_password" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                    <Button
-                        android:id="@+id/bnt_endereço"
-                        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layoutedit_birthdayProfile"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/label_date_birth">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edittext_birthdayProfile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/btn_addres"
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:enabled="false"
+                        android:inputType="none"
+                        android:text="@string/label_date_birth" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                    <Button
-                        android:id="@+id/bnt_formas"
-                        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/btn_payment"
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+                <include
+                    layout="@layout/line_gol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp" />
 
+                <Button
+                    android:id="@+id/button_updateUser"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/title_changeUser"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-                    <Button
-                        android:id="@+id/bnt_extrato"
-                        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/btn_extract"
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+                <Button
+                    android:id="@+id/button_deleteUser"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/btn_deleteUser"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                <Button
+                    android:id="@+id/bnt_orders"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/btn_extract"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-            <include
-                android:id="@+id/line_goal4"
-                layout="@layout/line_gol"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/textConfigs"
-                style="@style/label_fields"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:text="@string/txt_configs"
-                android:textSize="24sp" />
+        <include
+            layout="@layout/line_gol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <Button
-                android:id="@+id/bnt_data"
-                style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
-                android:layout_width="match_parent"
-                android:layout_height="46dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:text="@string/btn_data"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+        <TextView
+            style="@style/label_fields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="@string/txt_configs"
+            android:textSize="24sp" />
 
-            <Button
-                android:id="@+id/bnt_theme"
-                style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="20dp"
-                android:text="@string/btn_theme"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+        <Button
+            android:id="@+id/bnt_deleteLocalData"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="@string/btn_data"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
-            <Button
-                android:id="@+id/button_test03"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="15dp"
-                android:text="Voltar ao Inicio" />
-        </LinearLayout>
-    </ScrollView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/btn_goHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="15dp"
+            android:text="@string/btn_home" />
+    </LinearLayout>
+</ScrollView>

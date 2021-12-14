@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/title_changes" />
+            android:text="@string/title_changeUser" />
 
         <com.google.android.material.card.MaterialCardView
             style="@style/style_cardView"
@@ -39,7 +39,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/label_email"
+                    android:hint="@string/hint_email"
                     app:counterEnabled="true"
                     app:counterMaxLength="120"
                     app:endIconMode="clear_text">
@@ -56,7 +56,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/hint_pass"
+                    android:hint="@string/hint_password"
                     app:counterEnabled="true"
                     app:counterMaxLength="40"
                     app:endIconMode="password_toggle">
@@ -73,7 +73,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/hint_nome"
+                    android:hint="@string/hint_name"
                     app:counterEnabled="true"
                     app:counterMaxLength="80"
                     app:endIconMode="clear_text">
@@ -102,24 +102,6 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/hint_usu"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="60"
-                    app:endIconMode="clear_text">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switch_country"
                     android:layout_width="wrap_content"
@@ -137,7 +119,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="@string/btn_save" />
+            android:text="@string/btn_saveChanges" />
 
         <Button
             android:id="@+id/bnt_ignore"

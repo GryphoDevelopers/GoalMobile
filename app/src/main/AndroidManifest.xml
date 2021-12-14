@@ -18,7 +18,8 @@
             android:parentActivityName=".views.activities.IndexActivity" />
         <activity android:name=".views.activities.SearchActivity" />
         <activity android:name=".views.activities.ChangesActivity" />
-        <activity android:name=".views.activities.ProfileActivity" />
+        <activity android:name=".views.activities.ProfileActivity"
+            android:parentActivityName=".views.activities.IndexActivity" />
         <activity android:name=".views.activities.LoginActivity" />
         <activity android:name=".views.activities.AddressActivity" />
         <activity android:name=".views.activities.IndexActivity" />

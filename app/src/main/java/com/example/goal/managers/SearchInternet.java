@@ -109,6 +109,14 @@ public class SearchInternet {
     public static final String API_ATTR_CHANGE_LEVEL = "change-level";
 
     /**
+     * Segmento Final da URL que complementa a {@link #API_GOAL_USER} para exclui o Usuario da API
+     *
+     * @see <a href="https://igla-goal-api.herokuapp.com/swagger/index.html">API Goal</a>
+     * @see #API_GOAL_USER
+     */
+    public static final String API_ATTR_DELETE_USER = "delete-account";
+
+    /**
      * URL de Cadastro de Usuarios na API Goal (API do Projeto)
      *
      * @see <a href="https://igla-goal-api.herokuapp.com/swagger/index.html">API Goal</a>
