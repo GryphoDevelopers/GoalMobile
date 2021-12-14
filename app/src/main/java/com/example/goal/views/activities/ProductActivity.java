@@ -5,7 +5,6 @@ import static com.example.goal.managers.ManagerResources.dpToPixel;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,6 +19,8 @@ import com.example.goal.R;
 import com.example.goal.managers.ManagerDataBase;
 import com.example.goal.managers.ManagerResources;
 import com.example.goal.models.Product;
+import com.example.goal.views.fragments.CatalogFragment;
+import com.example.goal.views.fragments.ProductFragment;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
 import com.example.goal.views.widgets.SquareText;
 import com.squareup.picasso.Picasso;
@@ -119,6 +120,8 @@ public class ProductActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
         // Configura a Logo no Centro da ToolBar
         ImageView logo_goal = toolbar.findViewById(R.id.image_logo_goal);
 
@@ -147,26 +150,30 @@ public class ProductActivity extends AppCompatActivity {
             layout_seller.setVisibility(View.VISIBLE);
 
             update_product.setOnClickListener(v -> {
-                // TODO REMOVER e atualizar
-                Log.e("Debug", "Clicou no UPDATE PRODUCT");
+                Intent intent_index = new Intent(context, IndexActivity.class);
+                intent_index.putExtra(IndexActivity.TYPE_PRODUCT_FRAGMENT,
+                        ProductFragment.TYPE_UPDATE);
+                intent_index.putExtra(IndexActivity.ID_PRODUCT, product.getId_product());
                 finish();
+                startActivity(intent_index);
             });
 
             remove_product.setOnClickListener(v -> {
-                // TODO REMOVER e atualizar
-                Log.e("Debug", "Clicou no EXCLUIR PRODUCT");
+                Intent intent_index = new Intent(context, IndexActivity.class);
+                intent_index.putExtra(IndexActivity.TYPE_PRODUCT_FRAGMENT,
+                        ProductFragment.TYPE_DELETE);
+                intent_index.putExtra(IndexActivity.ID_PRODUCT, product.getId_product());
                 finish();
+                startActivity(intent_index);
             });
         }
 
         // Configura caso o Produto já seja um da Lista de Desejos
         if (database.isWhishes(product.getId_product())) visibleAddWishes(false);
 
-
         // Configura os Layout da CustomView do Produto
         GridLayout[] gridLayouts = new GridLayout[]{findViewById(R.id.layoutGrid_colors),
                 findViewById(R.id.layoutGrid_size)};
-
 
         if (attr_product.get(POSITION_LIST_COLOR) != null) {
             square_colors = new SquareText[attr_product.get(POSITION_LIST_COLOR).length];
@@ -274,5 +281,20 @@ public class ProductActivity extends AppCompatActivity {
                 gridLayout.addView(squareText);
             }
         }
+    }
+
+    /**
+     * Metodo Responsavel pelo Clique de Retornar da Tela
+     */
+    @Override
+    public void onBackPressed() {
+        if (isSellerProduct) {
+            Intent intent_index = new Intent(context, IndexActivity.class);
+            intent_index.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent_index.putExtra(IndexActivity.TYPE_CATALOG_FRAGMENT,
+                    CatalogFragment.TYPE_SELLER_PRODUCTS);
+            startActivity(intent_index);
+            finish();
+        } else super.onBackPressed();
     }
 }

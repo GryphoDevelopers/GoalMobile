@@ -1,5 +1,6 @@
 package com.example.goal.views.activities;
 
+import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
 import static com.example.goal.managers.SearchInternet.URL_PRODUCTS;
 import static com.example.goal.views.fragments.CatalogFragment.TYPE_CATEGORY;
 import static com.example.goal.views.fragments.CatalogFragment.TYPE_HOME;
@@ -46,6 +47,11 @@ import java.util.concurrent.Executors;
  */
 public class IndexActivity extends AppCompatActivity {
 
+    // Constantes Usadas no Caso de Passar dados Entre Intents
+    public static final String TYPE_PRODUCT_FRAGMENT = "product_fragments";
+    public static final String TYPE_CATALOG_FRAGMENT = "catalog_fragments";
+    public static final String ID_PRODUCT = "id_product";
+
     // Contantes das Opções do Menu Lateral
     private static final int HOME = R.id.option_home;
     private static final int PROFILE = R.id.option_profile;
@@ -81,6 +87,33 @@ public class IndexActivity extends AppCompatActivity {
         instanceItems();
         setUpToolBar();
         setUpLateralMenu();
+
+        Intent intent_index = getIntent();
+        if (intent_index != null) {
+            if (!isNullOrEmpty(intent_index.getStringExtra(TYPE_PRODUCT_FRAGMENT))) {
+                String type_product = intent_index.getStringExtra(TYPE_PRODUCT_FRAGMENT);
+
+                String id_product = intent_index.getStringExtra(ID_PRODUCT);
+                if (!isNullOrEmpty(id_product)) {
+                    // todo: obter o Produto da API
+                    Product product = new Product(IndexActivity.this);
+                    product.setId_product(id_product);
+                    product.setName_product("Random Name");
+                    product.setPrice(569.6);
+
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragments,
+                            ProductFragment.newInstance(type_product, product)).commit();
+                } else {
+                    alertDialogPersonalized.defaultDialog(
+                            getString(R.string.title_input_invalid, "Produto"),
+                            getString(R.string.error_product)).show();
+                }
+                return;
+            } else if (!isNullOrEmpty(intent_index.getStringExtra(TYPE_CATALOG_FRAGMENT))) {
+                getProducts(intent_index.getStringExtra(TYPE_CATALOG_FRAGMENT), "");
+                return;
+            }
+        }
 
         // Obtem uma Lista com os Produtos
         getProducts(TYPE_HOME, "");
@@ -177,11 +210,11 @@ public class IndexActivity extends AppCompatActivity {
 
                     if (type.equals(TYPE_SELLER_PRODUCTS)) {
                         alertDialogPersonalized.defaultDialog(
-                                getString(R.string.title_input_invalid, "Produtos"),getString(R.string.text_noProducts)).show();
+                                getString(R.string.title_input_invalid, "Produtos"), getString(R.string.text_noProducts)).show();
                     } else {
                         // Exibe o Erro do Catalogo para o Usuario
                         alertDialogPersonalized.defaultDialog(
-                                getString(R.string.title_input_invalid, "Produtos"),productAPI.getError_operation()).show();
+                                getString(R.string.title_input_invalid, "Produtos"), productAPI.getError_operation()).show();
                     }
                     // todo adicionar fragment null p/ erros
 
