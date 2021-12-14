@@ -1,5 +1,8 @@
 package com.example.goal.views.activities;
 
+import static com.example.goal.managers.ManagerResources.dpToPixel;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,13 +14,18 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.gridlayout.widget.GridLayout;
 
 import com.example.goal.R;
 import com.example.goal.managers.ManagerDataBase;
 import com.example.goal.managers.ManagerResources;
 import com.example.goal.models.Product;
 import com.example.goal.views.widgets.AlertDialogPersonalized;
+import com.example.goal.views.widgets.SquareText;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductActivity extends AppCompatActivity {
 
@@ -29,13 +37,22 @@ public class ProductActivity extends AppCompatActivity {
     public static final String PARAM_SIZE = "size";
     public static final String PARAM_PRICE = "price";
 
+    private static final int POSITION_LIST_COLOR = 0;
+    private static final int POSITION_LIST_SIZE = 1;
+
     private ManagerDataBase database;
     private boolean isSellerProduct = false;
+    private List<String[]> attr_product;
     private Product product;
     private Button remove_wishes;
     private Button add_wishes;
     private Button update_product;
     private Button remove_product;
+    private Context context;
+    private SquareText[] square_colors;
+    private SquareText[] square_sizes;
+    private String selected_color;
+    private String selected_size;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +61,31 @@ public class ProductActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
-            product = new Product(ProductActivity.this);
+            instanceItems();
+
+            product = new Product(context);
             product.setUrl_image(intent.getStringExtra(PARAM_IMAGE));
             product.setName_product(intent.getStringExtra(PARAM_NAME));
             product.setPrice(intent.getDoubleExtra(PARAM_PRICE, 0));
             product.setId_product(intent.getStringExtra(PARAM_ID));
             isSellerProduct = intent.getBooleanExtra(PARAM_IS_SELLER, false);
 
-            instanceItems();
+            // Obtem e Configura a Visibilidade dos Campos de Cor e Tamanho
+            attr_product.add(intent.getStringArrayExtra(PARAM_COLOR));
+            attr_product.add(intent.getStringArrayExtra(PARAM_SIZE));
+            if (attr_product.get(POSITION_LIST_COLOR) == null) {
+                TextView text_color = findViewById(R.id.txt_colors);
+                GridLayout gridLayout = findViewById(R.id.layoutGrid_colors);
+                text_color.setVisibility(View.GONE);
+                gridLayout.setVisibility(View.GONE);
+            }
+            if (attr_product.get(POSITION_LIST_SIZE) == null) {
+                TextView text_size = findViewById(R.id.txt_size);
+                GridLayout gridLayout = findViewById(R.id.layoutGrid_size);
+                text_size.setVisibility(View.GONE);
+                gridLayout.setVisibility(View.GONE);
+            }
+
             setUpToolBar();
             setUpElements();
             setUpButtons();
@@ -66,7 +100,9 @@ public class ProductActivity extends AppCompatActivity {
         add_wishes = findViewById(R.id.btn_listWishes);
         update_product = findViewById(R.id.btn_updateProduct);
         remove_product = findViewById(R.id.btn_deleteProduct);
-        database = new ManagerDataBase(ProductActivity.this);
+        context = ProductActivity.this;
+        database = new ManagerDataBase(context);
+        attr_product = new ArrayList<>();
     }
 
     /**
@@ -78,7 +114,7 @@ public class ProductActivity extends AppCompatActivity {
 
         // Adiciona o Icone de "Voltar"
         if (getSupportActionBar() != null) {
-            // getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -86,7 +122,7 @@ public class ProductActivity extends AppCompatActivity {
         // Configura a Logo no Centro da ToolBar
         ImageView logo_goal = toolbar.findViewById(R.id.image_logo_goal);
 
-        int margin_for_center = ManagerResources.dpToPixel(ProductActivity.this, 52);
+        int margin_for_center = ManagerResources.dpToPixel(context, 52);
         Toolbar.LayoutParams layoutParams = new Toolbar.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         layoutParams.setMargins(0, 0, margin_for_center, 0);
@@ -125,6 +161,25 @@ public class ProductActivity extends AppCompatActivity {
 
         // Configura caso o Produto já seja um da Lista de Desejos
         if (database.isWhishes(product.getId_product())) visibleAddWishes(false);
+
+
+        // Configura os Layout da CustomView do Produto
+        GridLayout[] gridLayouts = new GridLayout[]{findViewById(R.id.layoutGrid_colors),
+                findViewById(R.id.layoutGrid_size)};
+
+
+        if (attr_product.get(POSITION_LIST_COLOR) != null) {
+            square_colors = new SquareText[attr_product.get(POSITION_LIST_COLOR).length];
+        }
+        if (attr_product.get(POSITION_LIST_SIZE) != null) {
+            square_sizes = new SquareText[attr_product.get(POSITION_LIST_SIZE).length];
+        }
+
+
+        for (int i = 0; i < gridLayouts.length; i++) {
+            if (attr_product.get(i) != null && gridLayouts[i] != null)
+                setAttrProduct(gridLayouts[i], attr_product.get(i), i);
+        }
     }
 
     /**
@@ -133,13 +188,13 @@ public class ProductActivity extends AppCompatActivity {
     private void setUpButtons() {
         Button details_product = findViewById(R.id.btn_details);
         details_product.setOnClickListener(view ->
-                startActivity(new Intent(ProductActivity.this, DetailsActivity.class)));
+                startActivity(new Intent(context, DetailsActivity.class)));
 
         Button comments_product = findViewById(R.id.btn_moreComments);
         comments_product.setOnClickListener(view ->
-                startActivity(new Intent(ProductActivity.this, CommentsActivity.class)));
+                startActivity(new Intent(context, CommentsActivity.class)));
 
-        AlertDialogPersonalized alertPersonalized = new AlertDialogPersonalized(ProductActivity.this);
+        AlertDialogPersonalized alertPersonalized = new AlertDialogPersonalized(context);
 
         remove_wishes.setOnClickListener(v -> {
             if (!database.removeWishes(product.getId_product())) {
@@ -167,5 +222,57 @@ public class ProductActivity extends AppCompatActivity {
 
         add_wishes.setVisibility(visibleAdd);
         remove_wishes.setVisibility(visibleRemove);
+    }
+
+    /**
+     * Insere os Elementos da Custom View {@link SquareText} nos {@link GridLayout}
+     * <p>
+     * * Ambos os Atributos não podem ser Nulos
+     *
+     * @param gridLayout {@link GridLayout} que será inserido a CustomView
+     * @param items      String Array que contem os elementos que serão adicionados
+     *                   <p>
+     */
+    private void setAttrProduct(GridLayout gridLayout, String[] items, int postion_list) {
+        if (items != null && gridLayout != null) {
+            // Definem o Tamanho da Linha e Coluna
+            gridLayout.setRowCount(2);
+            gridLayout.setColumnCount(items.length % 2 == 0 ? items.length / 2 : (items.length + 1) / 2);
+
+            for (int i = 0; i < items.length; i++) {
+                // Instancia a Classe da CustomVIew com os Atributos Padrões
+                SquareText squareText = new SquareText(context, items[i], 0, 0, 0);
+
+                // Configura a Posição do Item na Coluna e os Parametros do layout
+                int column = i % 2 == 0 ? 0 : 1;
+
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams(gridLayout.getLayoutParams());
+                params.columnSpec = GridLayout.spec(column, 1, GridLayout.FILL, 1f);
+                params.width = dpToPixel(context, 20);
+                params.height = dpToPixel(context, 40);
+                params.setMargins(0, 0, dpToPixel(context, 5), column == 1 ? dpToPixel(context, 5) : 0);
+                squareText.setLayoutParams(params);
+
+                // Adiciona à um Array que controlará as CustomViews
+                if (postion_list == POSITION_LIST_COLOR) square_colors[i] = squareText;
+                else if (postion_list == POSITION_LIST_SIZE) square_sizes[i] = squareText;
+
+                // Controla os Cliques na Custom View
+                squareText.setOnClickListener(v -> {
+                    for (SquareText custom_item : postion_list == POSITION_LIST_COLOR ? square_colors : square_sizes) {
+                        if (custom_item.isSelectedSquareText()) custom_item.clickSquareText();
+                    }
+                    squareText.clickSquareText();
+
+                    if (postion_list == POSITION_LIST_COLOR)
+                        selected_color = squareText.getTextTitle();
+                    else if (postion_list == POSITION_LIST_SIZE)
+                        selected_size = squareText.getTextTitle();
+                });
+
+                // Adiciona a View no GridLayout
+                gridLayout.addView(squareText);
+            }
+        }
     }
 }

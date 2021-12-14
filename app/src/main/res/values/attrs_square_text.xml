@@ -1,0 +1,10 @@
+<resources>
+    <attr name="squareText" format="reference" />
+
+    <declare-styleable name="SquareText">
+        <attr name="textTitle" format="string" />
+        <attr name="textColor" format="color" />
+        <attr name="strokeColor" format="color" />
+        <attr name="titleSize" format="dimension" />
+    </declare-styleable>
+</resources>

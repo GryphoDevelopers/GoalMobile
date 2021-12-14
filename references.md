@@ -9,6 +9,9 @@
 - [Guru's Blog - Requisições HTTPs com Body](http://guruparang.blogspot.com/2016/01/example-on-working-with-json-and.html)
 - [StackOverflow - Inserindo Margem em DP pelo Codigo Java](https://stackoverflow.com/questions/12728255/in-android-how-do-i-set-margins-in-dp-programmatically)
 - [StackOverflow - Inserindo Margem na Imagem](https://stackoverflow.com/questions/3416087/how-to-set-margin-of-imageview-using-code-not-xml)
+- [StackOverflow - Weight em Linhas e Colunas](https://stackoverflow.com/questions/46582581/how-to-set-applayout-columnweight-and-applayout-rowweight-to-gridlayouts-chil)
+- [StackOverflow - GridLayout em Versões menores da API 21](https://stackoverflow.com/questions/39954438/how-to-support-layout-columnweight-and-layout-rowweight-in-pre-api-21)
+- [StackOverflow - GridLayout com TextView](https://stackoverflow.com/questions/33856565/how-to-create-a-gridlayout-layoutparams-to-specify-the-position-of-a-text-view)
 
 #### Correções
 
@@ -19,6 +22,7 @@
 - [Receitas de Codigo - Date para String](https://receitasdecodigo.com.br/java/converter-date-para-string-em-java)
 - [UFSC - Threads e seus Gerenciamento](http://www.inf.ufsc.br/~bosco.sobral/ensino/ine5645/Threads-e-Gerenciamento-de-Threads.pdf)
 - [StackOverflow - Configurando Tamanho das Imagens](https://stackoverflow.com/questions/3144940/set-imageview-width-and-height-programmatically)
+- [StackOverflow - GridLayout em Versões menores da API 21](https://stackoverflow.com/questions/18506055/android-support-v7-widget-gridlayout-cannot-get-it-to-work)
 
 #### Imagens
 
