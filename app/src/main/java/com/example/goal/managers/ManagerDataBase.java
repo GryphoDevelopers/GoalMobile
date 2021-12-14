@@ -174,23 +174,11 @@ public class ManagerDataBase extends SQLiteOpenHelper {
      * @return true/false
      */
     public boolean insertWishes(String id_product) {
-        SQLiteDatabase database = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
-        values.put(ID_PRODUCT, String.valueOf(id_product));
+        values.put(ID_PRODUCT, id_product);
 
-        return database.insert(TABLE_WISHES, null, values) > NOT_INSERT;
+        return this.getWritableDatabase().insert(TABLE_WISHES, null, values) > NOT_INSERT;
     }
-
-    /* todo: criar classe de pagamento
-     * Insere um {@link } no Banco de Dados Local
-     *
-     * @param user Instancia da Classe Pagamento que será inserida no Banco Local Mobile
-     * @return true|false
-
-    public boolean insertPayment(User user) {
-    return true;
-    }*/
 
     /**
      * Atualiza o Unico Usuario inserido no Banco de Dados Local
@@ -269,7 +257,7 @@ public class ManagerDataBase extends SQLiteOpenHelper {
      *
      * @return true/false
      */
-    public boolean isWhishes(String id_product) {
+    public boolean isWishes(String id_product) {
         // Seleciona um Produto da Lista de Desejo no Banco de Dados
         Cursor cursor = this.getReadableDatabase().query(TABLE_WISHES, new String[]{ID_PRODUCT},
                 ID_PRODUCT + "=?", new String[]{id_product}, null, null, null);
@@ -287,14 +275,14 @@ public class ManagerDataBase extends SQLiteOpenHelper {
      *
      * @return {@link List}|null
      */
-    public List<Integer> getIdWishes() {
+    public List<String> getIdWishes() {
         Cursor cursor = this.getReadableDatabase().query(TABLE_WISHES, new String[]{ID_PRODUCT},
                 null, null, null, null, null);
 
-        List<Integer> list_wishes = new ArrayList<>();
-        if (cursor != null && cursor.moveToFirst()) {
+        List<String> list_wishes = new ArrayList<>();
+        if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                list_wishes.add(cursor.getInt(cursor.getColumnIndex(ID_ADDRESS)));
+                list_wishes.add(cursor.getString(cursor.getColumnIndex(ID_PRODUCT)));
             }
             cursor.close();
         } else list_wishes = null;
@@ -327,7 +315,7 @@ public class ManagerDataBase extends SQLiteOpenHelper {
     public boolean removeWishes(String id_product) {
         return this.getWritableDatabase().delete(
                 TABLE_WISHES, ID_PRODUCT + "=?",
-                new String[]{String.valueOf(id_product)}) > NOT_CHANGED;
+                new String[]{id_product}) > NOT_CHANGED;
     }
 
     /**

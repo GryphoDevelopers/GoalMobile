@@ -6,8 +6,10 @@ import static com.example.goal.views.fragments.CatalogFragment.TYPE_CATEGORY;
 import static com.example.goal.views.fragments.CatalogFragment.TYPE_HOME;
 import static com.example.goal.views.fragments.CatalogFragment.TYPE_OTHERS;
 import static com.example.goal.views.fragments.CatalogFragment.TYPE_SELLER_PRODUCTS;
+import static com.example.goal.views.fragments.CatalogFragment.TYPE_WISHES;
 import static com.example.goal.views.fragments.ProductFragment.TYPE_CREATE;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +38,7 @@ import com.example.goal.views.widgets.AlertDialogPersonalized;
 import com.example.goal.views.widgets.SnackBarPersonalized;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -77,6 +80,9 @@ public class IndexActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private List<Product> productList;
     private AlertDialogPersonalized alertDialogPersonalized;
+    private ManagerSharedPreferences sharedPreferences;
+    private ManagerDataBase dataBase;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,13 +102,16 @@ public class IndexActivity extends AppCompatActivity {
                 String id_product = intent_index.getStringExtra(ID_PRODUCT);
                 if (!isNullOrEmpty(id_product)) {
                     // todo: obter o Produto da API
-                    Product product = new Product(IndexActivity.this);
+                    Product product = new Product(context);
                     product.setId_product(id_product);
                     product.setName_product("Random Name");
                     product.setPrice(569.6);
 
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragments,
                             ProductFragment.newInstance(type_product, product)).commit();
+
+                    navigationView.getMenu().findItem(MY_PRODUCTS).setCheckable(true);
+                    navigationView.getMenu().findItem(MY_PRODUCTS).setChecked(true);
                 } else {
                     alertDialogPersonalized.defaultDialog(
                             getString(R.string.title_input_invalid, "Produto"),
@@ -111,21 +120,28 @@ public class IndexActivity extends AppCompatActivity {
                 return;
             } else if (!isNullOrEmpty(intent_index.getStringExtra(TYPE_CATALOG_FRAGMENT))) {
                 getProducts(intent_index.getStringExtra(TYPE_CATALOG_FRAGMENT), "");
+                navigationView.getMenu().findItem(MY_PRODUCTS).setCheckable(true);
+                navigationView.getMenu().findItem(MY_PRODUCTS).setChecked(true);
                 return;
             }
         }
 
         // Obtem uma Lista com os Produtos
         getProducts(TYPE_HOME, "");
+        navigationView.getMenu().findItem(HOME).setCheckable(true);
+        navigationView.getMenu().findItem(HOME).setChecked(true);
     }
 
     /**
      * Instancia os Itens que serão utilizados na Classe
      */
     private void instanceItems() {
+        context = IndexActivity.this;
         navigationView = findViewById(R.id.navigationView_categories);
         toolbar = findViewById(R.id.toolbar_category);
-        alertDialogPersonalized = new AlertDialogPersonalized(IndexActivity.this);
+        alertDialogPersonalized = new AlertDialogPersonalized(context);
+        dataBase = new ManagerDataBase(context);
+        sharedPreferences = new ManagerSharedPreferences(context, ManagerSharedPreferences.NAME_PREFERENCE);
     }
 
     /**
@@ -139,7 +155,7 @@ public class IndexActivity extends AppCompatActivity {
         // Configura a Logo no Centro da ToolBar
         ImageView logo_goal = toolbar.findViewById(R.id.image_logo_goal);
 
-        int margin_for_center = ManagerResources.dpToPixel(IndexActivity.this, 52);
+        int margin_for_center = ManagerResources.dpToPixel(context, 52);
         Toolbar.LayoutParams layoutParams = new Toolbar.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         layoutParams.setMargins(0, 0, margin_for_center, 0);
@@ -153,10 +169,11 @@ public class IndexActivity extends AppCompatActivity {
      * @param category Categoria do Produto (Caso seja Catalogo, passar Vazio ("")
      */
     private void getProducts(String type, String category) {
+        boolean isCategory = type.equals(TYPE_CATEGORY);
         String category_api;
         Uri uri_search;
 
-        if (type.equals(TYPE_CATEGORY)) {
+        if (isCategory) {
             //todo remover/alterar para as categorias existentes
             switch (category) {
                 case "Equipamentos":
@@ -200,7 +217,7 @@ public class IndexActivity extends AppCompatActivity {
             runOnUiThread(dialogLoading::show);
 
             // Obtem os Itens que serão Exibidos
-            ProductsAPI productAPI = new ProductsAPI(IndexActivity.this);
+            ProductsAPI productAPI = new ProductsAPI(context);
             List<Product> listCatalogProducts = productAPI.getProducts(executorService,
                     finalUri_search.toString());
 
@@ -216,15 +233,64 @@ public class IndexActivity extends AppCompatActivity {
                         alertDialogPersonalized.defaultDialog(
                                 getString(R.string.title_input_invalid, "Produtos"), productAPI.getError_operation()).show();
                     }
-                    // todo adicionar fragment null p/ erros
-
                 } else {
                     // Configura a Lista dos Produtos Exibe o Fragment da Tela Principal
                     productList = listCatalogProducts;
 
                     // Instancia a Classe do Fragment e Insere no Local de Exibição do Fragment
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragments,
-                            CatalogFragment.newInstance(type, category, productList)).commit();
+                            isCategory
+                                    ? CatalogFragment.newInstance(type, category, productList)
+                                    : CatalogFragment.newInstance(type, productList)).commit();
+                }
+                dialogLoading.dismiss();
+            });
+        });
+    }
+
+    /**
+     * Obtem a Lista de Desejos do Usuario
+     */
+    private void getWishes() {
+        List<String> list_idProducts = dataBase.getIdWishes();
+        if (list_idProducts == null) {
+            alertDialogPersonalized.defaultDialog(
+                    getString(R.string.title_input_invalid, "Produtos"),
+                    getString(R.string.error_noMoreProducts)).show();
+            return;
+        }
+
+        // Configura o AlertDialog que exibe "Carregando" enquanto busca os Itens
+        AlertDialog dialogLoading = alertDialogPersonalized.loadingDialog(
+                getString(R.string.message_loadingDownload, "dos Produtos"), false);
+
+        // Cria uma Thread para atividade em Segundo Plano e Define um valor Fixo à categoria da API
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.execute(() -> {
+            runOnUiThread(dialogLoading::show);
+
+            // Obtem os Itens que serão Exibidos
+            ProductsAPI productAPI = new ProductsAPI(context);
+            List<Product> listProductSelected = new ArrayList<>();
+            for (String item : list_idProducts) {
+                // adcionar busca 1 por 1 dos produtos
+                Product product_selected = productAPI.getProduct(executorService,
+                        sharedPreferences.getJsonWebTokenUser(), item);
+                listProductSelected.add(product_selected);
+            }
+            // Exibe o Resultado na Tela
+            runOnUiThread(() -> {
+                if (listProductSelected.size() != 0) {
+                    // Configura a Lista dos Produtos Exibe o Fragment da Tela Principal
+                    productList = listProductSelected;
+
+                    // Instancia a Classe do Fragment e Insere no Local de Exibição do Fragment
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragments,
+                            CatalogFragment.newInstance(TYPE_WISHES, productList)).commit();
+                } else {
+                    alertDialogPersonalized.defaultDialog(
+                            getString(R.string.title_input_invalid, "Produtos"),
+                            getString(R.string.error_noMoreProducts)).show();
                 }
                 dialogLoading.dismiss();
             });
@@ -254,7 +320,7 @@ public class IndexActivity extends AppCompatActivity {
         actionToggle.syncState();
 
         // Exibe ou não as Opções do Vendedor
-        User user = new ManagerDataBase(IndexActivity.this).getUserDatabase();
+        User user = dataBase.getUserDatabase();
         if (user != null && user.isSeller()) {
             navigationView.getMenu().findItem(R.id.menu_seller).setVisible(true);
         }
@@ -272,8 +338,7 @@ public class IndexActivity extends AppCompatActivity {
      */
     private boolean itemSelect(MenuItem menuItem) {
         int id_item = menuItem.getItemId();
-        if (id_item != PROFILE && id_item != SEARCH && id_item != WISHES && id_item != EXIT
-                && id_item != MY_PRODUCTS) {
+        if (id_item != PROFILE && id_item != SEARCH && id_item != EXIT) {
             unselectedItemsMenu();
             menuItem.setChecked(true);
             menuItem.setCheckable(true);
@@ -285,13 +350,13 @@ public class IndexActivity extends AppCompatActivity {
                 getProducts(TYPE_HOME, "");
                 break;
             case PROFILE:
-                startActivity(new Intent(IndexActivity.this, ProfileActivity.class));
+                startActivity(new Intent(context, ProfileActivity.class));
                 break;
             case SEARCH:
-                startActivity(new Intent(IndexActivity.this, SearchActivity.class));
+                startActivity(new Intent(context, SearchActivity.class));
                 break;
             case WISHES:
-                startActivity(new Intent(IndexActivity.this, WishesActivity.class));
+                getWishes();
                 break;
             case EQUIPMENTS:
                 getProducts(TYPE_CATEGORY, getString(R.string.option_equipment));
@@ -332,10 +397,9 @@ public class IndexActivity extends AppCompatActivity {
                 getProducts(TYPE_SELLER_PRODUCTS, "");
                 break;
             case EXIT:
-                new ManagerDataBase(IndexActivity.this).clearTables();
-                new ManagerSharedPreferences(IndexActivity.this,
-                        ManagerSharedPreferences.NAME_PREFERENCE).clearPreferences();
-                startActivity(new Intent(IndexActivity.this, OpenActivity.class));
+                dataBase.clearTables();
+                sharedPreferences.clearPreferences();
+                startActivity(new Intent(context, OpenActivity.class));
                 finishAffinity();
                 break;
             default:

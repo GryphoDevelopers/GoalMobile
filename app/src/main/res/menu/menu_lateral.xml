@@ -13,8 +13,6 @@
     <group android:id="@+id/group_navigation">
         <item
             android:id="@+id/option_home"
-            android:checkable="true"
-            android:checked="true"
             android:title="@string/option_home" />
         <item
             android:id="@+id/option_wishes"

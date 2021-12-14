@@ -107,6 +107,33 @@ public class ProductsAPI {
     }
 
     /**
+     * Obtem uma Lista dos {@link Product} de um {@link User}
+     *
+     * @param executorService {@link ExecutorService} necessario para realizar as consultas na API
+     *                        para obter as cidades e manter na mesma Thread Assincrona utilizada
+     *                        nas Activity
+     * @param token           Token do Vendedor
+     * @param id_product      ID do Produto que será obtido
+     * @return {@link Product}|null
+     */
+    public Product getProduct(ExecutorService executorService, String token, String id_product) {
+        try {
+            // todo: obter dados da api goal
+            Uri uri = Uri.parse(URL_PRODUCTS).buildUpon().build();
+
+            List<Product> product = getProducts(executorService, uri.toString());
+            return product != null && product.size() != 0 && product.get(0) != null
+                    ? product.get(0) : null;
+        } catch (Exception ex) {
+            error_operation = MESSAGE_EXCEPTION;
+            Log.e(EXCEPTION, "Product" + " - Erro ao Obter os Produtos - " + ex.getClass().getName());
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
      * Se existir, retorna o erro da operação da Classe
      *
      * @return {@link String}|""

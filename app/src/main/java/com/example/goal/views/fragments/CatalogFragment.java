@@ -1,9 +1,9 @@
 package com.example.goal.views.fragments;
 
-import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
 import static com.example.goal.managers.RecyclerAdapterProducts.DEFAULT_ITEMS_QUANTITY;
 import static com.example.goal.managers.RecyclerAdapterProducts.INITIAL_ITEMS_QUANTITY;
-import static com.example.goal.managers.RecyclerAdapterProducts.POSITION_LOADING;
+import static com.example.goal.managers.RecyclerAdapterProducts.NOT_ONLY_LAYOUT;
+import static com.example.goal.managers.RecyclerAdapterProducts.POSITION_NORMAL_ITEM;
 import static com.example.goal.managers.RecyclerAdapterProducts.POSITION_SMALL_ITEM;
 
 import android.content.Context;
@@ -56,6 +56,11 @@ public class CatalogFragment extends Fragment implements ClickProducts {
      */
     public static final String TYPE_OTHERS = "type_others_category";
 
+    /**
+     * Variavel que define o Fragment das Outras Categorias
+     */
+    public static final String TYPE_WISHES = "type_wishes";
+
     // Chaves usadas no Bundle
     private static final String TYPE = "type_fragment";
     private static final String CATEGORY = "category_fragment";
@@ -89,15 +94,12 @@ public class CatalogFragment extends Fragment implements ClickProducts {
     }
 
     /**
-     * Cria uma Instancia do Fragment de Produtos.
+     * Cria uma Instancia do Fragment de Produtos de uma Categoria Especifica
      * <p>
-     * Esse {@link Fragment Fragment} aceita 2 configurações: Exibir um Catalogo de Produtos ou
-     * Exibir Produtos de uma Categoria Especifica
      *
      * @param productList {@link List} com os {@link Product} que serão exibidos
-     * @param type        Define o Tipo de {@link Fragment Fragment}: Catalogo ou Categoria
-     * @param category    Define a Categoria dos Produtos Buscados. Somente será usado quando o "Type"
-     *                    for "TYPE_CATEGORY", caso contrario será ignorado
+     * @param type        Define o Tipo de {@link Fragment Fragment}: {@link #TYPE_CATEGORY Categoria}
+     * @param category    Define a Categoria dos Produtos Buscados.
      * @return Nova instanceia de um {@link Fragment}
      */
     public static CatalogFragment newInstance(String type, String category, List<Product> productList) {
@@ -108,6 +110,28 @@ public class CatalogFragment extends Fragment implements ClickProducts {
         Bundle args = new Bundle();
         args.putString(TYPE, type);
         args.putString(CATEGORY, category);
+
+        // Informa os Arguments para o Fragment
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    /**
+     * Cria uma Instancia do Fragment de Produtos. Exibindo Produtos que não estão relacionados com
+     * uma Categoria Especifica
+     * <p>
+     *
+     * @param productList {@link List} com os {@link Product} que serão exibidos
+     * @return Nova instanceia de um {@link Fragment}
+     */
+    public static CatalogFragment newInstance(String type, List<Product> productList) {
+        // Instancia o Fragment
+        CatalogFragment fragment = new CatalogFragment(productList);
+
+        // Define os Itens
+        Bundle args = new Bundle();
+        args.putString(TYPE, type);
+        args.putString(CATEGORY, "");
 
         // Informa os Arguments para o Fragment
         fragment.setArguments(args);
@@ -151,26 +175,24 @@ public class CatalogFragment extends Fragment implements ClickProducts {
      */
     private void setUpFragment(View viewConfigured) {
         if (type_fragment.equals(TYPE_HOME) || type_fragment.equals(TYPE_CATEGORY)
-                || type_fragment.equals(TYPE_SELLER_PRODUCTS)) {
+                || type_fragment.equals(TYPE_SELLER_PRODUCTS) || type_fragment.equals(TYPE_WISHES)) {
 
             // Obtem uma Lista com a Quatidade Inicial de Itens no RecyclerView
-            if(productList.size() > INITIAL_ITEMS_QUANTITY) productList_loaded = productList.subList(0, INITIAL_ITEMS_QUANTITY);
+            if (productList.size() > INITIAL_ITEMS_QUANTITY)
+                productList_loaded = productList.subList(0, INITIAL_ITEMS_QUANTITY);
             else productList_loaded = productList;
 
-            boolean hasTitle = type_fragment.equals(TYPE_CATEGORY) ||
-                    type_fragment.equals(TYPE_SELLER_PRODUCTS);
-
             // Evita erros de "Esquece" de passar a Categoria do Fragment
-            String title_recyclerView = getString(R.string.titleMenu_categories);
-            if (hasTitle) {
+            String title_recyclerView = null;
+            if (type_fragment.equals(TYPE_CATEGORY) || type_fragment.equals(TYPE_SELLER_PRODUCTS)) {
                 title_recyclerView = type_fragment.equals(TYPE_SELLER_PRODUCTS)
                         ? getString(R.string.title_sellerProducts)
-                        : !isNullOrEmpty(category_fragment) ? category_fragment : title_recyclerView;
+                        : category_fragment;
             }
 
             // Configura o Adapter do RecyclerView e Obtem o Tamanho da Lista
-            recyclerAdapterProducts = new RecyclerAdapterProducts(productList_loaded, hasTitle,
-                    title_recyclerView, this);
+            recyclerAdapterProducts = new RecyclerAdapterProducts(productList_loaded, title_recyclerView,
+                    type_fragment.equals(TYPE_WISHES) ? POSITION_NORMAL_ITEM : NOT_ONLY_LAYOUT, this);
 
             // Obtem o RecyclerView e Configura o Adapter
             RecyclerView recyclerView = viewConfigured.findViewById(R.id.recycler_products);
@@ -229,39 +251,42 @@ public class CatalogFragment extends Fragment implements ClickProducts {
      */
     private void loadMoreItems(RecyclerView recyclerView) {
         int last_position = recyclerAdapterProducts.getLastPositionList();
+        // Adiciona um Item Nulo (Loading)
+        productList_loaded.add(null);
+        recyclerView.post(() -> {
+            // Notifica o RecyclerView que foi adicionado um Item Nullo e joga a Tela para baixo
+            recyclerAdapterProducts.notifyItemInserted(last_position);
+            recyclerView.scrollToPosition(last_position);
+        });
 
-        if(recyclerAdapterProducts.getItemViewType(last_position +1) == POSITION_LOADING ){
-            // Adiciona um Item Nulo (Loading)
-            productList_loaded.add(null);
-            recyclerView.post(() -> {
-                // Notifica o RecyclerView que foi adicionado um Item Nullo e joga a Tela para baixo
-                recyclerAdapterProducts.notifyItemInserted(last_position);
-                recyclerView.scrollToPosition(last_position);
-            });
+        // Realiza as Operações em Background, dando uma pausa de 2 segundos
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            int lastPositionList = recyclerAdapterProducts.getLastPositionList();
+            // Remove o Loading (Ultimo Item) da Lista e Notifica o RecyclerView
+            productList_loaded.remove(lastPositionList);
+            recyclerAdapterProducts.notifyItemRemoved(lastPositionList);
+            lastPositionList = recyclerAdapterProducts.getLastPositionList();
 
-            // Realiza as Operações em Background, dando uma pausa de 2 segundos
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                int lastPositionList = recyclerAdapterProducts.getLastPositionList();
-                // Remove o Loading (Ultimo Item) da Lista e Notifica o RecyclerView
-                productList_loaded.remove(lastPositionList);
-                recyclerAdapterProducts.notifyItemRemoved(lastPositionList);
-                lastPositionList = recyclerAdapterProducts.getLastPositionList();
+            // Define um novo tamanho da Lista com os novos itens
+            int new_position_list = lastPositionList + DEFAULT_ITEMS_QUANTITY;
 
-                // Define um novo tamanho da Lista com os novos itens
-                int new_position_list = lastPositionList + DEFAULT_ITEMS_QUANTITY;
+            // Insere na Lista e Notifica o RecyclerView das Inserções
+            for (int i = lastPositionList; i <= new_position_list; i++) {
 
-                // Insere na Lista e Notifica o RecyclerView das Inserções
-                for (int i = lastPositionList; i <= new_position_list; i++) {
+                if (productList.size() - 1 < i) {
+                    new AlertDialogPersonalized(context_fragment).defaultDialog(
+                            getString(R.string.title_input_invalid, "Produtos"),
+                            getString(R.string.error_noMoreProducts)).show();
+                    i = new_position_list + 1;
+                } else {
                     // todo Fix: Está sendo adicionado o Item na Lista com todos os Produtos
                     productList_loaded.add(productList.get(i));
                     recyclerAdapterProducts.notifyItemInserted(recyclerAdapterProducts.getLastPositionList());
                 }
+            }
 
-                is_loading = false;
-            }, 2000);
-        } else new AlertDialogPersonalized(context_fragment).defaultDialog(
-                getString(R.string.title_input_invalid, "Produtos"),
-                getString(R.string.error_noMoreProducts)).show();
+            is_loading = false;
+        }, 2000);
     }
 
     // Metodos Implementados do Clique nos Produtos do RecyclerView

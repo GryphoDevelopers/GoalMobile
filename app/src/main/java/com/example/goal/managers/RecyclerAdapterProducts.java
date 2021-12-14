@@ -65,6 +65,11 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
     public static final int POSITION_LINE = 5;
 
     /**
+     * Valor para não ser utilizar de um Layout Unico
+     */
+    public static final int NOT_ONLY_LAYOUT = -1;
+
+    /**
      * Lista que contem os Produtos que serão Exibidos
      */
     public final List<Product> productList;
@@ -83,6 +88,7 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
      * Define se terá ou não Titulo como Primeiro Elemento
      */
     private final boolean hasTitle;
+    private int defaultLayout = NOT_ONLY_LAYOUT;
     private final String title;
     private final ClickProducts clickProducts;
     private RecyclerView recyclerView;
@@ -90,16 +96,17 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
     /**
      * Construtor da Classe RecyclerAdapterProducts
      *
-     * @param productList Lista dos Produtos que serão exibidos
-     * @param hasTitle    Define se haverá o Titulo no RecyclerView
-     * @param title       Titulo do RecyclerView (Caso hasTitle sejá true)
+     * @param productList   Lista dos Produtos que serão exibidos
+     * @param title         Titulo do RecyclerView (Caso não tenha, insira null)
+     * @param defaultLayout Define um Unico Layout Padrão que será Exibido
      */
-    public RecyclerAdapterProducts(List<Product> productList, boolean hasTitle, String title,
+    public RecyclerAdapterProducts(List<Product> productList, String title, int defaultLayout,
                                    ClickProducts clickProducts) {
+        hasTitle = !isNullOrEmpty(title);
         if (hasTitle) productList.add(0, null);
         this.productList = productList;
-        this.hasTitle = hasTitle;
         this.title = title;
+        this.defaultLayout = defaultLayout;
         this.clickProducts = clickProducts;
     }
 
@@ -146,7 +153,7 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
             Product productItem = productList.get(position);
 
             // Configura os Diferentes tipos de Itens
-            if (isSmallItem(position)) {
+            if (getItemViewType(position) == POSITION_SMALL_ITEM) {
                 ((ItemsViewHolder) holder).image_product.getLayoutParams().height = dpToPixel(
                         holder.itemView.getContext(), 100);
                 ((ItemsViewHolder) holder).image_product.requestLayout();
@@ -156,7 +163,7 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
                 ((ItemsViewHolder) holder).txt_nameProduct.setText(productItem.getName_product());
 
                 // Configurações Adicionais para os Itens Maiores
-                if (isBigItem(position)) {
+                if (getItemViewType(position) == POSITION_BIG_ITEM) {
                     ((ItemsViewHolder) holder).image_product.getLayoutParams().height = dpToPixel(
                             holder.itemView.getContext(), 320);
                     ((ItemsViewHolder) holder).image_product.requestLayout();
@@ -221,7 +228,8 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
      */
     @Override
     public int getItemViewType(int position) {
-        if (isTitle(position)) return POSITION_TITLE;
+        if (defaultLayout != NOT_ONLY_LAYOUT) return defaultLayout;
+        else if (isTitle(position)) return POSITION_TITLE;
         else if (isBigItem(position)) return POSITION_BIG_ITEM;
         else if (isLoading(position)) return POSITION_LOADING;
         else if (isLineGoal(position)) return POSITION_LINE;

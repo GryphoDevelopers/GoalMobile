@@ -166,10 +166,13 @@ public class ProductActivity extends AppCompatActivity {
                 finish();
                 startActivity(intent_index);
             });
-        }
 
-        // Configura caso o Produto já seja um da Lista de Desejos
-        if (database.isWhishes(product.getId_product())) visibleAddWishes(false);
+            add_wishes.setVisibility(View.GONE);
+            remove_wishes.setVisibility(View.GONE);
+        } else {
+            // Configura caso o Produto já seja um da Lista de Desejos
+            if (database.isWishes(product.getId_product())) visibleAddWishes(false);
+        }
 
         // Configura os Layout da CustomView do Produto
         GridLayout[] gridLayouts = new GridLayout[]{findViewById(R.id.layoutGrid_colors),
@@ -182,7 +185,6 @@ public class ProductActivity extends AppCompatActivity {
             square_sizes = new SquareText[attr_product.get(POSITION_LIST_SIZE).length];
         }
 
-
         for (int i = 0; i < gridLayouts.length; i++) {
             if (attr_product.get(i) != null && gridLayouts[i] != null)
                 setAttrProduct(gridLayouts[i], attr_product.get(i), i);
@@ -193,14 +195,6 @@ public class ProductActivity extends AppCompatActivity {
      * Configura os Botãoes e seus Listeners
      */
     private void setUpButtons() {
-        Button details_product = findViewById(R.id.btn_details);
-        details_product.setOnClickListener(view ->
-                startActivity(new Intent(context, DetailsActivity.class)));
-
-        Button comments_product = findViewById(R.id.btn_moreComments);
-        comments_product.setOnClickListener(view ->
-                startActivity(new Intent(context, CommentsActivity.class)));
-
         AlertDialogPersonalized alertPersonalized = new AlertDialogPersonalized(context);
 
         remove_wishes.setOnClickListener(v -> {
