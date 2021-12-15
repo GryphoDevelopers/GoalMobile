@@ -58,7 +58,9 @@
     <string name="message_ok">Operação Bem-Sucedida</string>
     <string name="button_close">Fechar</string>
 
+    <string name="error_returnUser">O Usuario não pode deixar de ser um Vendedor</string>
     <string name="message_deleteProduct">Produto Excluido com Sucesso</string>
+    <string name="message_updateUser">Usuario Atualizado com Sucesso</string>
     <string name="notice_city">Algumas cidades podem não estar aparecendo por conta da divisão
         do municipio. &lt;br />&lt;br /> Por exemplo, a Cidade de <b>São Paulo</b> não está listada, mas suas
         &lt;b>subprefeituras (Butantã, Moema, e outras)&lt;b/> estarão disponiveis. &lt;br />&lt;br /> Busque sua

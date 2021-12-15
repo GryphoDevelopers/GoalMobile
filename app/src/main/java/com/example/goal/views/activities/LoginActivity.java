@@ -180,13 +180,14 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     handlerMain.post(() -> {
                         dialogLoading.dismiss();
-                        // Inicia a Pagina Index (Produtos) e Finaliza essa Activity
-                        startActivity(new Intent(context, IndexActivity.class));
-                        finishAffinity();
+                        dialogPersonalized.messageWithCloseWindow(this,
+                                getString(R.string.message_ok),
+                                getString(R.string.message_updateUser)).show();
                     });
                 }
             });
         });
+
     }
 
 }

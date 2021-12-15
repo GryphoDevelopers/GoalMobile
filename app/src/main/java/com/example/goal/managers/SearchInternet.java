@@ -130,6 +130,8 @@ public class SearchInternet {
      * @see <a href="https://igla-goal-api.herokuapp.com/swagger/index.html">API Goal</a>
      */
     public static final String API_GOAL_INSERT_USER = "https://igla-goal-api.herokuapp.com/goal/api/auth/add-access";
+    public static final String API_GOAL_UPDATE_USER = "https://igla-goal-api.herokuapp.com/goal/api/users/update";
+
 
     /**
      * URL que Obtem os Produtos que serão Exibidos (URL de Teste)
@@ -224,6 +226,7 @@ public class SearchInternet {
             // todo: criar uma serialização propria para obter o erro e adicionar novos codigos erros
             switch (urlConnection.getResponseCode()) {
                 case 200:
+                case 204:
                     break;
                 case 400:
                     error_search = context.getResources().getString(R.string.error_400);

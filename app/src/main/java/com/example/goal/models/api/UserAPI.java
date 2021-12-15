@@ -5,11 +5,13 @@ import static com.example.goal.managers.SearchInternet.API_ATTR_CHANGE_LEVEL;
 import static com.example.goal.managers.SearchInternet.API_ATTR_DELETE_USER;
 import static com.example.goal.managers.SearchInternet.API_GOAL_INSERT_USER;
 import static com.example.goal.managers.SearchInternet.API_GOAL_TOKEN;
+import static com.example.goal.managers.SearchInternet.API_GOAL_UPDATE_USER;
 import static com.example.goal.managers.SearchInternet.API_GOAL_USER;
 import static com.example.goal.managers.SearchInternet.DELETE;
 import static com.example.goal.managers.SearchInternet.GET;
 import static com.example.goal.managers.SearchInternet.PATCH;
 import static com.example.goal.managers.SearchInternet.POST;
+import static com.example.goal.managers.SearchInternet.PUT;
 
 import android.content.Context;
 import android.net.Uri;
@@ -50,9 +52,56 @@ public class UserAPI {
      * @param userRegister    {@link User} que será registrado na API
      * @return true|false
      */
-    public boolean updateUserAPI(ExecutorService executorService, User userRegister) {
-        //todo: implementação futura
-        return true;
+    public User updateUserAPI(ExecutorService executorService, User user_register, String token) {
+        try {
+            // Criação da Tarefa Assincrona e do Metodo que busca na Internet
+            SearchInternet searchInternet = new SearchInternet(context);
+            String[] parameters = new String[]{"id", "name", "surname", "email", "password", "sellerId"};
+
+            // Configura a Tarefa Assincrona que Retorna uma String
+            Set<Callable<String>> callable = new HashSet<>();
+            callable.add(() -> {
+
+                // Cria o Body do POST do Usuario
+                String[] values_user = new String[]{user_register.getId_user(), user_register.getName(),
+                        user_register.getLast_name(), user_register.getEmail(),
+                        user_register.getPassword(), user_register.getId_seller()};
+                searchInternet.setBodyRequest(parameters, values_user);
+
+                String json_api = searchInternet.SearchInAPI(API_GOAL_UPDATE_USER, PUT, token);
+
+                if (json_api == null) error_operation = searchInternet.getError_search();
+                return json_api;
+            });
+
+            List<Future<String>> futureTasksList;
+            futureTasksList = executorService.invokeAll(callable);
+            String json_email = futureTasksList.get(0).get();
+
+            if (json_email == null) return null;
+
+            SerializationInfo serializationInfo = new SerializationInfo(context);
+            String[] return_user = serializationInfo.jsonStringToArray(json_email, parameters);
+
+            if (return_user != null) {
+                User user = new User(context);
+                user.setId_user(return_user[0]);
+                user.setName(return_user[1]);
+                user.setLast_name(return_user[2]);
+                user.setEmail(return_user[3]);
+                user.setId_seller(return_user[4]);
+                return user;
+            }
+
+        } catch (Exception ex) {
+            Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Execução ao Executar a Inserção na API: "
+                    + ex.getClass().getName());
+            ex.printStackTrace();
+        }
+
+        // Ocorreu alguma Exception ou o Usuario não foi possivel de ser Cadastrado na API
+        error_operation = context.getString(R.string.error_register_api);
+        return null;
     }
 
     /**
@@ -65,40 +114,40 @@ public class UserAPI {
      * @return true|false
      */
     public boolean deleteUserAPI(ExecutorService executorService, User userDelete) {
-            try {
-                // Criação da Tarefa Assincrona e do Metodo que busca na Internet
-                SearchInternet searchInternet = new SearchInternet(context);
+        try {
+            // Criação da Tarefa Assincrona e do Metodo que busca na Internet
+            SearchInternet searchInternet = new SearchInternet(context);
 
-                // Configura a Tarefa Assincrona que Retorna uma String
-                Set<Callable<String>> callable = new HashSet<>();
-                callable.add(() -> {
-                    String uri = Uri.parse(API_GOAL_USER).buildUpon()
-                            .appendPath(userDelete.getId_user())
-                            .appendPath(API_ATTR_DELETE_USER).build().toString();
-                    String json_api = searchInternet.SearchInAPI(uri, DELETE, null);
+            // Configura a Tarefa Assincrona que Retorna uma String
+            Set<Callable<String>> callable = new HashSet<>();
+            callable.add(() -> {
+                String uri = Uri.parse(API_GOAL_USER).buildUpon()
+                        .appendPath(userDelete.getId_user())
+                        .appendPath(API_ATTR_DELETE_USER).build().toString();
+                String json_api = searchInternet.SearchInAPI(uri, DELETE, null);
 
-                    if (json_api == null) Log.e(ERROR_SEARCH, NAME_CLASS +
-                            " - Erro na Excluir da API: " + searchInternet.getError_search() + uri);
-                    return json_api;
-                });
+                if (json_api == null) Log.e(ERROR_SEARCH, NAME_CLASS +
+                        " - Erro na Excluir da API: " + searchInternet.getError_search() + uri);
+                return json_api;
+            });
 
-                // Obtem o Resultado da Busca na API
-                List<Future<String>> futureTasksList;
-                futureTasksList = executorService.invokeAll(callable);
-                String json_token = futureTasksList.get(0).get();
+            // Obtem o Resultado da Busca na API
+            List<Future<String>> futureTasksList;
+            futureTasksList = executorService.invokeAll(callable);
+            String json_token = futureTasksList.get(0).get();
 
-                // Valida o Resultado e Serializa
-                if (!isNullOrEmpty(json_token)) return json_token.equals("Autorizado");
+            // Valida o Resultado e Serializa
+            if (!isNullOrEmpty(json_token)) return json_token.equals("Autorizado");
 
-            } catch (Exception ex) {
-                Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Execução ao Executar a Inserção na API: "
-                        + ex.getClass().getName());
-                ex.printStackTrace();
-            }
+        } catch (Exception ex) {
+            Log.e(EXCEPTION_GENERAL, NAME_CLASS + " - Execução ao Executar a Inserção na API: "
+                    + ex.getClass().getName());
+            ex.printStackTrace();
+        }
 
-            // Caso ocorra alguma Exception, API retornou algum erro ou Serialização retornou null
-            error_operation = Html.fromHtml(context.getString(R.string.error_login_api)).toString();
-            return false;
+        // Caso ocorra alguma Exception, API retornou algum erro ou Serialização retornou null
+        error_operation = Html.fromHtml(context.getString(R.string.error_login_api)).toString();
+        return false;
     }
 
     /**

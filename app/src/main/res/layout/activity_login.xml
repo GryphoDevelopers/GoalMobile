@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="50dp"
             android:layout_marginEnd="30dp"
             android:layout_marginRight="30dp"
             android:hint="@string/label_email"
