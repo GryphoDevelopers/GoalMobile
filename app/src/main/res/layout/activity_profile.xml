@@ -14,6 +14,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <include
+                android:id="@+id/include2"
+                layout="@layout/tool_bar" />
+
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="200dp"
@@ -29,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:text="Pedro Paulo Fernandes"
+                android:text="@string/txtview_name"
                 android:textSize="24sp" />
 
             <com.google.android.material.card.MaterialCardView
@@ -54,7 +58,7 @@
                             android:layout_height="wrap_content"
                             android:editable="false"
                             android:inputType="none"
-                            android:text="Pedro" />
+                            android:text="@string/txt_nome" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -69,7 +73,7 @@
                             android:layout_height="wrap_content"
                             android:editable="false"
                             android:inputType="none"
-                            android:text="pedro.paulo@gmail.com" />
+                            android:text="@string/txt_email" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,7 +88,7 @@
                             android:layout_height="wrap_content"
                             android:editable="false"
                             android:inputType="none"
-                            android:text="*****" />
+                            android:text="@string/txt_pass" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
