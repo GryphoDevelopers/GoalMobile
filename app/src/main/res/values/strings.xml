@@ -51,7 +51,6 @@
     <string name="title_no_register_api">Falha no Cadastro</string>
     <string name="title_no_internet">Internet Indisponivel</string>
     <string name="title_loading">Carregando …</string>
-
     <string name="title_systemOffline">Sistema Indiponivel</string>
     <string name="message_loadingDownload">Obtendo Dados %s no Sistema</string>
     <string name="message_loadingSingUp">Realizando Cadastro do %s no Sistema</string>
@@ -241,12 +240,20 @@
     <!-- Layout do Fragment dos Produtos (Cadastro/Alteração) -->
     <string name="title_product">%s seu Produto</string>
     <string name="title_sellerProducts">Seus Produtos</string>
-    <string name="subtext_photo">Insira aqui a Imagem do Produto</string>
+    <string name="subtext_photo">%s aqui a Imagem do Produto</string>
     <string name="text_register">Cadastre</string>
     <string name="text_update">Atualize</string>
     <string name="text_delete">Exclua</string>
     <string name="text_confirmDelete">Tem Certeza que deseja excluir o Produto: &lt;br /> &lt;b>%s&lt;/b></string>
     <string name="text_warmingDelete">Após Clicar no Botão, não é possivel Reverter a Exclusão</string>
+    <string name="text_infoProduct">Dados do Produto:</string>
+    <string name="txt_prodName">Nome do Produto</string>
+    <string name="txt_type">Tipo do Produto</string>
+    <string name="txt_collor">Cor do Produto</string>
+    <string name="txt_size">Tamanho do Produto</string>
+    <string name="txt_expiration">Prazo de Validade</string>
+    <string name="txt_price">R$000,00</string>
+    <string name="btn_changeProd">%s dados</string>
 
     <!-- Layout da Activity Product (Descrição Inicial do Produto) -->
     <string name="text_color">Cores</string>
@@ -260,21 +267,47 @@
     <string name="btn_removeWishes">Remover da Lista de Desejos</string>
 
     <!-- Layout da Activity Changes -->
-    <string name="title_changeUser">Alterar dados da conta</string>
-    <string name="btn_saveChanges">Salvar alterações</string>
-    <string name="btn_cancel">Cancelar</string>
+    <string name="title_changes">Alterar dados da conta</string>
+    <string name="hint_nome">Nome</string>
+    <string name="hint_usu">Nome do usuário</string>
     <string name="option_account">Vendedor</string>
+    <string name="hint_email2">Email</string>
+    <string name="hint_pass">Senha</string>
+    <string name="btn_save">Salvar alterações</string>
+    <string name="btn_cancel">Cancelar</string>
+
+    <!-- Layout da Activity Detalhes -->
+    <string name="text_details">Detalhes</string>
+    <string name="text_type">Tipo: …</string>
+    <string name="text_collor">Cor: …</string>
+    <string name="text_size2">Tamanho: …</string>
+    <string name="text_material">Material: …</string>
+    <string name="text_local">Local de Fabricação: …</string>
+    <string name="text_brand">Marca: …</string>
+    <string name="text_warranty">Garantia: …</string>
+    <string name="text_SAC">SAC do fornecedor: …</string>
+    <string name="text_info">Informações do Produto</string>
 
     <!-- Layout da Activity Profile -->
     <string name="description_image_user">Imagem do Usuario</string>
-    <string name="btn_home">Voltar ao Incio</string>
-    <string name="btn_deleteUser">Excluir Usuario</string>
+    <string name="txtview_name">%s</string>
+    <string name="txt_nome">Nome</string>
+    <string name="txt_usu">Nome do usuário</string>
+    <string name="txt_email">Email</string>
+    <string name="txt_pass">Senha</string>
+    <string name="txt_date">XX/XX/XXXX</string>
+    <string name="btn_change">Alterar dados</string>
+    <string name="btn_home">Voltar</string>
+    <string name="btn_addres">Endereço</string>
     <string name="btn_payment">Formas de Pagamento</string>
     <string name="btn_extract">Extrato de Compras</string>
     <string name="txt_configs">Configurações do Aplicativo</string>
-    <string name="btn_data">Apagar Dados Locais</string>
-    <string name="btn_theme">Alterar Tema</string>
-    <string name="txt_confirmDeleteUser">Tem Certeza que deseja &lt;b>EXCLUIR&lt;/b> seu Usuario ? &lt;br />
-        Após Clicar no &lt;b>OK não sera Possivel REVERTER&lt;b/> esse Processo.</string>
+    <string name="btn_data">Apagar dados salvos</string>
+    <string name="btn_theme">Tema</string>
 
+    <!-- Layout da Activity Search -->
+    <string name="tittle_search">Pesquisar</string>
+    <string name="search_price">Preço</string>
+    <string name="search_category">Categoria</string>
+    <string name="btn_search">Pesquisar</string>
 </resources>
