@@ -1,6 +1,5 @@
 package com.example.goal.views.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -19,11 +18,7 @@ public class ChangesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_changes);
 
-        // todo: remover. Apenas para testes
-        Button button_home = findViewById(R.id.btn_save);
-        button_home.setOnClickListener(v -> {
-            startActivity(new Intent(ChangesActivity.this, IndexActivity.class));
-            finish();
-        });
+        Button button_home = findViewById(R.id.bnt_abortChanges);
+        button_home.setOnClickListener(v -> finish());
     }
 }

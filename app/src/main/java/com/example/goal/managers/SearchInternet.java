@@ -99,6 +99,14 @@ public class SearchInternet {
      */
     public static final String API_GOAL_USER = "https://igla-goal-api.herokuapp.com/goal/api/users/";
 
+    public static final String API_GOAL_PRODUCT = "https://igla-goal-api.herokuapp.com/goal/api/products/";
+
+    public static final String API_ATTR_MY_PRODUCTS = "my-products?";
+
+    public static final String API_GOAL_CATEGORIES = "https://igla-goal-api.herokuapp.com/goal/api/products/categories?";
+
+    public static final String ATRR_REMOVE_PRODUCT = "remove-product";
+
     /**
      * Segmento Final da URL que complementa a {@link #API_GOAL_USER} para alterar o Usuario para
      * Vendedor
@@ -123,11 +131,15 @@ public class SearchInternet {
      */
     public static final String API_GOAL_INSERT_USER = "https://igla-goal-api.herokuapp.com/goal/api/auth/add-access";
 
-    // todo: alterar para URL correta
     /**
      * URL que Obtem os Produtos que serão Exibidos (URL de Teste)
      */
-    public static final String URL_PRODUCTS = "https://makeup-api.herokuapp.com/api/v1/products.json?";
+    public static final String URL_PRODUCTS = "https://igla-goal-api.herokuapp.com/goal/api/products?";
+
+    public static final String ATRR_PAGE_SIZE = "pageSize";
+    public static final String ATRR_FILTER = "HasFilter";
+    public static final String ATRR_CATEGORY = "CategoryId";
+    public static final String ATRR_MAX_PRICE = "MaxPrice";
 
     // Constantes de Possiveis Exception usadads nos Logs
     private final String NAME_CLASS = "SearchInternet";

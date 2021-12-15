@@ -11,10 +11,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/include2"
-            layout="@layout/tool_bar" />
-
         <TextView
             android:id="@+id/title_fragment_product"
             style="@style/title_activities"
@@ -23,15 +19,8 @@
             android:text="@string/title_product"
             android:textSize="24sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <!-- TODO: Inserir Inputs de Criar/Atualizar Produto -->
-        </LinearLayout>
-
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/image_fragmentProduct"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_gravity="center"
@@ -46,7 +35,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="@string/subtext_photo"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
         <com.google.android.material.card.MaterialCardView
             style="@style/style_cardView"
@@ -54,115 +43,96 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
-
-        <TextView
-            android:id="@+id/products_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginBottom="20dp"
-            android:text="@string/text_infoProduct"
-            android:textSize="24sp" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.textfield.TextInputEditText
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none"
-                android:text="@string/txt_prodName" />
+                android:orientation="vertical"
+                android:padding="24dp">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/products_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center"
+                    android:text="@string/text_infoProduct"
+                    android:textSize="24sp" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:text="@string/txt_type" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_nameProduct"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:text="@string/txt_prodName" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:text="@string/txt_collor" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_categoryProduct"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:text="@string/txt_category" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:text="@string/txt_size" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_colorProduct"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:text="@string/txt_collor" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:text="@string/txt_expiration" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_sizeProduct"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:text="@string/txt_size" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:text="@string/txt_price" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_priceProduct"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:text="@string/txt_price" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/button_change"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/btn_change"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-
-    </LinearLayout>
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
@@ -192,14 +162,42 @@
             android:textSize="18sp"
             android:visibility="gone" />
 
-
         <Button
-            android:id="@+id/btn_fragment_product"
-            android:layout_width="wrap_content"
+            android:id="@+id/btn_deleteProduct"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="24dp"
-            android:text="@string/option_registerProduct" />
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/option_deleteProduct"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_registerProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/option_registerProduct"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_changeProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/btn_change"
+            android:textSize="16sp"
+            android:visibility="gone" />
 
     </LinearLayout>
 </ScrollView>

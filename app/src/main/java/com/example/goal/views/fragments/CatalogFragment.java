@@ -300,7 +300,9 @@ public class CatalogFragment extends Fragment implements ClickProducts {
             intentProduct.putExtra(ProductActivity.PARAM_PRICE, product.getPrice());
             intentProduct.putExtra(ProductActivity.PARAM_IS_SELLER, type_fragment.equals(TYPE_SELLER_PRODUCTS));
             intentProduct.putExtra(ProductActivity.PARAM_COLOR, product.getColors());
-            intentProduct.putExtra(ProductActivity.PARAM_SIZE, new String[]{"P", "G", "GG", "XGG"});
+            intentProduct.putExtra(ProductActivity.PARAM_SIZE, product.getSizes());
+            intentProduct.putExtra(ProductActivity.PARAM_CATEGORY, product.getCategory_product());
+            intentProduct.putExtra(ProductActivity.PARAM_STOCK, product.getStock_product());
             startActivity(intentProduct);
         } else {
             String title = context_fragment.getString(R.string.title_input_invalid, "Produto");

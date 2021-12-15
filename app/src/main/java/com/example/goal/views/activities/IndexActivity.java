@@ -1,7 +1,10 @@
 package com.example.goal.views.activities;
 
 import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
-import static com.example.goal.managers.SearchInternet.URL_PRODUCTS;
+import static com.example.goal.managers.SearchInternet.API_GOAL_PRODUCT;
+import static com.example.goal.managers.SearchInternet.ATRR_CATEGORY;
+import static com.example.goal.managers.SearchInternet.ATRR_FILTER;
+import static com.example.goal.managers.SearchInternet.ATRR_PAGE_SIZE;
 import static com.example.goal.views.fragments.CatalogFragment.TYPE_CATEGORY;
 import static com.example.goal.views.fragments.CatalogFragment.TYPE_HOME;
 import static com.example.goal.views.fragments.CatalogFragment.TYPE_OTHERS;
@@ -83,6 +86,8 @@ public class IndexActivity extends AppCompatActivity {
     private ManagerSharedPreferences sharedPreferences;
     private ManagerDataBase dataBase;
     private Context context;
+    private User user;
+    private AlertDialog dialogLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,18 +105,35 @@ public class IndexActivity extends AppCompatActivity {
                 String type_product = intent_index.getStringExtra(TYPE_PRODUCT_FRAGMENT);
 
                 String id_product = intent_index.getStringExtra(ID_PRODUCT);
-                if (!isNullOrEmpty(id_product)) {
-                    // todo: obter o Produto da API
-                    Product product = new Product(context);
-                    product.setId_product(id_product);
-                    product.setName_product("Random Name");
-                    product.setPrice(569.6);
+                if (!isNullOrEmpty(type_product) && !isNullOrEmpty(id_product)) {
 
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragments,
-                            ProductFragment.newInstance(type_product, product)).commit();
+                    // Configura o AlertDialog que exibe "Carregando" enquanto busca os Itens
+                    dialogLoading.show();
 
-                    navigationView.getMenu().findItem(MY_PRODUCTS).setCheckable(true);
-                    navigationView.getMenu().findItem(MY_PRODUCTS).setChecked(true);
+                    // Cria uma Thread para atividade em Segundo Plano e Define um valor Fixo à categoria da API
+                    ExecutorService executorService = Executors.newCachedThreadPool();
+                    executorService.execute(() -> {
+                        ProductsAPI productAPI = new ProductsAPI(context);
+                        List<Product> listCatalogProducts = productAPI.getSellerProducts(executorService,
+                                user.getToken_user(), user.getId_seller());
+
+                        runOnUiThread(() -> {
+                            Product product = null;
+                            for (int i = 0; i < listCatalogProducts.size() - 1; i++) {
+                                if (listCatalogProducts.get(i).getId_product().equals(id_product)) {
+                                    product = listCatalogProducts.get(i);
+                                }
+                            }
+
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragments,
+                                    ProductFragment.newInstance(type_product, product, user)).commit();
+
+                            navigationView.getMenu().findItem(MY_PRODUCTS).setCheckable(true);
+                            navigationView.getMenu().findItem(MY_PRODUCTS).setChecked(true);
+
+                            dialogLoading.dismiss();
+                        });
+                    });
                 } else {
                     alertDialogPersonalized.defaultDialog(
                             getString(R.string.title_input_invalid, "Produto"),
@@ -140,8 +162,12 @@ public class IndexActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.navigationView_categories);
         toolbar = findViewById(R.id.toolbar_category);
         alertDialogPersonalized = new AlertDialogPersonalized(context);
+        dialogLoading = alertDialogPersonalized.loadingDialog(
+                getString(R.string.message_loadingDownload, "dos Produtos"), false);
         dataBase = new ManagerDataBase(context);
         sharedPreferences = new ManagerSharedPreferences(context, ManagerSharedPreferences.NAME_PREFERENCE);
+        user = dataBase.getUserDatabase();
+        if (user != null) user.setToken_user(sharedPreferences.getJsonWebTokenUser());
     }
 
     /**
@@ -169,57 +195,38 @@ public class IndexActivity extends AppCompatActivity {
      * @param category Categoria do Produto (Caso seja Catalogo, passar Vazio ("")
      */
     private void getProducts(String type, String category) {
-        boolean isCategory = type.equals(TYPE_CATEGORY);
-        String category_api;
-        Uri uri_search;
-
-        if (isCategory) {
-            //todo remover/alterar para as categorias existentes
-            switch (category) {
-                case "Equipamentos":
-                    category_api = "Blush";
-                    break;
-                case "Acessorios":
-                    category_api = "Bronzer";
-                    break;
-                case "Vitaminas":
-                    category_api = "Eyebrow";
-                    break;
-                case "Roupas":
-                    category_api = "Eyeliner";
-                    break;
-                case "Calçados":
-                    category_api = "Eyeshadow";
-                    break;
-                case "Bolsas":
-                    category_api = "Foundation";
-                    break;
-                default:
-                    category_api = "";
-                    break;
-            }
-            uri_search = Uri.parse(URL_PRODUCTS).buildUpon().appendQueryParameter(
-                    "product_type", category_api).build();
-        } else if (type.equals(TYPE_SELLER_PRODUCTS)) {
-            // todo alterar para api goal
-            uri_search = Uri.parse(URL_PRODUCTS).buildUpon().appendQueryParameter(
-                    "rating_greater_than", "4.8").build();
-        } else uri_search = Uri.parse(URL_PRODUCTS).buildUpon().build();
-
         // Configura o AlertDialog que exibe "Carregando" enquanto busca os Itens
-        AlertDialog dialogLoading = alertDialogPersonalized.loadingDialog(
-                getString(R.string.message_loadingDownload, "dos Produtos"), false);
+        dialogLoading.show();
 
         // Cria uma Thread para atividade em Segundo Plano e Define um valor Fixo à categoria da API
         ExecutorService executorService = Executors.newCachedThreadPool();
-        Uri finalUri_search = uri_search;
         executorService.execute(() -> {
-            runOnUiThread(dialogLoading::show);
-
-            // Obtem os Itens que serão Exibidos
             ProductsAPI productAPI = new ProductsAPI(context);
-            List<Product> listCatalogProducts = productAPI.getProducts(executorService,
-                    finalUri_search.toString());
+            List<Product> listCatalogProducts;
+            String id_category = "";
+
+            if (type.equals(TYPE_SELLER_PRODUCTS)) {
+                listCatalogProducts = productAPI.getSellerProducts(executorService,
+                        user.getToken_user(), user.getId_seller());
+            } else if (type.equals(TYPE_CATEGORY) && !isNullOrEmpty(category)) {
+                List<String[]> list_categories = productAPI.getCategories(executorService, user.getToken_user());
+                for (int i = 0; i < list_categories.size(); i++) {
+                    if (list_categories.get(i)[0].equals(category)) {
+                        id_category = list_categories.get(i)[1];
+                    }
+                }
+                String uri = Uri.parse(API_GOAL_PRODUCT).buildUpon()
+                        .appendQueryParameter(ATRR_FILTER, "true")
+                        .appendQueryParameter(ATRR_PAGE_SIZE, "100")
+                        .appendQueryParameter(ATRR_CATEGORY, id_category).build().toString();
+
+                listCatalogProducts = productAPI.getProducts(executorService, uri, user.getToken_user());
+            } else {
+                String uri = Uri.parse(API_GOAL_PRODUCT).buildUpon()
+                        .appendQueryParameter(ATRR_FILTER, "true")
+                        .appendQueryParameter(ATRR_PAGE_SIZE, "100").build().toString();
+                listCatalogProducts = productAPI.getProducts(executorService, uri, user.getToken_user());
+            }
 
             // Exibe o Resultado na Tela
             runOnUiThread(() -> {
@@ -239,7 +246,7 @@ public class IndexActivity extends AppCompatActivity {
 
                     // Instancia a Classe do Fragment e Insere no Local de Exibição do Fragment
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragments,
-                            isCategory
+                            type.equals(TYPE_CATEGORY)
                                     ? CatalogFragment.newInstance(type, category, productList)
                                     : CatalogFragment.newInstance(type, productList)).commit();
                 }
@@ -260,10 +267,6 @@ public class IndexActivity extends AppCompatActivity {
             return;
         }
 
-        // Configura o AlertDialog que exibe "Carregando" enquanto busca os Itens
-        AlertDialog dialogLoading = alertDialogPersonalized.loadingDialog(
-                getString(R.string.message_loadingDownload, "dos Produtos"), false);
-
         // Cria uma Thread para atividade em Segundo Plano e Define um valor Fixo à categoria da API
         ExecutorService executorService = Executors.newCachedThreadPool();
         executorService.execute(() -> {
@@ -275,7 +278,7 @@ public class IndexActivity extends AppCompatActivity {
             for (String item : list_idProducts) {
                 // adcionar busca 1 por 1 dos produtos
                 Product product_selected = productAPI.getProduct(executorService,
-                        sharedPreferences.getJsonWebTokenUser(), item);
+                        user.getToken_user(), item);
                 listProductSelected.add(product_selected);
             }
             // Exibe o Resultado na Tela
@@ -320,9 +323,11 @@ public class IndexActivity extends AppCompatActivity {
         actionToggle.syncState();
 
         // Exibe ou não as Opções do Vendedor
-        User user = dataBase.getUserDatabase();
-        if (user != null && user.isSeller()) {
+        if (user != null && user.isSeller())
             navigationView.getMenu().findItem(R.id.menu_seller).setVisible(true);
+        else if (user == null) {
+            navigationView.getMenu().findItem(PROFILE).setVisible(false);
+            navigationView.getMenu().findItem(WISHES).setVisible(false);
         }
 
         // Listener do Botão do Drawer e dos Cliques no Menu
@@ -391,7 +396,7 @@ public class IndexActivity extends AppCompatActivity {
             case REGISTER_PRODUCT:
                 // Instancia a Classe do Fragment e Insere no Local de Exibição do Fragment
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragments,
-                        ProductFragment.newInstance(TYPE_CREATE, null)).commit();
+                        ProductFragment.newInstance(TYPE_CREATE, null, user)).commit();
                 break;
             case MY_PRODUCTS:
                 getProducts(TYPE_SELLER_PRODUCTS, "");

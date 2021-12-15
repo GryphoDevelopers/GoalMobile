@@ -74,6 +74,9 @@ public class ProfileActivity extends AppCompatActivity {
             TextInputEditText edit_birthday = findViewById(R.id.edittext_birthdayProfile);
             edit_birthday.setText(userProfile.getString_dateBirth());
 
+            ImageView image_profile = findViewById(R.id.imageProfile);
+            image_profile.setImageResource(R.drawable.user_image);
+
             // Configura os Cliques no Botão
             setUpButtons();
         } else {

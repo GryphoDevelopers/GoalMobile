@@ -66,11 +66,26 @@
             android:id="@+id/txt_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
             android:fontFamily="@font/ubuntu_bold"
             android:text="Text for Example"
             android:textSize="18sp"
             tools:ignore="HardcodedText" />
+
+
+        <TextView
+            android:id="@+id/txt_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16sp"
+            android:layout_marginLeft="16sp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/ubuntu_bold"
+            android:text="@string/text_category"
+            android:textSize="18sp" />
+
 
         <TextView
             android:id="@+id/txt_colors"
@@ -118,8 +133,7 @@
             layout="@layout/line_gol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
-
+            android:layout_marginTop="20dp" />
 
         <TextView
             android:id="@+id/txt_price"
@@ -128,19 +142,30 @@
             android:layout_marginStart="26dp"
             android:layout_marginLeft="26dp"
             android:layout_marginTop="16dp"
-            android:text="R$ 000,00"
-            android:textSize="24sp"
-            tools:ignore="HardcodedText" />
+            android:text="@string/text_price"
+            android:textSize="28sp" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="36dp"
             android:layout_marginTop="26dp"
+            android:layout_marginRight="36dp"
+            android:gravity="center"
             android:text="@string/available_stock"
-            android:textSize="28sp"
+            android:textSize="24sp"
             app:drawableLeftCompat="@drawable/ic_email"
             app:drawableTint="@color/grey" />
+
+        <TextView
+            android:id="@+id/txt_stock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/ubuntu_bold"
+            android:gravity="center"
+            android:text="@string/text_stock"
+            android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -159,7 +184,7 @@
                 android:text="@string/btn_buy" />
 
             <!-- minHeight = 0 para que o botão não possua espaço dentro -->
-            <Button
+             <Button
                 android:id="@+id/btn_listWishes"
                 style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
                 android:layout_width="wrap_content"

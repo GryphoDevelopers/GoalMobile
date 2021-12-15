@@ -26,8 +26,10 @@ public class Product {
     private String name_product = "";
     private String url_image = "";
     private int stock_product = 0;
+    private String category_product = "";
     private double price = 0;
     private String[] colors;
+    private String[] sizes;
 
     /**
      * Variavel que armazenará a Mensagem de Erro
@@ -189,6 +191,22 @@ public class Product {
 
     public void setColors(String[] colors) {
         this.colors = colors;
+    }
+
+    public String getCategory_product() {
+        return category_product;
+    }
+
+    public void setCategory_product(String category_product) {
+        this.category_product = category_product;
+    }
+
+    public String[] getSizes() {
+        return sizes;
+    }
+
+    public void setSizes(String[] sizes) {
+        this.sizes = sizes;
     }
 
     /**

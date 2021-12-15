@@ -1,8 +1,10 @@
 package com.example.goal.managers;
 
+import static com.example.goal.managers.ManagerResources.EXCEPTION;
 import static com.example.goal.managers.ManagerResources.dpToPixel;
 import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,9 +90,9 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
      * Define se terá ou não Titulo como Primeiro Elemento
      */
     private final boolean hasTitle;
-    private int defaultLayout = NOT_ONLY_LAYOUT;
     private final String title;
     private final ClickProducts clickProducts;
+    private int defaultLayout = NOT_ONLY_LAYOUT;
     private RecyclerView recyclerView;
 
     /**
@@ -145,56 +147,63 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerView.V
      */
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        // Verifica de qual classe vem a Instancia do ViewHolder
-        if (holder instanceof TitleViewHolder) {
-            ((TitleViewHolder) holder).text_tile.setText(title);
-        } else if (holder instanceof ItemsViewHolder) {
-            // Obtem os Dados do Produto na Posição especifica do Cursor
-            Product productItem = productList.get(position);
+        try {
+            // Verifica de qual classe vem a Instancia do ViewHolder
+            if (holder instanceof TitleViewHolder) {
+                ((TitleViewHolder) holder).text_tile.setText(title);
+            } else if (holder instanceof ItemsViewHolder) {
+                // Obtem os Dados do Produto na Posição especifica do Cursor
+                Product productItem = productList.get(position);
 
-            // Configura os Diferentes tipos de Itens
-            if (getItemViewType(position) == POSITION_SMALL_ITEM) {
-                ((ItemsViewHolder) holder).image_product.getLayoutParams().height = dpToPixel(
-                        holder.itemView.getContext(), 100);
-                ((ItemsViewHolder) holder).image_product.requestLayout();
-                ((ItemsViewHolder) holder).txt_nameProduct.setVisibility(View.GONE);
-            } else {
-                // Coloca o Texto nos Itens Grandes ou Medios
-                ((ItemsViewHolder) holder).txt_nameProduct.setText(productItem.getName_product());
-
-                // Configurações Adicionais para os Itens Maiores
-                if (getItemViewType(position) == POSITION_BIG_ITEM) {
+                // Configura os Diferentes tipos de Itens
+                if (getItemViewType(position) == POSITION_SMALL_ITEM) {
                     ((ItemsViewHolder) holder).image_product.getLayoutParams().height = dpToPixel(
-                            holder.itemView.getContext(), 320);
+                            holder.itemView.getContext(), 100);
                     ((ItemsViewHolder) holder).image_product.requestLayout();
+                    ((ItemsViewHolder) holder).txt_nameProduct.setVisibility(View.GONE);
+                } else {
+                    // Coloca o Texto nos Itens Grandes ou Medios
+                    ((ItemsViewHolder) holder).txt_nameProduct.setText(productItem.getName_product());
+
+                    // Configurações Adicionais para os Itens Maiores
+                    if (getItemViewType(position) == POSITION_BIG_ITEM) {
+                        ((ItemsViewHolder) holder).image_product.getLayoutParams().height = dpToPixel(
+                                holder.itemView.getContext(), 320);
+                        ((ItemsViewHolder) holder).image_product.requestLayout();
+                    }
+                }
+                if (isNullOrEmpty(productItem.getUrl_image())) {
+                    ((ItemsViewHolder) holder).image_product.setImageResource(R.drawable.error_image);
+                } else {
+                    // Carrega a URL da Imagem na ImageView (se não estiver disponivel, usa uma imagem de erro)
+                    Picasso.get().load(productItem.getUrl_image())
+                            .error(R.drawable.error_image)
+                            .into(((ItemsViewHolder) holder).image_product);
+                }
+
+                ((ItemsViewHolder) holder).image_product.setOnClickListener(v ->
+                        clickProducts.clickProduct(productItem));
+                ((ItemsViewHolder) holder).txt_nameProduct.setOnClickListener(v ->
+                        clickProducts.clickProduct(productItem));
+
+            } else if (holder instanceof EmptyViewHolder && getItemViewType(position) == POSITION_LINE) {
+                // Obtem os parametros do Layout
+                GridLayoutManager.LayoutParams params =
+                        (GridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
+
+                // Obtem o valor convertido de DP para Pixels e Insere no Layout
+                int margin_top_pixel = dpToPixel(holder.itemView.getContext(), 16);
+                params.setMargins(0, margin_top_pixel, 0, 0);
+                holder.itemView.setLayoutParams(params);
+
+                if (!isNullOrEmpty(productList.get(position).getName_product())) {
+                    productList.add(position, new Product(holder.itemView.getContext()));
+                    recyclerView.post(() -> notifyItemChanged((position) + 1));
                 }
             }
-            // Carrega a URL da Imagem na ImageView (se não estiver disponivel, usa uma imagem de erro)
-            Picasso.get().load(productItem.getUrl_image())
-                    .error(R.drawable.error_image)
-                    .into(((ItemsViewHolder) holder).image_product);
-
-            ((ItemsViewHolder) holder).image_product.setOnClickListener(v ->
-                    clickProducts.clickProduct(productItem));
-            ((ItemsViewHolder) holder).txt_nameProduct.setOnClickListener(v ->
-                    clickProducts.clickProduct(productItem));
-
-            // todo adicionar customização quando o tipo da view for dos produtos do vendedor
-
-        } else if (holder instanceof EmptyViewHolder && getItemViewType(position) == POSITION_LINE) {
-            // Obtem os parametros do Layout
-            GridLayoutManager.LayoutParams params =
-                    (GridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
-
-            // Obtem o valor convertido de DP para Pixels e Insere no Layout
-            int margin_top_pixel = dpToPixel(holder.itemView.getContext(), 16);
-            params.setMargins(0, margin_top_pixel, 0, 0);
-            holder.itemView.setLayoutParams(params);
-
-            if (!isNullOrEmpty(productList.get(position).getName_product())) {
-                productList.add(position, new Product(holder.itemView.getContext()));
-                recyclerView.post(() -> notifyItemChanged((position) + 1));
-            }
+        } catch (Exception ex) {
+            Log.e(EXCEPTION, "RecyclerView" + " - Erro ao Adicionar as CustomViews - " + ex.getClass().getName());
+            ex.printStackTrace();
         }
     }
 

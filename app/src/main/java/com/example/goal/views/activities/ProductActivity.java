@@ -1,10 +1,13 @@
 package com.example.goal.views.activities;
 
+import static com.example.goal.managers.ManagerResources.EXCEPTION;
 import static com.example.goal.managers.ManagerResources.dpToPixel;
+import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,7 +39,9 @@ public class ProductActivity extends AppCompatActivity {
     public static final String PARAM_IS_SELLER = "product_seller";
     public static final String PARAM_COLOR = "color";
     public static final String PARAM_SIZE = "size";
+    public static final String PARAM_CATEGORY = "category";
     public static final String PARAM_PRICE = "price";
+    public static final String PARAM_STOCK = "stock";
 
     private static final int POSITION_LIST_COLOR = 0;
     private static final int POSITION_LIST_SIZE = 1;
@@ -69,6 +74,8 @@ public class ProductActivity extends AppCompatActivity {
             product.setName_product(intent.getStringExtra(PARAM_NAME));
             product.setPrice(intent.getDoubleExtra(PARAM_PRICE, 0));
             product.setId_product(intent.getStringExtra(PARAM_ID));
+            product.setCategory_product(intent.getStringExtra(PARAM_CATEGORY));
+            product.setStock_product(intent.getIntExtra(PARAM_STOCK, 0));
             isSellerProduct = intent.getBooleanExtra(PARAM_IS_SELLER, false);
 
             // Obtem e Configura a Visibilidade dos Campos de Cor e Tamanho
@@ -140,10 +147,16 @@ public class ProductActivity extends AppCompatActivity {
         ImageView image_product = findViewById(R.id.image_product);
         TextView txt_title = findViewById(R.id.txt_name);
         TextView txt_price = findViewById(R.id.txt_price);
+        TextView txt_category = findViewById(R.id.txt_category);
+        TextView txt_stock = findViewById(R.id.txt_stock);
 
-        Picasso.get().load(product.getUrl_image()).error(R.drawable.error_image).into(image_product);
+        if (isNullOrEmpty(product.getUrl_image())) image_product.setImageResource(R.drawable.error_image);
+        else Picasso.get().load(product.getUrl_image()).error(R.drawable.error_image).into(image_product);
+
         txt_title.setText(product.getName_product());
-        txt_price.setText(String.valueOf(product.getPrice()));
+        txt_price.setText(getString(R.string.text_price, String.valueOf(product.getPrice())));
+        txt_category.setText(getString(R.string.text_category, product.getCategory_product()));
+        txt_stock.setText(getString(R.string.text_stock, String.valueOf(product.getStock_product())));
 
         if (isSellerProduct) {
             LinearLayout layout_seller = findViewById(R.id.layout_productSeller);
@@ -235,45 +248,51 @@ public class ProductActivity extends AppCompatActivity {
      *                   <p>
      */
     private void setAttrProduct(GridLayout gridLayout, String[] items, int postion_list) {
-        if (items != null && gridLayout != null) {
-            // Definem o Tamanho da Linha e Coluna
-            gridLayout.setRowCount(2);
-            gridLayout.setColumnCount(items.length % 2 == 0 ? items.length / 2 : (items.length + 1) / 2);
+        try{
+            if (items != null && gridLayout != null) {
+                // Definem o Tamanho da Linha e Coluna
+                gridLayout.setRowCount(2);
+                gridLayout.setColumnCount(items.length % 2 == 0 ? items.length / 2 : (items.length + 1) / 2);
 
-            for (int i = 0; i < items.length; i++) {
-                // Instancia a Classe da CustomVIew com os Atributos Padrões
-                SquareText squareText = new SquareText(context, items[i], 0, 0, 0);
+                for (int i = 0; i < items.length; i++) {
+                    // Instancia a Classe da CustomVIew com os Atributos Padrões
+                    SquareText squareText = new SquareText(context, items[i], 0, 0, 0);
 
-                // Configura a Posição do Item na Coluna e os Parametros do layout
-                int column = i % 2 == 0 ? 0 : 1;
+                    // Configura a Posição do Item na Coluna e os Parametros do layout
+                    int column = i % 2 == 0 ? 0 : 1;
 
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams(gridLayout.getLayoutParams());
-                params.columnSpec = GridLayout.spec(column, 1, GridLayout.FILL, 1f);
-                params.width = dpToPixel(context, 20);
-                params.height = dpToPixel(context, 40);
-                params.setMargins(0, 0, dpToPixel(context, 5), column == 1 ? dpToPixel(context, 5) : 0);
-                squareText.setLayoutParams(params);
+                    GridLayout.LayoutParams params = new GridLayout.LayoutParams(gridLayout.getLayoutParams());
+                    params.columnSpec = GridLayout.spec(column, 1, GridLayout.FILL, 1f);
+                    params.width = dpToPixel(context, 20);
+                    params.height = dpToPixel(context, 40);
+                    params.setMargins(0, 0, dpToPixel(context, 5), column == 1 ? dpToPixel(context, 5) : 0);
+                    squareText.setLayoutParams(params);
 
-                // Adiciona à um Array que controlará as CustomViews
-                if (postion_list == POSITION_LIST_COLOR) square_colors[i] = squareText;
-                else if (postion_list == POSITION_LIST_SIZE) square_sizes[i] = squareText;
+                    // Adiciona à um Array que controlará as CustomViews
+                    if (postion_list == POSITION_LIST_COLOR) square_colors[i] = squareText;
+                    else if (postion_list == POSITION_LIST_SIZE) square_sizes[i] = squareText;
 
-                // Controla os Cliques na Custom View
-                squareText.setOnClickListener(v -> {
-                    for (SquareText custom_item : postion_list == POSITION_LIST_COLOR ? square_colors : square_sizes) {
-                        if (custom_item.isSelectedSquareText()) custom_item.clickSquareText();
-                    }
-                    squareText.clickSquareText();
+                    // Controla os Cliques na Custom View
+                    squareText.setOnClickListener(v -> {
+                        for (SquareText custom_item : postion_list == POSITION_LIST_COLOR ? square_colors : square_sizes) {
+                            if (custom_item.isSelectedSquareText()) custom_item.clickSquareText();
+                        }
+                        squareText.clickSquareText();
 
-                    if (postion_list == POSITION_LIST_COLOR)
-                        selected_color = squareText.getTextTitle();
-                    else if (postion_list == POSITION_LIST_SIZE)
-                        selected_size = squareText.getTextTitle();
-                });
+                        if (postion_list == POSITION_LIST_COLOR)
+                            selected_color = squareText.getTextTitle();
+                        else if (postion_list == POSITION_LIST_SIZE)
+                            selected_size = squareText.getTextTitle();
+                    });
 
-                // Adiciona a View no GridLayout
-                gridLayout.addView(squareText);
+                    // Adiciona a View no GridLayout
+                    gridLayout.addView(squareText);
+                }
             }
+        }
+        catch (Exception ex){
+            Log.e(EXCEPTION, "ProductActivity" + " - Erro ao Adicionar as CustomViews - " + ex.getClass().getName());
+            ex.printStackTrace();
         }
     }
 

@@ -16,13 +16,13 @@
             layout="@layout/tool_bar" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imageProfile"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
             android:contentDescription="@string/description_image_user"
-            tools:srcCompat="@drawable/user_image" />
+            tools:src="@drawable/user_image" />
 
         <TextView
             android:id="@+id/textView"
@@ -195,7 +195,7 @@
             android:layout_height="46dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="@string/btn_data"
+            android:text="@string/btn_clearLocalData"
             android:textColor="@color/black"
             android:textSize="16sp" />
 

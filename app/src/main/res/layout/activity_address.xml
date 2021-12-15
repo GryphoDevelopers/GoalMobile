@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <include
-            android:id="@+id/include2"
+            android:id="@+id/toolbar_fragmentProducts"
             layout="@layout/tool_bar" />
 
         <TextView

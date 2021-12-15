@@ -12,6 +12,7 @@ import static com.example.goal.managers.ManagerDataBase.NICKNAME_USER;
 import static com.example.goal.managers.ManagerDataBase.PASSWORD_USER;
 import static com.example.goal.managers.ManagerDataBase.PHONE_USER;
 import static com.example.goal.managers.ManagerResources.EXCEPTION;
+import static com.example.goal.managers.ManagerResources.isNullOrEmpty;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -20,12 +21,14 @@ import android.util.Log;
 import com.example.goal.R;
 import com.example.goal.managers.ManagerDataBase;
 import com.example.goal.managers.SearchInternet;
+import com.example.goal.models.api.ProductsAPI;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Classe SerializationInfos: Serializa Dados para exibir para o usuario. Seja eles retornos da API
@@ -103,46 +106,63 @@ public class SerializationInfo {
      * @see SearchInternet
      * @see Product
      */
-    public List<Product> serializationProduct(String raw_json) {
+    public List<Product> serializationProduct(ExecutorService executorService, String raw_json, String token_user) {
         try {
             // A partir da String, obtem um Array JSON e seu tamanho
-            JSONArray jsonArray = new JSONArray(raw_json);
+            JSONObject jsonObject = new JSONObject(raw_json);
+            JSONArray jsonArray = (JSONArray) jsonObject.get("list");
             int length_array = jsonArray.length();
+
+            ProductsAPI productsAPI = new ProductsAPI(context);
+            List<String[]> listCategories = productsAPI.getCategories(executorService, token_user);
 
             // Variavel que armazenará os resultados e laço de repetição para obte-los
             List<Product> result_search = new ArrayList<>();
             for (int i = 0; i < length_array; i++) {
 
                 // Obtem as Informações do Array
-                JSONObject jsonObject = new JSONObject(jsonArray.getString(i));
+                JSONObject jsonObjectItem = new JSONObject(jsonArray.getString(i));
                 Product product = new Product(context);
 
-                product.setId_product(jsonObject.isNull("id") ? "0"
-                        : jsonObject.getString("id"));
-                product.setName_product(jsonObject.isNull("name") ? ""
-                        : jsonObject.getString("name"));
-                product.setUrl_image(jsonObject.isNull("image_link") ? ""
-                        : jsonObject.getString("image_link"));
+                product.setId_product(jsonObjectItem.isNull("id") ? "0"
+                        : jsonObjectItem.getString("id"));
+                product.setName_product(jsonObjectItem.isNull("title") ? ""
+                        : jsonObjectItem.getString("title"));
+                product.setUrl_image(jsonObjectItem.isNull("urlImage") ? ""
+                        : jsonObjectItem.getString("urlImage"));
+                product.setStock_product(jsonObjectItem.isNull("amount") ? 0
+                        : jsonObjectItem.getInt("amount"));
 
-                if (!jsonObject.isNull("price")) {
-                    String price = String.valueOf(jsonObject.get("price"));
+                String category = jsonObjectItem.isNull("categoryId") ? ""
+                        : jsonObjectItem.getString("categoryId");
+
+                if (!isNullOrEmpty(category)) {
+                    for (int u = 0; u < listCategories.size(); u++) {
+                        if (listCategories.get(u)[1].equals(category)) {
+                            product.setCategory_product(listCategories.get(u)[0]);
+                            u = listCategories.size();
+                        }
+                    }
+                }
+
+                if (!jsonObjectItem.isNull("price")) {
+                    String price = String.valueOf(jsonObjectItem.get("price"));
                     product.setPrice(product.validationPrice(price) ? Double.parseDouble(price) : 0);
                 }
 
-                if (!jsonObject.isNull("product_colors") &&
-                        jsonObject.get("product_colors") instanceof JSONArray) {
-
-                    JSONArray array_colors = (JSONArray) jsonObject.get("product_colors");
-                    String[] values_colors = new String[array_colors.length()];
+                if (!jsonObjectItem.isNull("detailsList")
+                        && jsonObjectItem.get("detailsList") instanceof JSONArray) {
+                    JSONArray array_colors = (JSONArray) jsonObjectItem.get("detailsList");
+                    String[] values_size = new String[array_colors.length()];
 
                     for (int u = 0; u < array_colors.length(); u++) {
                         JSONObject json_color = new JSONObject(array_colors.getString(u));
 
-                        if (!json_color.isNull("colour_name"))
-                            values_colors[u] = json_color.getString("colour_name");
+                        if (!json_color.isNull("value"))
+                            values_size[u] = json_color.getString("value");
                     }
 
-                    product.setColors(values_colors);
+                    product.setSizes(values_size);
                 }
 
                 // Adiciona ao Array os Itens do Produto

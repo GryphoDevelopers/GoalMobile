@@ -56,15 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         btn_register.setOnClickListener(v -> startActivity(new
                 Intent(context, SingUpActivity.class)));
 
-        Button btn_nextStage = findViewById(R.id.bnt_ignore);
-        btn_nextStage.setOnClickListener(v -> {
-            // O Usuario sempre será Redirecionado à tela de Login/Cadastro antes de ir para a Index
-            new ManagerSharedPreferences(context, ManagerSharedPreferences.NAME_PREFERENCE)
-                    .setRememberLogin(false);
-            startActivity(new Intent(context, IndexActivity.class));
-            finishAffinity();
-        });
-
         // Listener do Botão Login
         loginUser();
     }
